@@ -10,7 +10,10 @@
   "routes": [
     { "pattern": "kylepace.dev/transit", "zone_name": "kylepace.dev" },
     { "pattern": "kylepace.dev/transit/*", "zone_name": "kylepace.dev" }
-  ]
+  ],
+  // The globe's tiles (/transit/globe/<country>.pmtiles), too big for static assets
+  // (25 MB limit). Uploaded by hand for now: see scripts/build-globe.ts.
+  "r2_buckets": [{ "binding": "TILES", "bucket_name": "kylepace-transit-tiles" }]
   // Secret (not in Git): OBA_API_KEY, the OneBusAway Puget Sound key for Sound Transit,
   // Pierce Transit, WSF and the Seattle Streetcar. Without it the shared TEST key is used.
 }
