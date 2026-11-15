@@ -1,14 +1,14 @@
 {
-  "name": "wa-transit-map",
+  "name": "world-transit",
   "version": "0.1.0",
-  "description": "Every bus, train and ferry in Washington that reports where it is, on one live map, at kylepace.dev/transit/.",
+  "description": "Every transit route on Earth with an open schedule, on one globe, with vehicles moving live where agencies share them, at kylepace.dev/world-transit/.",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro build && wrangler dev",
-    "data": "node scripts/build-transit.ts",
+    "data": "node --max-old-space-size=6000 scripts/build-globe.ts",
     "astro": "astro",
     "check": "node .agents/skills/page-check/check.mjs --js-budget 400",
     "test": "node --test tests/*.test.mjs"

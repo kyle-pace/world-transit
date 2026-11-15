@@ -1,5 +1,5 @@
 /*
-  Search on the globe (/transit/globe/): one box for places and agencies.
+  Search on the globe (/world-transit/): one box for places and agencies.
 
   - Empty and focused: "Places to explore", a short list by region.
   - Typing: Places first (with their state or province, so the two Portlands differ), then
@@ -8,7 +8,7 @@
   - Picking a place flies there; picking an agency fits the map to where it runs and
     highlights its routes.
 
-  The indexes (public/transit/globe/search-places.json and search-agencies.json, written
+  The indexes (public/world-transit/search-places.json and search-agencies.json, written
   by scripts/build-globe.ts) load the first time the box gets focus. Matching ignores case
   and accents ("montreal" finds Montréal), and every word typed has to appear.
 
@@ -19,6 +19,7 @@
 */
 import type { Map as MapLibreMap } from 'maplibre-gl';
 import { ICONS } from './transit-icons';
+import { track } from 'kp-design/analytics';
 
 /** [name, ascii name, country, latitude, longitude, population, state or province] */
 type PlaceRow = [string, string, string, number, number, number, string?];
@@ -101,8 +102,8 @@ export function globeSearch(
   let loading: Promise<void> | null = null;
   const load = () =>
     (loading ??= Promise.all([
-      fetch('/transit/globe/search-places.json').then((r) => r.json() as Promise<PlaceRow[]>),
-      fetch('/transit/globe/search-agencies.json').then((r) => r.json() as Promise<AgencyRow[]>),
+      fetch('/world-transit/search-places.json').then((r) => r.json() as Promise<PlaceRow[]>),
+      fetch('/world-transit/search-agencies.json').then((r) => r.json() as Promise<AgencyRow[]>),
     ])
       .then(([p, a]) => {
         places = p.map(([name, ascii, cc, lat, lon, pop, region]) => {
@@ -275,6 +276,8 @@ export function globeSearch(
   }
 
   function choose(option: Option) {
+    // No search text in analytics: only what kind of result, and whether it was a suggestion.
+    track('Picked Search Result', { experiment: 'world-transit', result_kind: option.kind, from_suggestions: !input!.value.trim() });
     input!.value = '';
     groups = [];
     render();

@@ -1,8 +1,17 @@
-# Washington transit: design plan
+# World transit: design plan
 
-The transit map is a standalone lab on kylepace.dev (kp-design's `LabLayout`). This is
-its own look, written down so later changes stay in it. Tokens live in
-`src/styles/theme.css`.
+World transit is a standalone lab on kylepace.dev (kp-design's `LabLayout`). It grew out
+of the Washington live map and keeps its look: the station wall map below, now with a
+globe on the wall. Tokens live in `src/styles/theme.css`.
+
+## What changed for the globe
+
+- The map is a globe from orbit, against a dark "space" color in both modes, easing into
+  the flat map as you zoom in. The one sign holds the name, counts, search, Somewhere
+  random and the legend.
+- Hierarchy without gray: trains, trams and ferries in full color with a land-colored
+  outline; buses in their own colors softened toward the land until street level.
+- No page below the map but a short About section; the full explanation is the About page.
 
 ## Concept: a station wall map
 

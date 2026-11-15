@@ -1,8 +1,8 @@
 /*
-  The transit globe at /transit/globe/: every route and stop in one country's open
+  The transit globe at /world-transit/: every route and stop in one country's open
   schedules, on a globe you can spin and zoom into a single street.
 
-  Data: public/transit/globe/<country>.pmtiles, built by scripts/build-globe.ts. PMTiles is
+  Data: public/world-transit/<country>.pmtiles, built by scripts/build-globe.ts. PMTiles is
   one file holding every vector tile; the `pmtiles` library reads just the tiles on screen
   from it with HTTP range requests, so no tile server is needed.
 
@@ -13,6 +13,9 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { Protocol } from 'pmtiles';
 import { liveVehicles, type LiveFeedRow } from './globe-vehicles';
 import { globeSearch } from './globe-search';
+import { track } from 'kp-design/analytics';
+
+const EXPERIMENT = 'world-transit';
 
 type Mode = 'bus' | 'rail' | 'tram' | 'ferry' | 'other';
 
@@ -62,7 +65,7 @@ const reducedMotion = () =>
 export function startGlobe(root: HTMLElement) {
   const container = root.querySelector<HTMLElement>('[data-map]')!;
   const country = root.dataset.country ?? 'us';
-  const tiles = `pmtiles://${location.origin}/transit/globe/${country}.pmtiles`;
+  const tiles = `pmtiles://${location.origin}/world-transit/${country}.pmtiles`;
   const modeInputs = [...root.querySelectorAll<HTMLInputElement>('[data-mode]')];
   const status = root.querySelector<HTMLElement>('[data-status]');
   const liveStatus = root.querySelector<HTMLElement>('[data-live-status]');
@@ -98,7 +101,7 @@ export function startGlobe(root: HTMLElement) {
   });
   map.once('load', async () => {
     try {
-      liveFeeds.push(...((await fetch('/transit/globe/live-feeds.json').then((r) => r.json())) as LiveFeedRow[]));
+      liveFeeds.push(...((await fetch('/world-transit/live-feeds.json').then((r) => r.json())) as LiveFeedRow[]));
     } catch {
       // No live list: routes still show; vehicles just don't.
     }
@@ -129,6 +132,7 @@ export function startGlobe(root: HTMLElement) {
     map.getSource<maplibregl.GeoJSONSource>('hotspots')?.setData(hotspotData());
   }
   liveOnlyInput?.addEventListener('change', () => {
+    track('Changed Live Filter', { experiment: EXPERIMENT, live_only: liveOnly() });
     applyFilters();
     // Turning it on from far away: the dots are the point, so make sure they're in view.
     if (liveOnly() && map.getZoom() > 7 && !map.queryRenderedFeatures({ layers: ['vehicles'] }).length) live.start();
@@ -330,14 +334,16 @@ export function startGlobe(root: HTMLElement) {
     const vehiclePopup = live.popupAt(e);
     if (vehiclePopup) {
       popup = vehiclePopup;
+      track('Tapped Vehicle', { experiment: EXPERIMENT });
       return;
     }
     if (!hits.length) {
       setFocus(null);
       return;
     }
-    const first = hits[0].properties as { feed: string; rid: string | number };
+    const first = hits[0].properties as { feed: string; rid: string | number; mode: string };
     setFocus({ feed: first.feed, rid: String(first.rid) });
+    track('Tapped Route', { experiment: EXPERIMENT, mode: first.mode });
     const seen = new Set<string>();
     const list = document.createElement('ul');
     list.className = 'globe-hits';
@@ -379,7 +385,8 @@ export function startGlobe(root: HTMLElement) {
   let dense: DenseRow[] = [];
   let lastRandom = -1;
   randomButton?.addEventListener('click', async () => {
-    if (!dense.length) dense = await fetch('/transit/globe/search-dense.json').then((r) => r.json()).catch(() => []);
+    track('Tapped Somewhere Random', { experiment: EXPERIMENT });
+    if (!dense.length) dense = await fetch('/world-transit/search-dense.json').then((r) => r.json()).catch(() => []);
     if (!dense.length) return;
     let i = Math.floor(Math.random() * dense.length);
     if (i === lastRandom) i = (i + 1) % dense.length;

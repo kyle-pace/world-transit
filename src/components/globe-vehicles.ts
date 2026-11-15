@@ -1,14 +1,14 @@
 /*
-  Live vehicles on the globe (/transit/globe/), drawn by transit-globe.ts.
+  Live vehicles on the globe (/world-transit/), drawn by transit-globe.ts.
 
   The page knows every live feed's area (src/lib/globe-live.json, written by
   scripts/build-globe.ts). Every 15 seconds while the tab is visible, and right after the
-  map stops moving, it asks /transit/api/globe/<feed>.json for the feeds whose areas
+  map stops moving, it asks /world-transit/api/<feed>.json for the feeds whose areas
   overlap the screen, nearest first and at most MAX_FEEDS. Zoomed out past a region,
   it asks for nothing: a whole country of dots would be noise, and hundreds of requests.
 
   Each vehicle is colored like its route's line, from the small route lookup the build
-  writes per schedule (/transit/globe/routes/<schedule>.json, fetched once per feed).
+  writes per schedule (/world-transit/routes/<schedule>.json, fetched once per feed).
 */
 import maplibregl, { type GeoJSONSource, type Map as MapLibreMap } from 'maplibre-gl';
 
@@ -39,7 +39,7 @@ export function liveVehicles(map: MapLibreMap, feeds: LiveFeedRow[], onStatus: (
   const lookup = (schedule: string) => {
     let p = routes.get(schedule);
     if (!p) {
-      p = fetch(`/transit/globe/routes/${schedule}.json`)
+      p = fetch(`/world-transit/routes/${schedule}.json`)
         .then((r) => (r.ok ? r.json() : {}))
         .catch(() => ({}));
       routes.set(schedule, p);
@@ -97,7 +97,7 @@ export function liveVehicles(map: MapLibreMap, feeds: LiveFeedRow[], onStatus: (
             const padY = (b.getNorth() - b.getSouth()) / 2;
             const r = (x: number) => Math.round(x * 10) / 10;
             const box = [r(b.getWest() - padX), r(Math.max(-90, b.getSouth() - padY)), r(b.getEast() + padX), r(Math.min(90, b.getNorth() + padY))].join(',');
-            const res = await fetch(`/transit/api/globe/${id}.json?bbox=${box}`);
+            const res = await fetch(`/world-transit/api/${id}.json?bbox=${box}`);
             if (!res.ok) return; // keep its last vehicles; try again next round
             const [live, info] = await Promise.all([res.json() as Promise<{ v: VehicleRow[] }>, lookup(schedule)]);
             byFeed.set(

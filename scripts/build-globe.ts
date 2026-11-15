@@ -27,7 +27,7 @@
                        .globe-tmp/catalogs/ from GitHub)
     --upload           send the finished tiles to R2 (bucket kylepace-transit-tiles,
                        key globe/<country>.pmtiles), which the Worker serves at
-                       /transit/globe/<country>.pmtiles. Needs `wrangler login`.
+                       /world-transit/<country>.pmtiles. Needs `wrangler login`.
 */
 import { spawn, spawnSync } from 'node:child_process';
 import { createReadStream, createWriteStream, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
@@ -59,7 +59,7 @@ const SEARCH_ONLY = process.argv.includes('--search-only');
 const CATALOGS = join(TMP, 'catalogs');
 const UPLOAD = process.argv.includes('--upload');
 const BUCKET = 'kylepace-transit-tiles';
-const OUT_DIR = join(root, 'public/transit/globe');
+const OUT_DIR = join(root, 'public/world-transit');
 // The tiles are too big to ship as a Worker asset (25 MB limit), so they stay out of
 // public/ until they have a home; the local preview serves them from here.
 const TILES_DIR = join(TMP, 'tiles');
@@ -706,7 +706,7 @@ const routeKey = (p: { agency: string; short: string; long: string; mode: string
  * so the page can say what a vehicle is and color it like its line.
  *
  * Writes src/lib/globe-live.json (the Worker reads feed URLs from it, the page reads
- * ids and areas) and public/transit/globe/routes/<schedule>.json. If no feed answers at
+ * ids and areas) and public/world-transit/routes/<schedule>.json. If no feed answers at
  * all (the network is down), nothing is written and the last list stays.
  */
 async function buildLiveList() {
@@ -739,6 +739,18 @@ async function buildLiveList() {
     candidates.push({ id: get(r, 'id'), name: get(r, 'provider') || get(r, 'name'), url, static: schedule, alts: refs });
   }
   candidates.push(...extraLiveCandidates(seenUrls));
+  // Puget Sound feeds that come through OneBusAway, carried over from the Washington map.
+  // {oba} is the OneBusAway key: the shared TEST key here, the Worker's secret when served.
+  const OBA = 'https://api.pugetsound.onebusaway.org/api/gtfs_realtime/vehicle-positions-for-agency';
+  for (const [id, name, agency, schedules] of [
+    ['oba-40', 'Sound Transit', '40', ['mdb-268', 'mdb-267']],
+    ['oba-3', 'Pierce Transit', '3', ['mdb-265']],
+    ['oba-95', 'Washington State Ferries', '95', ['mdb-283', 'mdb-1331']],
+    ['oba-23', 'Seattle Streetcar', '23', ['ntd-23', 'mdb-267']],
+  ] as [string, string, string, string[]][]) {
+    const have = schedules.filter((s) => existsSync(join(CACHE, `${s}.ndjson`)));
+    if (have.length) candidates.push({ id, name, url: `${OBA}/${agency}.pb?key={oba}`, static: have[0], alts: have });
+  }
   console.log(`\nLive: ${candidates.length} open vehicle feeds with a schedule on the globe (${keyed} need a key, ${noSchedule} have no schedule on the globe). Checking each…`);
 
   // Final line colors, after duplicates and recoloring (the merged file tippecanoe read).
@@ -773,7 +785,7 @@ async function buildLiveList() {
       const i = next++;
       const c = candidates[i];
       try {
-        const live = compactFeed(await fetchLiveFeed(c.url, 10_000));
+        const live = compactFeed(await fetchLiveFeed(c.url.replace('{oba}', 'TEST'), 10_000));
         // From the other catalogs, a feed with no vehicles and no sign it's a positions
         // feed is most likely delays only.
         if (/^t[lr]-/.test(c.id) && !live.v.length && !/vehicle|position|vp/i.test(c.url)) throw new Error('no vehicles (delays only?)');

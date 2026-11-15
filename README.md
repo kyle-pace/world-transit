@@ -1,29 +1,23 @@
-# Washington transit, live
+# World transit
 
-Every bus, train and ferry in Washington that reports where it is, on one zoomable map with every route and stop. Positions refresh every 15 seconds.
+Every transit route on Earth with an open schedule, on one globe you can spin and zoom into a single street, with buses, trains and ferries moving live where agencies share their positions.
 
-Live at **[kylepace.dev/transit](https://kylepace.dev/transit/)**, one of the experiments on [kylepace.dev](https://kylepace.dev). There's also a page for [every agency](https://kylepace.dev/transit/agencies/).
+Live at **[kylepace.dev/world-transit](https://kylepace.dev/world-transit/)**, one of the experiments on [kylepace.dev](https://kylepace.dev). [How it works](https://kylepace.dev/world-transit/about/).
 
-Built with [Astro](https://astro.build) and [MapLibre](https://maplibre.org) on Cloudflare Workers, following [kyle-pace/principles](https://github.com/kyle-pace/principles). It's a standalone lab: the shell (back link, footer, display settings, analytics) is `LabLayout` from [kp-design](https://github.com/kyle-pace/kp-design), and its look is its own, in `src/styles/theme.css` (plan: `design/PLAN.md`).
+Built with [Astro](https://astro.build) and [MapLibre](https://maplibre.org) on Cloudflare Workers and R2, following [kyle-pace/principles](https://github.com/kyle-pace/principles). It grew out of [Washington transit, live](https://github.com/kyle-pace/wa-transit-map).
 
 ## Run it
 
 ```sh
 npm install
-npm run dev       # http://localhost:4321/transit/
-npm run build     # builds to dist/
-npm run preview   # builds, then runs it the way Cloudflare will
-npm run data      # rebuilds routes and stops from every feed (slow)
+npm run build
+npx wrangler dev   # http://localhost:8787/world-transit/
+npm test
+npm run check
 ```
 
-## How it works
+The tiles (about 1.8 GB) aren't in the repo: build them with `npm run data` (see AGENTS.md, "The data"), then load them into the local R2 store before `wrangler dev`.
 
-- `src/lib/transit-feeds.ts` lists every system: its GTFS schedule zips and, where there is one, its GTFS-realtime vehicle positions feed. Add or fix a feed there.
-- `scripts/build-transit.ts` downloads the schedules and writes `public/transit/` (meta, routes, stops, plus `report.json` saying what each feed gave). GitHub Actions runs it weekly and whenever the feed list changes; a failed download keeps that system's last good data.
-- `/transit/api/vehicles.json` fetches every live feed, decodes it (`src/lib/gtfs-rt.ts`) and caches the merged answer at the edge for 15 seconds. Its `feeds` list shows which feeds answered.
-- Sound Transit, Pierce Transit, Washington State Ferries and the Seattle Streetcar come through OneBusAway Puget Sound. It works with OneBusAway's shared `TEST` key; for a real key, email oba_api_key@soundtransit.org and set it with `npx wrangler secret put OBA_API_KEY`.
-- The basemap is OpenFreeMap (free, no key).
+## Where the data comes from
 
-## How it's served
-
-Its own Cloudflare Worker, `wa-transit-map`, mounted on the hub's domain by two routes in `wrangler.jsonc` (`kylepace.dev/transit` and `kylepace.dev/transit/*`). Cloudflare Workers Builds deploys `main` (build `npm run build`, deploy `npx wrangler deploy`).
+Schedules (GTFS) and live vehicle positions (GTFS-realtime) from each agency, found through the [Mobility Database](https://mobilitydatabase.org), [Transitland](https://www.transit.land) and [Transitous](https://transitous.org); transit lines where there are no open schedules from [OpenStreetMap](https://www.openstreetmap.org/copyright) (© OpenStreetMap contributors, ODbL) via [Geofabrik](https://download.geofabrik.de/); city names from [GeoNames](https://www.geonames.org/) (CC BY 4.0); basemap by [OpenFreeMap](https://openfreemap.org).

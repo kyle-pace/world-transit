@@ -1,9 +1,9 @@
 /*
-  Live vehicles for the globe (/transit/globe/), one agency feed at a time.
+  Live vehicles for the globe (/world-transit/), one agency feed at a time.
 
   The Washington map reads all of its ~20 feeds on every request (src/lib/transit.ts).
   That doesn't scale to the hundreds of feeds across a country, so the globe asks for
-  each feed separately (/transit/api/globe/<feed>.json), and only for the feeds covering
+  each feed separately (/world-transit/api/<feed>.json), and only for the feeds covering
   what's on screen. Each answer is cached at the edge for 15 seconds, so a feed nobody is
   looking at is never fetched.
 
@@ -16,7 +16,7 @@
 */
 import { decodeFeed, type FeedMessage } from './gtfs-rt.ts';
 
-const USER_AGENT = 'kylepace.dev transit map (https://kylepace.dev/transit/)';
+const USER_AGENT = 'kylepace.dev world transit (https://kylepace.dev/world-transit/)';
 /** Positions older than this are parked or lost vehicles; leave them off the map. */
 export const MAX_AGE_SECONDS = 15 * 60;
 

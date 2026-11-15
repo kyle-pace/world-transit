@@ -2,17 +2,14 @@
   // Cloudflare Workers config. The Astro adapter fills in the entry point and static
   // assets at build time; settings here are merged into that.
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "wa-transit-map",
+  "name": "world-transit",
   "compatibility_date": "2026-11-01",
   "observability": { "enabled": true },
-  // Claims kylepace.dev/transit on the hub's domain. Routes win over the hub's Custom
-  // Domain, so only these paths reach this Worker.
-  "routes": [
-    { "pattern": "kylepace.dev/transit", "zone_name": "kylepace.dev" },
-    { "pattern": "kylepace.dev/transit/*", "zone_name": "kylepace.dev" }
-  ],
-  // The globe's tiles (/transit/globe/<country>.pmtiles), too big for static assets
-  // (25 MB limit). Uploaded by hand for now: see scripts/build-globe.ts.
+  // Preview first: served at world-transit.<account>.workers.dev only. Going live adds
+  // routes claiming kylepace.dev/world-transit and /world-transit/* on the hub's domain.
+  "workers_dev": true,
+  // The tiles (/world-transit/world.pmtiles), too big for static assets (25 MB limit).
+  // Uploaded by scripts/build-globe.ts --upload.
   "r2_buckets": [{ "binding": "TILES", "bucket_name": "kylepace-transit-tiles" }]
   // Secret (not in Git): OBA_API_KEY, the OneBusAway Puget Sound key for Sound Transit,
   // Pierce Transit, WSF and the Seattle Streetcar. Without it the shared TEST key is used.

@@ -23,4 +23,7 @@ npm-debug.log*
 .check/
 
 # Globe build: downloads and per-feed cache, and the tiles (too big for Git; hosting TBD)
-.globe-tmp/
+.globe-tmp
+
+# Local scratch (screenshots, one-off scripts)
+.tmp/

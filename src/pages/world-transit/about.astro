@@ -1,0 +1,280 @@
+---
+// About World transit. Headings and step format follow the about-page skill
+// (.agents/skills/about-page/SKILL.md); "How it works" is drawn as a transit line with a
+// stop for every step (design/PLAN.md). Counts and dates come from the same files the map
+// uses, so the page can't drift from what's really built.
+import LabLayout from 'kp-design/layouts/LabLayout.astro';
+import '../../styles/theme.css';
+
+type Summary = { updated: string; countries: string[]; feeds: number; agencies: number; routes: number; stops: number; osmOverlaps?: number };
+type LiveList = { feeds: unknown[] };
+const summary = (Object.values(import.meta.glob<Summary>('../../../public/world-transit/world.json', { eager: true, import: 'default' }))[0] ?? null) as Summary | null;
+const live = (Object.values(import.meta.glob<LiveList>('../../lib/globe-live.json', { eager: true, import: 'default' }))[0] ?? { feeds: [] }) as LiveList;
+const n = (x: number | undefined) => (x ?? 0).toLocaleString('en-US');
+const updated = summary ? new Date(summary.updated).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }) : 'not yet';
+
+// The line: one stop per step, in the order the data travels.
+const stopsOnLine = [
+  {
+    name: 'Agencies publish their schedules',
+    where: 'Each agency’s own website',
+    body: [
+      'Transit agencies around the world publish their routes, stops and timetables as open files in a shared format called GTFS. Three public catalogs list them: the Mobility Database, Transitland and Transitous.',
+    ],
+  },
+  {
+    name: 'A build reads every schedule',
+    where: 'A computer running the build script, every few weeks for now',
+    body: [
+      `A script downloads every open schedule in all three catalogs, each in its own process so one country-sized file can’t stop the rest, and keeps the routes that run. The last build was ${updated}: ${n(summary?.routes)} routes and ${n(summary?.stops)} stops from ${n(summary?.agencies)} agencies in ${summary?.countries.length ?? 0} countries.`,
+      'Where a country publishes no open schedules, the lines come from OpenStreetMap instead, which shows where they run but not when. Where both exist, the schedule wins.',
+    ],
+  },
+  {
+    name: 'The routes are cut into tiles',
+    where: 'The same computer, then Cloudflare R2',
+    body: [
+      'Duplicates are dropped, lines drawn stop to stop are broken where a bus would never go without stopping, and each line gets a first zoom by its length, so the world view carries only long train and ferry lines. Everything is packed into one file of map tiles, stored on Cloudflare, that your browser reads a few squares at a time.',
+    ],
+  },
+  {
+    name: 'Vehicles report where they are',
+    where: 'Each agency’s live feed',
+    body: [
+      `${n(live.feeds.length)} agencies also publish a live feed (GTFS-realtime) with the position of every vehicle that’s out. Each is paired with its schedule so its vehicles can be named and colored like their routes.`,
+    ],
+  },
+  {
+    name: 'A small program reads only the feeds you’re looking at',
+    where: 'A Cloudflare Worker, only while someone has the map open',
+    body: [
+      'When you zoom in to a region, the map asks for the live feeds covering what’s on screen. Each feed is read at most every 15 seconds and shared by everyone looking, and each person gets only the vehicles near their view. A feed nobody is looking at is never read.',
+    ],
+  },
+  {
+    name: 'Your browser draws the map',
+    where: 'Your phone or computer',
+    body: [
+      'The globe, the lines and the vehicles are drawn in your browser with MapLibre. The streets and water underneath come from OpenFreeMap, built on OpenStreetMap, recolored to match the page.',
+    ],
+  },
+];
+---
+
+<LabLayout
+  title="About World transit"
+  description="What the World transit globe is, how it works, where its routes, stops and live vehicle positions come from, and what it collects."
+  image="/world-transit/share-about.png"
+  imageAlt="About World transit: the title on a green sign beside a transit line with six stops, from Agencies publish their schedules to Your browser draws the map."
+  themeColor={{ light: '#eceee8', dark: '#121719' }}
+>
+  <ul class="lab-nav" slot="bar">
+    <li><a href="/world-transit/">Map</a></li>
+    <li><a href="/world-transit/about/" aria-current="page">About</a></li>
+  </ul>
+
+  <article class="page">
+    <h1 class="plate title">About World transit</h1>
+
+    <section class="notes" aria-labelledby="what-heading">
+      <h2 id="what-heading">What it is</h2>
+      <p>
+        <a href="/world-transit/">A globe</a> with every transit route on Earth that has an open schedule, from metros and trains to buses and
+        ferries, and the vehicles that report where they are, moving live. It’s for anyone curious how cities move, or where the buses are right now.
+      </p>
+    </section>
+
+    <section class="notes" aria-labelledby="use-heading">
+      <h2 id="use-heading">How to use it</h2>
+      <p>
+        Spin the globe and zoom in anywhere. Long train and ferry lines show from orbit; buses and trams appear at region level in softer
+        colors, and stops at street level. Live vehicles appear once you zoom in to a region.
+      </p>
+      <p>
+        Search for a city or an agency, or try <strong>Somewhere random</strong> to land in one of the world’s densest transit cities. Tap a
+        line to highlight it and see who runs it, and tap a vehicle to see its route. <strong>Only places with live vehicles</strong> hides
+        everything without a live feed and marks each live system from orbit.
+      </p>
+    </section>
+
+    <section aria-labelledby="how-heading">
+      <h2 id="how-heading">How it works</h2>
+      <ol class="line">
+        {
+          stopsOnLine.map((stop) => (
+            <li>
+              <h3>{stop.name}</h3>
+              <p class="where">Where it runs: {stop.where}.</p>
+              {stop.body.map((text) => (
+                <p>{text}</p>
+              ))}
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="notes" aria-labelledby="sources-heading">
+      <h2 id="sources-heading">Where the data comes from</h2>
+      <p>
+        Every schedule and live feed belongs to the agency that publishes it, under its own terms. They were found through the
+        <a href="https://mobilitydatabase.org">Mobility Database</a>, <a href="https://www.transit.land">Transitland Atlas</a> and
+        <a href="https://transitous.org">Transitous</a>.
+      </p>
+      <p>
+        Lines in countries without open schedules, the streets and water, and the map tiles come from
+        <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> (© OpenStreetMap contributors, ODbL), with tiles by
+        <a href="https://openfreemap.org">OpenFreeMap</a> and extracts by <a href="https://download.geofabrik.de/">Geofabrik</a>. City names
+        and populations for search come from <a href="https://www.geonames.org/">GeoNames</a> (CC BY 4.0).
+      </p>
+    </section>
+
+    <section class="notes" aria-labelledby="trust-heading">
+      <h2 id="trust-heading">Good to know</h2>
+      <p>
+        A vehicle on the map is where its agency last said it was, so it’s always a little behind. Many agencies don’t share live positions
+        openly, and some only with a key, so a city without dots isn’t a city without buses. For catching a ride, use the agency’s own app.
+      </p>
+      <p>
+        Routes are only as good as the schedules and OpenStreetMap behind them: some cities are mapped line by line, others barely. The data
+        is rebuilt by hand for now, so new routes can take a few weeks to appear. The readers for schedules, live feeds and OpenStreetMap are
+        tested against saved real data and broken files.
+      </p>
+    </section>
+
+    <section class="notes" aria-labelledby="privacy-heading">
+      <h2 id="privacy-heading">Privacy</h2>
+      <p>
+        Your browser asks OpenFreeMap’s servers for the part of the map you’re looking at. Everything else, including the tiles and the live
+        vehicles, comes from kylepace.dev. Searches stay in your browser and are never sent anywhere. Analytics works the same as the rest of
+        kylepace.dev: anonymous, no cookies, and you can turn it off (<a href="https://kylepace.dev/privacy/">privacy</a>).
+      </p>
+    </section>
+
+    <section class="notes" aria-labelledby="code-heading">
+      <h2 id="code-heading">Get in touch</h2>
+      <p>
+        If something is missing or looks wrong, email <a href="mailto:mail@kylepace.net">mail@kylepace.net</a>. The code is public:{' '}
+        <a href="https://github.com/kyle-pace/world-transit">github.com/kyle-pace/world-transit</a>.
+      </p>
+    </section>
+  </article>
+</LabLayout>
+
+<style>
+  .page {
+    padding: var(--space-4) var(--gutter) var(--space-12);
+    max-width: 84rem;
+  }
+
+  /* The page's sign, the same plate as the agencies page. */
+  .title {
+    display: inline-block;
+    margin: 0 0 var(--space-8);
+    padding: 0.08em 0.35em 0.12em;
+    font-size: var(--step-2);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    border-radius: var(--radius-sm);
+  }
+
+  h2 {
+    margin: 0 0 var(--space-4);
+    padding-bottom: var(--space-2);
+    max-width: 44rem;
+    font-size: var(--step-1);
+    font-weight: 700;
+    border-bottom: 3px solid var(--ink);
+  }
+
+  a {
+    color: var(--accent-ink);
+    text-underline-offset: 0.15em;
+  }
+
+  .plate a,
+  .lab-nav a {
+    color: inherit;
+  }
+
+  p {
+    max-width: 36rem;
+    margin: 0 0 var(--space-3);
+  }
+
+  /* The line: a strip map. A Guide green line runs down the left with a white-centered
+     stop at each step, the way a route is drawn on the wall of a train car. */
+  .line {
+    --stop: 1.25rem;
+    --track: 0.375rem;
+    list-style: none;
+    margin: var(--space-6) 0 var(--space-8);
+    padding: 0;
+  }
+
+  .line li {
+    position: relative;
+    padding: 0 0 var(--space-8) calc(var(--stop) + var(--space-4));
+  }
+
+  /* The track between this stop and the next. */
+  .line li::before {
+    content: '';
+    position: absolute;
+    left: calc((var(--stop) - var(--track)) / 2);
+    top: calc(var(--stop) / 2 + 0.2rem);
+    bottom: calc(-1 * (var(--stop) / 2 + 0.2rem));
+    width: var(--track);
+    background: var(--plate);
+  }
+
+  .line li:last-child {
+    padding-bottom: 0;
+  }
+
+  .line li:last-child::before {
+    display: none;
+  }
+
+  /* The stop. */
+  .line li::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.2rem;
+    width: var(--stop);
+    height: var(--stop);
+    box-sizing: border-box;
+    border: 0.25rem solid var(--plate);
+    border-radius: 50%;
+    background: var(--bg-raised);
+  }
+
+  /* The ends of the line are terminals: filled, like the last stop on a strip map. */
+  .line li:first-child::after,
+  .line li:last-child::after {
+    background: var(--plate);
+    box-shadow: inset 0 0 0 0.2rem var(--bg-raised);
+    border-width: 0.2rem;
+  }
+
+  .line h3 {
+    margin: 0;
+    font-size: var(--step-1);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+
+  .where {
+    margin: var(--space-1) 0 var(--space-3);
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--ink-muted);
+  }
+
+  .notes {
+    margin-bottom: var(--space-8);
+  }
+</style>
