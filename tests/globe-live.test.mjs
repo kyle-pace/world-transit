@@ -71,3 +71,14 @@ test('an error page or an HTTP error is refused, not decoded', async () => {
     down.close();
   }
 });
+
+import { trimBox } from '../src/lib/globe-live.ts';
+
+test('a bbox parameter is read, and nonsense is ignored rather than trusted', () => {
+  assert.deepEqual(trimBox('-0.6,51.3,0.3,51.7'), [-0.6, 51.3, 0.3, 51.7]);
+  assert.equal(trimBox(null), null);
+  assert.equal(trimBox('x,1,2'), null);
+  assert.equal(trimBox('1,2,3'), null);
+  assert.equal(trimBox('5,0,1,1'), null, 'west east of east');
+  assert.equal(trimBox('0,-95,1,1'), null, 'off the planet');
+});

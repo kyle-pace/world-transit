@@ -90,7 +90,14 @@ export function liveVehicles(map: MapLibreMap, feeds: LiveFeedRow[], onStatus: (
       await Promise.all(
         wanted.map(async ([id, name, schedule]) => {
           try {
-            const res = await fetch(`/transit/api/globe/${id}.json`);
+            // Only the part of the feed around the screen (half a screen of margin, rounded
+            // so neighbors' requests share the browser cache).
+            const b = map.getBounds();
+            const padX = (b.getEast() - b.getWest()) / 2;
+            const padY = (b.getNorth() - b.getSouth()) / 2;
+            const r = (x: number) => Math.round(x * 10) / 10;
+            const box = [r(b.getWest() - padX), r(Math.max(-90, b.getSouth() - padY)), r(b.getEast() + padX), r(Math.min(90, b.getNorth() + padY))].join(',');
+            const res = await fetch(`/transit/api/globe/${id}.json?bbox=${box}`);
             if (!res.ok) return; // keep its last vehicles; try again next round
             const [live, info] = await Promise.all([res.json() as Promise<{ v: VehicleRow[] }>, lookup(schedule)]);
             byFeed.set(

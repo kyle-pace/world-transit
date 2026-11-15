@@ -54,3 +54,13 @@ export function compactFeed(feed: FeedMessage, now = Math.floor(Date.now() / 100
   }
   return { t: now, age: feed.timestamp ? now - feed.timestamp : null, v };
 }
+
+/** A ?bbox=west,south,east,north parameter, or null if it's missing or nonsense. */
+export function trimBox(param: string | null): [number, number, number, number] | null {
+  if (!param) return null;
+  const parts = param.split(',').map(Number);
+  if (parts.length !== 4 || parts.some((x) => !Number.isFinite(x))) return null;
+  const [w, s, e, n] = parts;
+  if (w > e || s > n || s < -90 || n > 90) return null;
+  return [w, s, e, n];
+}
