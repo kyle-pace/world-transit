@@ -20,15 +20,17 @@
     --concurrency 6    feeds processed at once
     --tiles-only       skip downloading; just repack the cached results
     --live-only        just recheck the live vehicle feeds (needs a finished build)
+    --no-tiles         download only; pack the tiles in a later --tiles-only run
     --upload           send the finished tiles to R2 (bucket kylepace-transit-tiles,
                        key globe/<country>.pmtiles), which the Worker serves at
                        /transit/globe/<country>.pmtiles. Needs `wrangler login`.
 */
 import { spawn, spawnSync } from 'node:child_process';
-import { createWriteStream, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { createReadStream, createWriteStream, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { basename, join } from 'node:path';
+import { createInterface } from 'node:readline';
 import { fileURLToPath } from 'node:url';
-import { download, readGtfs } from './build-transit.ts';
+import { download, findFiles, readGtfs } from './build-transit.ts';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const TMP = join(root, '.globe-tmp');
@@ -47,6 +49,7 @@ const LIMIT = Number(arg('limit', '0'));
 const CONCURRENCY = Number(arg('concurrency', '6'));
 const TILES_ONLY = process.argv.includes('--tiles-only');
 const LIVE_ONLY = process.argv.includes('--live-only');
+const NO_TILES = process.argv.includes('--no-tiles');
 const UPLOAD = process.argv.includes('--upload');
 const BUCKET = 'kylepace-transit-tiles';
 const OUT_DIR = join(root, 'public/transit/globe');
@@ -175,40 +178,61 @@ async function buildFeed(feed: Feed, color: string): Promise<FeedResult> {
     }
     if (!source) throw new Error(`download failed: ${lastError}`);
     // Some zips keep their files in a subfolder, so match names anywhere in the archive.
-    const unzip = spawnSync('unzip', ['-o', '-qq', '-C', zip, ...WANTED, ...WANTED.map((f) => `*/${f}`), '-d', dir]);
-    if (!existsSync(dir)) throw new Error(`unzip failed: ${String(unzip.stderr).trim().slice(0, 200)}`);
-    // A few zips store their files without read permission.
-    spawnSync('chmod', ['-R', 'u+rwX', dir]);
+    const extract = (from: string, to: string) => {
+      spawnSync('unzip', ['-o', '-qq', '-C', from, ...WANTED, ...WANTED.map((f) => `*/${f}`), '-d', to]);
+      // A few zips store their files without read permission.
+      if (existsSync(to)) spawnSync('chmod', ['-R', 'u+rwX', to]);
+      return existsSync(to) && existsSync(join(to)) && findFiles(to).has('routes.txt');
+    };
+    const dirs: string[] = [];
+    if (extract(zip, dir)) dirs.push(dir);
+    else {
+      // A zip of zips (Public Transport Victoria ships one per mode): read each inner one.
+      const inner = String(spawnSync('unzip', ['-Z1', zip]).stdout).split('\n').filter((n) => /\.zip$/i.test(n.trim()));
+      if (!inner.length) throw new Error('no routes.txt or trips.txt in the zip');
+      const innerDir = join(work, 'inner');
+      spawnSync('unzip', ['-o', '-qq', zip, ...inner, '-d', innerDir]);
+      inner.forEach((name, i) => {
+        if (extract(join(innerDir, name.trim()), join(work, `gtfs-${i}`))) dirs.push(join(work, `gtfs-${i}`));
+      });
+      if (!dirs.length) throw new Error(`no routes.txt in any of ${inner.length} inner zips`);
+    }
     rmSync(zip, { force: true });
 
-    const bundle = await readGtfs({ key: feed.id, name: feed.provider }, dir, color);
     const lines: string[] = [];
     let drawn = 0;
-    for (const r of bundle.routes) {
-      if (!r.geom.length) continue;
-      drawn++;
-      lines.push(
-        JSON.stringify({
-          type: 'Feature',
-          tippecanoe: { layer: 'routes', minzoom: MIN_ZOOM[r.mode] ?? 5 },
-          properties: { feed: feed.id, rid: r.id, agency: bundle.agencies[r.agency] ?? feed.provider, short: r.short, long: r.long, color: r.color, mode: r.mode },
-          geometry: { type: 'MultiLineString', coordinates: r.geom },
-        }),
-      );
+    let routeCount = 0;
+    let stopCount = 0;
+    for (const d of dirs) {
+      const bundle = await readGtfs({ key: feed.id, name: feed.provider }, d, color);
+      routeCount += bundle.routes.length;
+      stopCount += bundle.stops.length;
+      for (const r of bundle.routes) {
+        if (!r.geom.length) continue;
+        drawn++;
+        lines.push(
+          JSON.stringify({
+            type: 'Feature',
+            tippecanoe: { layer: 'routes', minzoom: MIN_ZOOM[r.mode] ?? 5 },
+            properties: { feed: feed.id, rid: r.id, agency: bundle.agencies[r.agency] ?? feed.provider, short: r.short, long: r.long, color: r.color, mode: r.mode },
+            geometry: { type: 'MultiLineString', coordinates: r.geom },
+          }),
+        );
+      }
+      for (const st of bundle.stops) {
+        lines.push(
+          JSON.stringify({
+            type: 'Feature',
+            tippecanoe: { layer: 'stops', minzoom: STOP_MIN_ZOOM },
+            properties: { feed: feed.id, name: st.name, routes: st.routes.length },
+            geometry: { type: 'Point', coordinates: [st.lon, st.lat] },
+          }),
+        );
+      }
     }
-    for (const s of bundle.stops) {
-      lines.push(
-        JSON.stringify({
-          type: 'Feature',
-          tippecanoe: { layer: 'stops', minzoom: STOP_MIN_ZOOM },
-          properties: { feed: feed.id, name: s.name, routes: s.routes.length },
-          geometry: { type: 'Point', coordinates: [s.lon, s.lat] },
-        }),
-      );
-    }
-    if (!drawn) throw new Error(`no route lines (${bundle.routes.length} routes, no shapes or stop sequences)`);
+    if (!drawn) throw new Error(`no route lines (${routeCount} routes, no shapes or stop sequences)`);
     writeFileSync(join(CACHE, `${feed.id}.ndjson`), lines.join('\n') + '\n');
-    return { ...base, ok: true, source, routes: bundle.routes.length, lines: drawn, stops: bundle.stops.length, ms: Date.now() - started };
+    return { ...base, ok: true, source, routes: routeCount, lines: drawn, stops: stopCount, ms: Date.now() - started };
   } catch (e) {
     return { ...base, ok: false, error: (e as Error).message.slice(0, 300), ms: Date.now() - started };
   } finally {
@@ -262,6 +286,8 @@ interface Counts {
   routes: number;
   stops: number;
   duplicates: number;
+  osmOverlaps: number;
+  longHopOnly: number;
   agencies: number;
   modes: Record<string, number>;
 }
@@ -276,19 +302,102 @@ interface Counts {
  *   order; branded lines with their own color keep it.
  * - Near-black and near-white lines vanish on one of the two basemaps, so they're
  *   treated as having no color.
+ * - OpenStreetMap lines (scripts/build-osm.ts) fill in where there are no schedules. Where
+ *   a city has both, the OpenStreetMap copy of a route is dropped: schedules are read
+ *   first and mark the ~300 m grid cells their lines pass through (rail and road
+ *   separately), and an OpenStreetMap route mostly inside marked cells is skipped.
  * The agency's own color is kept as `official`.
  */
+async function* readFeatures(file: string) {
+  // Line by line: one region's OpenStreetMap file can pass Node's 512 MB string limit.
+  for await (const line of createInterface({ input: createReadStream(file), crlfDelay: Infinity })) if (line) yield JSON.parse(line);
+}
+
+const CELL = 0.003; // degrees, about 300 m
+
+// Lines built from stop to stop (the schedule had no drawn path) cut straight across
+// everything when stops are far apart: an airport coach slices through a whole city. Such
+// a line is broken wherever one hop is longer than this, in km; drawn paths are untouched.
+const MAX_HOP_KM: Record<string, number> = { bus: 3, other: 3, tram: 3, rail: 60, ferry: Infinity };
+
+function km(a: number[], b: number[]) {
+  const dx = (a[0] - b[0]) * Math.cos(((a[1] + b[1]) / 2) * (Math.PI / 180)) * 111.32;
+  const dy = (a[1] - b[1]) * 110.57;
+  return Math.hypot(dx, dy);
+}
+
+/** A line whose points are (almost) all this feed's stops was drawn stop to stop. */
+export function breakLongHops(lines: number[][][], stopsAt: Set<string>, mode: string): number[][][] {
+  const limit = MAX_HOP_KM[mode] ?? 3;
+  if (limit === Infinity) return lines;
+  const out: number[][][] = [];
+  for (const line of lines) {
+    const onStops = line.filter((p) => stopsAt.has(`${p[0]},${p[1]}`)).length;
+    if (onStops < line.length * 0.9) {
+      out.push(line);
+      continue;
+    }
+    let piece: number[][] = [line[0]];
+    for (let i = 1; i < line.length; i++) {
+      if (km(line[i - 1], line[i]) > limit) {
+        if (piece.length >= 2) out.push(piece);
+        piece = [line[i]];
+      } else piece.push(line[i]);
+    }
+    if (piece.length >= 2) out.push(piece);
+  }
+  return out;
+}
+const cellOf = (lon: number, lat: number) => Math.floor((lon + 180) / CELL) * 100_000 + Math.floor((lat + 90) / CELL);
+const isRail = (mode: string) => mode === 'rail' || mode === 'tram';
+
 async function mergeFeeds(files: string[], routesOut: string, stopsOut: string): Promise<Counts> {
   const routes = createWriteStream(routesOut);
   const stops = createWriteStream(stopsOut);
   const seenRoutes = new Set<string>();
   const seenStops = new Set<string>();
-  const counts: Counts = { routes: 0, stops: 0, duplicates: 0, agencies: 0, modes: {} };
+  const counts: Counts = { routes: 0, stops: 0, duplicates: 0, osmOverlaps: 0, longHopOnly: 0, agencies: 0, modes: {} };
   const agencies = new Set<string>();
-  for (const file of files) {
-    const features = readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+  const covered = { rail: new Set<number>(), road: new Set<number>() };
+  const write = async (stream: ReturnType<typeof createWriteStream>, f: unknown) => {
+    if (!stream.write(JSON.stringify(f) + '\n')) await new Promise((r) => stream.once('drain', r));
+  };
+  const keep = (f: any) => {
+    counts.routes++;
+    counts.modes[f.properties.mode] = (counts.modes[f.properties.mode] ?? 0) + 1;
+    agencies.add(f.properties.agency);
+  };
+
+  // Schedules first, so their grid is complete before any OpenStreetMap line is checked.
+  const isOsm = (f: string) => basename(f).startsWith('osm-');
+  const ordered = [...files.filter((f) => !isOsm(f)), ...files.filter(isOsm)];
+  for (const file of ordered) {
+    if (isOsm(file)) {
+      for await (const f of readFeatures(file)) {
+        const p = f.properties;
+        const grid = isRail(p.mode) ? covered.rail : covered.road;
+        let pts = 0;
+        let inside = 0;
+        for (const line of f.geometry.coordinates) for (let i = 0; i < line.length; i += 2) {
+          pts++;
+          if (grid.has(cellOf(line[i][0], line[i][1]))) inside++;
+        }
+        if (pts && inside / pts > 0.6) {
+          counts.osmOverlaps++;
+          continue;
+        }
+        p.official = p.color;
+        delete f.tippecanoe.layer;
+        await write(routes, f);
+        keep(f);
+      }
+      continue;
+    }
+    // This feed's stop positions, to tell stop-to-stop lines from drawn ones.
+    const stopsAt = new Set<string>();
+    for await (const f of readFeatures(file)) if (f.tippecanoe.layer === 'stops') stopsAt.add(`${f.geometry.coordinates[0]},${f.geometry.coordinates[1]}`);
     const groups = new Map<string, any[]>();
-    for (const f of features) {
+    for await (const f of readFeatures(file)) {
       const p = f.properties;
       if (f.tippecanoe.layer === 'stops') {
         const [lon, lat] = f.geometry.coordinates;
@@ -296,8 +405,13 @@ async function mergeFeeds(files: string[], routesOut: string, stopsOut: string):
         if (seenStops.has(key)) continue;
         seenStops.add(key);
         delete f.tippecanoe.layer;
-        stops.write(JSON.stringify(f) + '\n');
+        await write(stops, f);
         counts.stops++;
+        continue;
+      }
+      f.geometry.coordinates = breakLongHops(f.geometry.coordinates, stopsAt, p.mode);
+      if (!f.geometry.coordinates.length) {
+        counts.longHopOnly++;
         continue;
       }
       const first = f.geometry.coordinates[0][0];
@@ -307,6 +421,8 @@ async function mergeFeeds(files: string[], routesOut: string, stopsOut: string):
         continue;
       }
       seenRoutes.add(key);
+      const grid = isRail(p.mode) ? covered.rail : covered.road;
+      for (const line of f.geometry.coordinates) for (const [lon, lat] of line) grid.add(cellOf(lon, lat));
       p.official = p.color;
       const lum = luminance(p.color);
       const unusable = lum < 0.02 || lum > 0.8;
@@ -318,10 +434,8 @@ async function mergeFeeds(files: string[], routesOut: string, stopsOut: string):
       if (members.length >= 4 || key.includes('|none|')) members.forEach((f, n) => (f.properties.color = DISTINCT[n % DISTINCT.length]));
       for (const f of members) {
         delete f.tippecanoe.layer;
-        routes.write(JSON.stringify(f) + '\n');
-        counts.routes++;
-        counts.modes[f.properties.mode] = (counts.modes[f.properties.mode] ?? 0) + 1;
-        agencies.add(f.properties.agency);
+        await write(routes, f);
+        keep(f);
       }
     }
   }
@@ -372,7 +486,12 @@ async function buildTiles(): Promise<{ out: string; counts: Counts }> {
 // ---------- Summary (counts for the globe page's sign) ----------
 
 function writeSummary(reportFile: string, counts: Counts) {
-  const report: Record<string, FeedResult> = existsSync(reportFile) ? JSON.parse(readFileSync(reportFile, 'utf8')) : {};
+  const osmFile = join(TMP, 'report-osm.json');
+  const report: Record<string, FeedResult> = {
+    ...(existsSync(reportFile) ? JSON.parse(readFileSync(reportFile, 'utf8')) : {}),
+    // OpenStreetMap regions (scripts/build-osm.ts), counted like feeds.
+    ...(existsSync(osmFile) ? JSON.parse(readFileSync(osmFile, 'utf8')) : {}),
+  };
   const summary = {
     updated: new Date().toISOString(),
     countries: [...new Set(Object.values(report).filter((r) => r.ok).map((r) => r.country ?? 'US'))].sort(),
@@ -382,7 +501,7 @@ function writeSummary(reportFile: string, counts: Counts) {
   };
   mkdirSync(OUT_DIR, { recursive: true });
   writeFileSync(join(OUT_DIR, `${WORLD}.json`), JSON.stringify(summary, null, 1) + '\n');
-  console.log(`Summary: ${summary.feeds} feeds, ${summary.agencies} agencies, ${counts.routes} routes (${counts.duplicates} duplicates dropped), ${counts.stops} stops.`);
+  console.log(`Summary: ${summary.feeds} feeds, ${summary.agencies} agencies, ${counts.routes} routes (${counts.duplicates} duplicates and ${counts.osmOverlaps} OpenStreetMap copies of scheduled routes dropped, ${counts.longHopOnly} stop-to-stop routes with nothing short enough to draw), ${counts.stops} stops.`);
 }
 
 // ---------- Live feeds (vehicle positions) ----------
@@ -443,9 +562,8 @@ async function buildLiveList() {
 
   // Final line colors, after duplicates and recoloring (the merged file tippecanoe read).
   const finalColor = new Map<string, string>();
-  for (const line of readFileSync(join(TMP, 'tiles-input', 'routes.ndjson'), 'utf8').split('\n')) {
-    if (!line) continue;
-    const f = JSON.parse(line);
+  for await (const f of readFeatures(join(TMP, 'tiles-input', 'routes.ndjson'))) {
+    if (f.properties.source === 'osm') continue;
     finalColor.set(routeKey(f.properties, f.geometry.coordinates[0][0]), f.properties.color);
   }
 
@@ -459,9 +577,8 @@ async function buildLiveList() {
       try {
         const live = compactFeed(await fetchLiveFeed(c.url, 10_000));
         let [w, s, e, n] = [180, 90, -180, -90];
-        for (const line of readFileSync(join(CACHE, `${c.static}.ndjson`), 'utf8').split('\n')) {
-          if (!line) continue;
-          const g = JSON.parse(line).geometry;
+        for await (const feature of readFeatures(join(CACHE, `${c.static}.ndjson`))) {
+          const g = feature.geometry;
           const pts: number[][] = g.type === 'Point' ? [g.coordinates] : g.coordinates.flat();
           for (const [x, y] of pts) {
             if (x < w) w = x;
@@ -486,9 +603,7 @@ async function buildLiveList() {
   for (const schedule of new Set(feeds.map((f) => f.static))) {
     // route id -> [short name, long name, color, mode, agency]
     const lookup: Record<string, [string, string, string, string, string]> = {};
-    for (const line of readFileSync(join(CACHE, `${schedule}.ndjson`), 'utf8').split('\n')) {
-      if (!line) continue;
-      const f = JSON.parse(line);
+    for await (const f of readFeatures(join(CACHE, `${schedule}.ndjson`))) {
       if (f.tippecanoe.layer !== 'routes') continue;
       const p = f.properties;
       lookup[p.rid] = [p.short, p.long, finalColor.get(routeKey(p, f.geometry.coordinates[0][0])) ?? p.color, p.mode, p.agency];
@@ -552,6 +667,7 @@ async function main() {
     console.log(`\n${results.filter((r) => r.ok).length} feeds ok, ${results.filter((r) => !r.ok).length} failed. Report: ${reportFile}`);
   }
 
+  if (NO_TILES) return;
   const { out, counts } = await buildTiles();
   console.log(`Tiles: ${out} (${Math.round(statSync(out).size / 1e6)} MB)`);
   writeSummary(reportFile, counts);
@@ -569,4 +685,5 @@ async function main() {
   }
 }
 
-await main();
+// Run only when started directly (or as a feed's child process), not when tests import it.
+if (import.meta.main) await main();

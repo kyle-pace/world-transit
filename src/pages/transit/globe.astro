@@ -155,7 +155,7 @@ const places: [string, [string, number, number, number][]][] = [
       <h2 id="about-heading">About</h2>
       <p>
         {
-          `Every route here comes from a schedule an agency publishes openly (GTFS), found through the Mobility Database${summary ? `: ${n(summary.feeds)} schedules, ${n(summary.routes)} routes and ${n(summary.stops)} stops` : ''}. Trains and ferries show from orbit; buses appear as you zoom in to a region, and stops at city level. Tap a line to see its name and agency.`
+          `Routes come from the schedules agencies publish openly (GTFS), found through the Mobility Database${summary ? `: ${n(summary.feeds)} sources, ${n(summary.routes)} routes and ${n(summary.stops)} stops in ${summary.countries.length} countries` : ''}. Where a country publishes no open schedules, the lines come from OpenStreetMap, which shows where they run but not when. Trains and ferries show from orbit; buses appear as you zoom in to a region, and stops at city level. Tap a line to see its name and who runs it.`
         }
       </p>
       <p>

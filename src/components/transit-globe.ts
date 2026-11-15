@@ -63,7 +63,7 @@ export function startGlobe(root: HTMLElement) {
     cooperativeGestures: matchMedia('(pointer: coarse)').matches,
     maxPitch: 60,
   });
-  map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: 'Routes from agency schedules (GTFS) via the Mobility Database' }), 'bottom-left');
+  map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: 'Routes from agency schedules (GTFS) via the Mobility Database, and OpenStreetMap' }), 'bottom-left');
   // MapLibre opens the compact credits at first; on phones fold them to the (i) button.
   map.once('load', () => {
     if (matchMedia('(max-width: 47.99rem)').matches) container.querySelector('.maplibregl-ctrl-attrib')?.classList.remove('maplibregl-compact-show');
@@ -189,7 +189,9 @@ export function startGlobe(root: HTMLElement) {
       const name = document.createElement('strong');
       name.textContent = [p.short, p.long].filter(Boolean).join(' ') || 'Unnamed route';
       const sub = document.createElement('span');
-      sub.textContent = `${MODE_NAMES[p.mode] ?? 'Route'}, ${p.agency}`;
+      // OpenStreetMap lines say so: they have no timetable behind them.
+      const source = (f.properties as { source?: string }).source === 'osm' ? ' (from OpenStreetMap)' : '';
+      sub.textContent = `${MODE_NAMES[p.mode] ?? 'Route'}, ${p.agency}${source}`;
       li.append(swatch, name, sub);
       list.append(li);
     }
