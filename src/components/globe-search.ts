@@ -5,7 +5,7 @@
   written by scripts/build-globe.ts) are fetched the first time the box gets focus, so the
   page itself stays light. Matching ignores case and accents ("montreal" finds Montréal),
   and every word typed has to appear. Picking a place flies there; picking an agency fits
-  the map to where it runs.
+  the map to where it runs and highlights its routes.
 
   The box is a combobox, like the live map's: arrow keys move through the results, Enter
   picks, Escape closes, and the highlighted result is announced (aria-activedescendant).
@@ -34,7 +34,7 @@ const fold = (s: string) =>
     .replace(/[̀-ͯ]/g, '')
     .toLowerCase();
 
-export function globeSearch(root: HTMLElement, map: MapLibreMap, reducedMotion: () => boolean) {
+export function globeSearch(root: HTMLElement, map: MapLibreMap, reducedMotion: () => boolean, onAgency: (name: string) => void = () => {}) {
   const input = root.querySelector<HTMLInputElement>('[data-search]');
   const list = root.querySelector<HTMLElement>('[data-results]');
   if (!input || !list) return;
@@ -86,14 +86,16 @@ export function globeSearch(root: HTMLElement, map: MapLibreMap, reducedMotion: 
             detail: [country, `${n(routes)} ${routes === 1 ? 'route' : 'routes'}`].filter(Boolean).join(', '),
             words: fold(`${name} ${country}`),
             size: routes,
-            go: () =>
+            go: () => {
+              onAgency(name);
               map.fitBounds(
                 [
                   [w, s],
                   [e, nn],
                 ],
                 { padding: 40, maxZoom: 13, duration: reducedMotion() ? 0 : 2500 },
-              ),
+              );
+            },
           });
         }
         items = out;

@@ -22,12 +22,14 @@ const STYLES = {
 };
 // Keep in step with BASEMAP in transit-map.ts and src/styles/theme.css.
 const BASEMAP = {
-  light: { land: '#eceee8', water: '#b3cad2', green: null, space: '#16242a', halo: '#ffffff' },
-  dark: { land: '#1b2326', water: '#1a3440', green: '#20292c', space: '#040708', halo: '#121719' },
+  light: { land: '#eceee8', water: '#b3cad2', green: null, space: '#16242a', halo: '#ffffff', network: '#8d9a9f' },
+  dark: { land: '#1b2326', water: '#1a3440', green: '#20292c', space: '#040708', halo: '#121719', network: '#56656b' },
 };
 const MODE_NAMES: Record<Mode, string> = { bus: 'Bus', rail: 'Train', tram: 'Light rail or streetcar', ferry: 'Ferry', other: 'Other' };
 // Drawn bottom to top, so trains sit over the buses that feed them.
 const MODE_ORDER: Mode[] = ['bus', 'other', 'ferry', 'tram', 'rail'];
+// Buses take their own colors from this zoom (street level); before it they're one gray network.
+const BUS_COLOR_ZOOM = 13;
 
 const theme = (): 'light' | 'dark' => {
   const set = document.documentElement.dataset.theme;
@@ -168,10 +170,12 @@ export function startGlobe(root: HTMLElement) {
           filter: ['==', ['get', 'mode'], mode],
           layout: { 'line-join': 'round', 'line-cap': 'round' },
           paint: {
-            'line-color': ['get', 'color'],
+            // The hierarchy: trains, trams and ferries in their colors at every zoom; buses
+            // as one quiet gray network until street level, where their own colors help.
+            'line-color': heavy ? ['get', 'color'] : ['step', ['zoom'], t.network, BUS_COLOR_ZOOM, ['get', 'color']],
             // Hairlines from orbit, full strokes at street level.
-            'line-width': heavy ? ['interpolate', ['linear'], ['zoom'], 2, 0.8, 8, 2, 14, 5] : ['interpolate', ['linear'], ['zoom'], 7, 0.5, 9, 1, 14, 3],
-            'line-opacity': heavy ? 0.95 : ['interpolate', ['linear'], ['zoom'], 7, 0.55, 10, 0.85],
+            'line-width': heavy ? ['interpolate', ['linear'], ['zoom'], 2, 0.8, 8, 2, 14, 5] : ['interpolate', ['linear'], ['zoom'], 7, 0.4, 12, 0.9, 14, 3],
+            'line-opacity': heavy ? 0.95 : ['interpolate', ['linear'], ['zoom'], 7, 0.45, 12, 0.6, BUS_COLOR_ZOOM, 0.85],
             ...(mode === 'ferry' ? { 'line-dasharray': [2, 1.5] } : {}),
           },
         },
@@ -214,10 +218,38 @@ export function startGlobe(root: HTMLElement) {
     // Vehicles on top of everything, ringed in the land color so they stand off the lines.
     live.addLayer(t.halo);
     applyFilters();
+    applyFocus();
   }
   map.on('style.load', addOverlay);
 
   modeInputs.forEach((i) => i.addEventListener('change', applyFilters));
+
+  // ---------- Focus: one route or one agency stands out, the rest fade ----------
+  type Focus = { feed: string; rid: string } | { agency: string } | null;
+  let focus: Focus = null;
+  function applyFocus() {
+    const match: maplibregl.ExpressionSpecification | null = !focus
+      ? null
+      : 'agency' in focus
+        ? ['==', ['get', 'agency'], focus.agency]
+        : ['all', ['==', ['get', 'feed'], focus.feed], ['==', ['to-string', ['get', 'rid']], focus.rid]];
+    for (const mode of MODE_ORDER) {
+      const id = `routes-${mode}`;
+      if (!map.getLayer(id)) continue;
+      const heavy = mode === 'rail' || mode === 'tram' || mode === 'ferry';
+      const base = heavy ? 0.95 : (['interpolate', ['linear'], ['zoom'], 7, 0.45, 12, 0.6, BUS_COLOR_ZOOM, 0.85] as maplibregl.ExpressionSpecification);
+      map.setPaintProperty(id, 'line-opacity', match ? ['case', match, 1, 0.12] : base);
+      // A focused bus route shows its own color at any zoom.
+      if (!heavy) map.setPaintProperty(id, 'line-color', match ? ['case', match, ['get', 'color'], BASEMAP[currentTheme].network] : ['step', ['zoom'], BASEMAP[currentTheme].network, BUS_COLOR_ZOOM, ['get', 'color']]);
+    }
+  }
+  const setFocus = (f: Focus) => {
+    focus = f;
+    applyFocus();
+  };
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && focus && !(e.target instanceof HTMLInputElement)) setFocus(null);
+  });
 
   // A route's name and agency on click or tap.
   const routeLayers = MODE_ORDER.map((m) => `routes-${m}`);
@@ -248,7 +280,12 @@ export function startGlobe(root: HTMLElement) {
       popup = vehiclePopup;
       return;
     }
-    if (!hits.length) return;
+    if (!hits.length) {
+      setFocus(null);
+      return;
+    }
+    const first = hits[0].properties as { feed: string; rid: string | number };
+    setFocus({ feed: first.feed, rid: String(first.rid) });
     const seen = new Set<string>();
     const list = document.createElement('ul');
     list.className = 'globe-hits';
@@ -271,13 +308,17 @@ export function startGlobe(root: HTMLElement) {
       list.append(li);
     }
     popup = new maplibregl.Popup({ maxWidth: '20rem' }).setLngLat(e.lngLat).setDOMContent(list).addTo(map);
+    // Closing the popup with its × lets the whole network back in.
+    popup.on('close', () => {
+      if (focus && 'feed' in focus && focus.feed === first.feed) setFocus(null);
+    });
   });
   for (const id of [...routeLayers, 'vehicles', 'hotspots']) {
     map.on('mouseenter', id, () => (map.getCanvas().style.cursor = 'pointer'));
     map.on('mouseleave', id, () => (map.getCanvas().style.cursor = ''));
   }
 
-  globeSearch(root, map, reducedMotion);
+  globeSearch(root, map, reducedMotion, (agency) => setFocus({ agency }));
 
   // Go to: fly to a place (or jump, with reduced motion). Zoom 0 means the starting view.
   const places = root.querySelector<HTMLSelectElement>('[data-places]');
