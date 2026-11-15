@@ -10,7 +10,7 @@
     "preview": "astro build && wrangler dev",
     "data": "node --max-old-space-size=6000 scripts/build-globe.ts",
     "astro": "astro",
-    "check": "node .agents/skills/page-check/check.mjs --js-budget 400 --pages /world-transit/,/world-transit/about/,/world-transit/agencies/,/world-transit/agencies/us/,/world-transit/agencies/fi/,/world-transit/agencies/jp/",
+    "check": "node .agents/skills/page-check/check.mjs --js-budget 400 --pages /world-transit/,/world-transit/about/,/world-transit/how-its-built/,/world-transit/agencies/,/world-transit/agencies/us/,/world-transit/agencies/fi/,/world-transit/agencies/jp/",
     "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {

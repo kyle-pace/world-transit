@@ -1,0 +1,407 @@
+---
+// How World transit is built: the technical version of the About page, for the curious.
+// Simple diagrams drawn as inline SVG in the page's own colors (currentColor and the theme
+// tokens), each with a title, a description and the same facts in the text around it.
+// Counts come from the same files the map uses.
+import LabLayout from 'kp-design/layouts/LabLayout.astro';
+import '../../styles/theme.css';
+
+type Summary = { updated: string; countries: string[]; feeds: number; agencies: number; routes: number; stops: number; duplicates?: number; osmOverlaps?: number };
+const summary = (Object.values(import.meta.glob<Summary>('../../../public/world-transit/world.json', { eager: true, import: 'default' }))[0] ?? null) as Summary | null;
+const live = (Object.values(import.meta.glob<{ feeds: unknown[] }>('../../lib/globe-live.json', { eager: true, import: 'default' }))[0] ?? { feeds: [] }) as { feeds: unknown[] };
+const n = (x: number | undefined) => (x ?? 0).toLocaleString('en-US');
+const repo = 'https://github.com/kyle-pace/world-transit/blob/main/';
+---
+
+<LabLayout
+  title="How World transit is built"
+  description="The technical version: how 675,000 transit routes become one globe of map tiles, how live vehicles reach the page, and the decisions and bugs along the way."
+  image="/world-transit/share-about.png"
+  imageAlt="About World transit: the title on a green sign beside a transit line with six stops, from Agencies publish their schedules to Your browser draws the map."
+  themeColor={{ light: '#eceee8', dark: '#121719' }}
+  about="/world-transit/about/"
+  lab={{ name: 'World transit', href: '/world-transit/' }}
+>
+  <article class="page">
+    <h1 class="plate title">How World transit is built</h1>
+    <p class="lede">
+      The <a href="/world-transit/about/">About page</a> says what the map does. This is how: the data pipeline, the live feeds, the
+      rules that keep a planet of routes readable, and what went wrong on the way. Written for the curious, with links into
+      <a href="https://github.com/kyle-pace/world-transit">the code</a>.
+    </p>
+
+    <section aria-labelledby="numbers-heading">
+      <h2 id="numbers-heading">The numbers</h2>
+      <dl class="numbers">
+        <div><dt>Routes</dt><dd>{n(summary?.routes)}</dd></div>
+        <div><dt>Stops</dt><dd>{n(summary?.stops)}</dd></div>
+        <div><dt>Agencies</dt><dd>{n(summary?.agencies)}</dd></div>
+        <div><dt>Countries</dt><dd>{summary?.countries.length ?? 0}</dd></div>
+        <div><dt>Sources</dt><dd>{n(summary?.feeds)}</dd></div>
+        <div><dt>Live feeds</dt><dd>{n(live.feeds.length)}</dd></div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="pipeline-heading">
+      <h2 id="pipeline-heading">From schedules to a globe</h2>
+      <figure tabindex="0" role="region" aria-label="Diagram: The build pipeline. On narrow screens it scrolls sideways.">
+        <svg class="diagram" viewBox="0 0 960 250" role="img" aria-labelledby="pipe-title pipe-desc">
+          <title id="pipe-title">The build pipeline</title>
+          <desc id="pipe-desc">
+            Three catalogs and OpenStreetMap feed a build script, which reads each schedule in its own process into a per-feed
+            cache. A merge step cleans and combines everything, tippecanoe packs it into one tiles file, which is stored in R2 and
+            served by a Cloudflare Worker to the browser.
+          </desc>
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" class="ink-fill"></path>
+            </marker>
+          </defs>
+          <g class="box"><rect x="10" y="20" width="150" height="46" rx="6"></rect><text x="85" y="49">3 catalogs</text></g>
+          <g class="box"><rect x="10" y="84" width="150" height="46" rx="6"></rect><text x="85" y="113">OpenStreetMap</text></g>
+          <g class="box accent"><rect x="210" y="40" width="170" height="70" rx="6"></rect><text x="295" y="70">Read each schedule</text><text x="295" y="92" class="small">one process per feed</text></g>
+          <g class="box"><rect x="430" y="40" width="150" height="70" rx="6"></rect><text x="505" y="70">Merge and clean</text><text x="505" y="92" class="small">dedupe, recolor, zooms</text></g>
+          <g class="box"><rect x="630" y="40" width="140" height="70" rx="6"></rect><text x="700" y="70">tippecanoe</text><text x="700" y="92" class="small">world.pmtiles</text></g>
+          <g class="box"><rect x="820" y="40" width="130" height="70" rx="6"></rect><text x="885" y="70">R2 storage</text><text x="885" y="92" class="small">1.8 GB, one file</text></g>
+          <path d="M160 43 C185 43 185 65 208 70" class="link" marker-end="url(#arrow)"></path>
+          <path d="M160 107 C185 107 185 85 208 80" class="link" marker-end="url(#arrow)"></path>
+          <path d="M380 75 L428 75" class="link" marker-end="url(#arrow)"></path>
+          <path d="M580 75 L628 75" class="link" marker-end="url(#arrow)"></path>
+          <path d="M770 75 L818 75" class="link" marker-end="url(#arrow)"></path>
+          <g class="box"><rect x="630" y="170" width="140" height="56" rx="6"></rect><text x="700" y="203">Worker</text></g>
+          <g class="box accent"><rect x="430" y="170" width="150" height="56" rx="6"></rect><text x="505" y="203">Your browser</text></g>
+          <path d="M885 110 C885 150 820 198 772 198" class="link" marker-end="url(#arrow)"></path>
+          <path d="M630 198 L582 198" class="link" marker-end="url(#arrow)"></path>
+          <text x="760" y="160" class="small">a few squares at a time</text>
+        </svg>
+      </figure>
+      <ol class="steps">
+        <li>
+          <strong>Find every open schedule.</strong> Schedules come as GTFS: a zip of CSV files (routes, trips, stops, shapes,
+          stop times). The <a href="https://mobilitydatabase.org">Mobility Database</a>, <a href="https://www.transit.land">Transitland Atlas</a>
+          and <a href="https://transitous.org">Transitous</a> list them; the build reads all three and skips any URL it has already seen.
+        </li>
+        <li>
+          <strong>Read each one in its own process.</strong> <a href={`${repo}scripts/build-globe.ts`}><code>build-globe.ts</code></a> runs
+          eight at a time, each in a child Node process. Germany's nationwide schedule has millions of trips and took almost four
+          hours; when a feed runs out of memory, only that feed fails, and it's retried alone at the end. Each result is cached, so a
+          rerun only fetches what's new or broken.
+        </li>
+        <li>
+          <strong>Fill the gaps from OpenStreetMap.</strong> China, Russia and much of Africa and Latin America publish no open
+          schedules. <a href={`${repo}scripts/build-osm.ts`}><code>build-osm.ts</code></a> filters Geofabrik extracts down to transit
+          route relations with osmium and joins each route's ways into one line. Where a schedule already covers a street, the
+          OpenStreetMap copy is dropped: {n(summary?.osmOverlaps)} were.
+        </li>
+        <li>
+          <strong>Merge and clean.</strong> {n(summary?.duplicates)} duplicate routes go (the same feed is often listed twice). Agencies
+          that paint every route one color get a color per route. Near-black and near-white lines are recolored, since they vanish on
+          one of the two basemaps.
+        </li>
+        <li>
+          <strong>Cut it into tiles.</strong> <a href="https://github.com/felt/tippecanoe">tippecanoe</a> packs everything into one
+          <a href="https://docs.protomaps.com/pmtiles/">PMTiles</a> file: every map square at every zoom, with an index at the front.
+          It's stored in Cloudflare R2, and the Worker answers the browser's range requests ("bytes 6,415,642 to 6,438,512, please"),
+          so the page only ever downloads the squares on screen.
+        </li>
+      </ol>
+    </section>
+
+    <section aria-labelledby="live-heading">
+      <h2 id="live-heading">Live vehicles, only where you're looking</h2>
+      <figure tabindex="0" role="region" aria-label="Diagram: How live vehicles reach the page. On narrow screens it scrolls sideways.">
+        <svg class="diagram" viewBox="0 0 960 200" role="img" aria-labelledby="live-title live-desc">
+          <title id="live-title">How live vehicles reach the page</title>
+          <desc id="live-desc">
+            Agencies publish live feeds. When someone looks at a region, the Worker reads only the feeds covering it, at most once
+            every 15 seconds, keeps one copy at the edge, and sends each visitor only the vehicles near their view.
+          </desc>
+          <g class="box"><rect x="10" y="20" width="160" height="40" rx="6"></rect><text x="90" y="45">Feed A</text></g>
+          <g class="box"><rect x="10" y="80" width="160" height="40" rx="6"></rect><text x="90" y="105">Feed B</text></g>
+          <g class="box muted"><rect x="10" y="140" width="160" height="40" rx="6"></rect><text x="90" y="165">Feed C (off screen)</text></g>
+          <g class="box accent"><rect x="290" y="45" width="230" height="70" rx="6"></rect><text x="405" y="75">Worker at the edge</text><text x="405" y="97" class="small">one read per feed per 15 s</text></g>
+          <g class="box"><rect x="640" y="20" width="150" height="40" rx="6"></rect><text x="715" y="45">You (Seattle)</text></g>
+          <g class="box"><rect x="640" y="80" width="150" height="40" rx="6"></rect><text x="715" y="105">Someone else</text></g>
+          <path d="M170 40 C230 40 230 70 288 72" class="link" marker-end="url(#arrow)"></path>
+          <path d="M170 100 C230 100 230 90 288 88" class="link" marker-end="url(#arrow)"></path>
+          <path d="M520 70 C580 70 580 40 638 40" class="link" marker-end="url(#arrow)"></path>
+          <path d="M520 90 C580 90 580 100 638 100" class="link" marker-end="url(#arrow)"></path>
+          <text x="815" y="45" class="small left">only your area</text>
+          <text x="815" y="105" class="small left">only their area</text>
+          <text x="190" y="165" class="small left">never read while nobody looks</text>
+        </svg>
+      </figure>
+      <p>
+        Live positions come as <strong>GTFS-realtime</strong>: protocol buffers, a compact binary format. A small hand-written reader,
+        <a href={`${repo}src/lib/gtfs-rt.ts`}><code>gtfs-rt.ts</code></a>, pulls out just the vehicle positions without a protobuf
+        library. The Washington map that came before read all of its 20 feeds on every request, which doesn't scale to
+        {' '}{n(live.feeds.length)}. So the page asks <code>/world-transit/api/&lt;feed&gt;.json?bbox=…</code> for at most 30 feeds
+        overlapping the screen, nearest first. The Worker reads each feed at most every 15 seconds, keeps one copy in Cloudflare's
+        cache, and trims it to the area each visitor asked for: a phone looking at London gets London's buses, not all 11,000 in
+        Britain.
+      </p>
+      <p>
+        Each live feed is paired with the schedule its vehicles' route ids match, so a dot can be named and colored like its line.
+        Some feeds send only trip ids, so those dots stay gray for now.
+      </p>
+    </section>
+
+    <section aria-labelledby="zoom-heading">
+      <h2 id="zoom-heading">Keeping a planet of routes readable</h2>
+      <figure tabindex="0" role="region" aria-label="Diagram: What shows at each zoom. On narrow screens it scrolls sideways.">
+        <svg class="diagram" viewBox="0 0 960 230" role="img" aria-labelledby="zoom-title zoom-desc">
+          <title id="zoom-title">What shows at each zoom</title>
+          <desc id="zoom-desc">
+            From orbit at zoom 0, only rail lines over 400 kilometers, one per corridor. From zoom 3, rail over 120 kilometers and
+            long ferries. From zoom 5, rail over 30 kilometers. From zoom 6, all rail and ferries. From zoom 7, buses and trams in
+            softened colors. From zoom 13, buses in full color and every stop.
+          </desc>
+          <line x1="40" y1="40" x2="920" y2="40" class="axis"></line>
+          {
+            [0, 3, 5, 6, 7, 13].map((z) => {
+              const x = 40 + (z / 14) * 880;
+              return (
+                <g>
+                  <line x1={x} y1="32" x2={x} y2="48" class="axis"></line>
+                  <text x={x} y="24" class="small">zoom {z}</text>
+                </g>
+              );
+            })
+          }
+          <rect x="40" y="62" width="880" height="22" class="band rail"></rect><text x="48" y="78" class="small left on-band">rail over 400 km, one per corridor</text>
+          <rect x="229" y="92" width="691" height="22" class="band rail"></rect><text x="237" y="108" class="small left on-band">rail over 120 km, long ferries</text>
+          <rect x="354" y="122" width="566" height="22" class="band rail"></rect><text x="362" y="138" class="small left on-band">rail over 30 km, then all rail</text>
+          <rect x="480" y="152" width="440" height="22" class="band bus"></rect><text x="488" y="168" class="small left">buses and trams, softened</text>
+          <rect x="857" y="182" width="63" height="22" class="band rail"></rect><text x="850" y="198" class="small right">full color, stops</text>
+        </svg>
+      </figure>
+      <ul class="notes-list">
+        <li>
+          <strong>First zoom by length.</strong> A line's first zoom comes from its mode and length (<code>minZoomFor</code>). Without
+          it, Europe's regional trains made a single world-view tile 2 MB.
+        </li>
+        <li>
+          <strong>One line per corridor from orbit.</strong> China Railway lists every train as its own route: 4,600 of them on the same
+          tracks filled the world tile. Below zoom 5, a line mostly on tracks already drawn waits. The world tile went from 1.4 MB to
+          about 90 KB.
+        </li>
+        <li>
+          <strong>Buses quieter, not gray.</strong> MapLibre can't desaturate, but it can do arithmetic on a color's channels, so each
+          bus line keeps its hue, blended toward the land until street level. Trains get an outline in the land color.
+        </li>
+        <li>
+          <strong>Continents before tiles.</strong> The basemap takes a moment to arrive, so a small world outline (1:110m, from
+          world-atlas) draws the continents first. The same file draws the little locator globe in the corner.
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="bugs-heading">
+      <h2 id="bugs-heading">Bugs worth learning from</h2>
+      <ul class="notes-list">
+        <li>
+          <strong>Seattle's buses vanished, but only in dark mode.</strong> Routes were inserted below the basemap's first label layer.
+          The dark style has a label layer early on, below its roads, so the road fills covered every bus and cut rail lines into dashes.
+          The fix places routes above the last road or area layer.
+        </li>
+        <li>
+          <strong>King County Metro was in the tiles but not on the map.</strong> With hundreds of input files, tippecanoe put some
+          features in a layer named after a file instead of <code>routes</code>. Merging everything into one file per layer fixed it.
+        </li>
+        <li>
+          <strong>Node's 512 MB string limit.</strong> China's OpenStreetMap file and the merged routes file were too big to read as one
+          string, so everything is read line by line.
+        </li>
+        <li>
+          <strong>Straight lines across London.</strong> Schedules without drawn paths connect stops directly, so an airport coach sliced
+          through a city. Lines drawn stop to stop are now broken where one hop is longer than a bus would go without stopping.
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="stack-heading">
+      <h2 id="stack-heading">The stack</h2>
+      <ul class="notes-list">
+        <li><strong>Site:</strong> Astro on a Cloudflare Worker, with kp-design's lab layout. Pages are static; the tiles and live feeds are Worker routes.</li>
+        <li><strong>Map:</strong> MapLibre GL in globe mode, basemap from OpenFreeMap, transit tiles from PMTiles.</li>
+        <li><strong>Data:</strong> Node scripts with no framework, osmium, tippecanoe; the tile file in Cloudflare R2.</li>
+        <li><strong>Tests:</strong> Node's own test runner against saved real feeds and broken ones, for every reader of outside data.</li>
+        <li><strong>How I work:</strong> the principles every project follows are in <a href="https://kylepace.dev/how-i-build/">how I build</a>.</li>
+      </ul>
+    </section>
+  </article>
+</LabLayout>
+
+<style>
+  .page {
+    padding: var(--space-4) var(--gutter) var(--space-12);
+    max-width: 64rem;
+  }
+
+  .title {
+    display: inline-block;
+    margin: 0 0 var(--space-4);
+    padding: 0.08em 0.35em 0.12em;
+    font-size: var(--step-2);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    border-radius: var(--radius-sm);
+  }
+
+  .lede {
+    max-width: 40rem;
+    font-size: var(--step-0);
+  }
+
+  section {
+    margin-top: var(--space-10, var(--space-12));
+  }
+
+  h2 {
+    margin: 0 0 var(--space-4);
+    padding-bottom: var(--space-2);
+    font-size: var(--step-1);
+    font-weight: 700;
+    border-bottom: 3px solid var(--ink);
+  }
+
+  a {
+    color: var(--accent-ink);
+    text-underline-offset: 0.15em;
+  }
+
+  p,
+  li {
+    max-width: 40rem;
+  }
+
+  p {
+    margin: 0 0 var(--space-3);
+  }
+
+  code {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.92em;
+  }
+
+  .numbers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: var(--space-4);
+    margin: 0;
+  }
+
+  .numbers div {
+    border-top: 3px solid var(--plate);
+    padding-top: var(--space-2);
+  }
+
+  .numbers dt {
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+  }
+
+  .numbers dd {
+    margin: 0;
+    font-size: var(--step-2);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Diagrams keep their size, so their labels stay readable; on a phone they scroll
+     sideways, and can be reached and scrolled with the keyboard. */
+  figure {
+    margin: 0 0 var(--space-6);
+    overflow-x: auto;
+  }
+
+  figure:focus-visible {
+    outline: 3px solid var(--accent-ink);
+    outline-offset: 2px;
+  }
+
+  /* Diagrams in the page's own colors, so they follow light and dark. */
+  .diagram {
+    display: block;
+    width: 100%;
+    min-width: 40rem;
+    height: auto;
+    font-family: inherit;
+  }
+
+  .diagram text {
+    fill: var(--ink);
+    font-size: 15px;
+    font-weight: 600;
+    text-anchor: middle;
+  }
+
+  .diagram text.small {
+    font-size: 12px;
+    font-weight: 400;
+    fill: var(--ink-muted);
+  }
+
+  .diagram text.left {
+    text-anchor: start;
+  }
+
+  .diagram text.right {
+    text-anchor: end;
+  }
+
+  .diagram .box rect {
+    fill: var(--bg-raised);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+
+  .diagram .box.accent rect {
+    stroke: var(--plate);
+    stroke-width: 3;
+  }
+
+  .diagram .box.muted rect {
+    stroke-dasharray: 5 4;
+    stroke: var(--ink-muted);
+  }
+
+  .diagram .link {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+
+  .diagram .ink-fill {
+    fill: var(--ink);
+  }
+
+  .diagram .axis {
+    stroke: var(--ink-muted);
+    stroke-width: 1.5;
+  }
+
+  .diagram .band.rail {
+    fill: var(--plate);
+  }
+
+  .diagram .band.bus {
+    fill: color-mix(in oklab, var(--plate), var(--bg) 70%);
+  }
+
+  .diagram text.on-band {
+    fill: #ffffff;
+    font-weight: 600;
+  }
+
+  .steps,
+  .notes-list {
+    padding-left: 1.25rem;
+  }
+
+  .steps li,
+  .notes-list li {
+    margin-bottom: var(--space-3);
+  }
+</style>
