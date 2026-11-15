@@ -1,4 +1,4 @@
-// The globe's tiles, /transit/globe/<country>.pmtiles, read from R2 (bucket
+// The globe's tiles, /transit/globe/world.pmtiles (one file for every country), read from R2 (bucket
 // kylepace-transit-tiles, binding TILES in wrangler.jsonc). The page's `pmtiles` library
 // asks for a few KB at a time with HTTP range requests, so this answers those with
 // 206 Partial Content. Served from this Worker, so the browser never talks to another host.
@@ -24,7 +24,7 @@ const tiles = () => (env as unknown as { TILES?: R2Like }).TILES;
 
 export const GET: APIRoute = async ({ params, request }) => {
   const country = String(params.country ?? '').toLowerCase();
-  if (!/^[a-z]{2}$/.test(country)) return new Response('Not found', { status: 404 });
+  if (!/^[a-z]{2,8}$/.test(country)) return new Response('Not found', { status: 404 });
   const bucket = tiles();
   if (!bucket) return new Response('Tiles not configured', { status: 503 });
 

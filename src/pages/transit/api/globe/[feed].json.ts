@@ -1,11 +1,11 @@
 // Live vehicles for one agency feed on the globe: /transit/api/globe/<feed id>.json
-// (src/lib/globe-live.ts). Only feeds in src/lib/globe-live-us.json (written by
+// (src/lib/globe-live.ts). Only feeds in src/lib/globe-live.json (written by
 // scripts/build-globe.ts) are fetched, so this can't be used to fetch anything else.
 // The answer is cached at the edge for 15 seconds, so each agency's feed is read at most
 // about four times a minute per Cloudflare location, and never when nobody's looking.
 import type { APIRoute } from 'astro';
 import { compactFeed, fetchLiveFeed } from '../../../../lib/globe-live';
-import list from '../../../../lib/globe-live-us.json';
+import list from '../../../../lib/globe-live.json';
 
 export const prerender = false;
 

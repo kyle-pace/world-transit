@@ -1,6 +1,58 @@
 {
- "updated": "2026-11-15T08:44:14.747Z",
+ "updated": "2026-11-15T09:11:00.287Z",
  "feeds": [
+  {
+   "id": "mdb-1378",
+   "name": "BC Transit (Campbell River Transit)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=12",
+   "static": "mdb-2514",
+   "bbox": [
+    -125.287,
+    49.87,
+    -125.127,
+    50.064
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-1379",
+   "name": "BC Transit (Cowichan Valley Regional Transit System)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=10",
+   "static": "mdb-2528",
+   "bbox": [
+    -124.219,
+    48.418,
+    -123.364,
+    48.999
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-1382",
+   "name": "Barrie Transit",
+   "url": "http://www.myridebarrie.ca/gtfs/GTFS_VehiclePositions.pb",
+   "static": "mdb-3",
+   "bbox": [
+    -79.737,
+    44.322,
+    -79.611,
+    44.42
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-1405",
+   "name": "Port Alberni",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=11",
+   "static": "mdb-761",
+   "bbox": [
+    -124.85,
+    49.218,
+    -124.782,
+    49.277
+   ],
+   "vehicles": 0
+  },
   {
    "id": "mdb-1414",
    "name": "Metro St. Louis",
@@ -11,6 +63,19 @@
     38.468,
     -89.874,
     38.809
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-1417",
+   "name": "Burlington Transit",
+   "url": "http://opendata.burlington.ca/gtfs-rt/GTFS_VehiclePositions.pb",
+   "static": "mdb-724",
+   "bbox": [
+    -79.893,
+    43.255,
+    -79.725,
+    43.412
    ],
    "vehicles": 0
   },
@@ -38,7 +103,7 @@
     -97.37,
     30.596
    ],
-   "vehicles": 152
+   "vehicles": 149
   },
   {
    "id": "mdb-1430",
@@ -52,6 +117,19 @@
     40.155
    ],
    "vehicles": 0
+  },
+  {
+   "id": "mdb-1433",
+   "name": "Kingston Transit",
+   "url": "https://api.cityofkingston.ca/gtfs-realtime/vehicleupdates.pb",
+   "static": "mdb-733",
+   "bbox": [
+    -76.667,
+    44.218,
+    -76.438,
+    44.279
+   ],
+   "vehicles": 8
   },
   {
    "id": "mdb-1436",
@@ -80,6 +158,19 @@
    "vehicles": 1
   },
   {
+   "id": "mdb-1458",
+   "name": "Hamilton Street Railway",
+   "url": "https://opendata.hamilton.ca/GTFS-RT/GTFS_VehiclePositions.pb",
+   "static": "mdb-2618",
+   "bbox": [
+    -80.134,
+    43.156,
+    -79.638,
+    43.337
+   ],
+   "vehicles": 3
+  },
+  {
    "id": "mdb-1461",
    "name": "Duluth Transit",
    "url": "https://duluthtransit.com/gtfsrt/Vehicle/VehiclePositions.pb",
@@ -103,7 +194,20 @@
     -84.258,
     39.357
    ],
-   "vehicles": 17
+   "vehicles": 24
+  },
+  {
+   "id": "mdb-1496",
+   "name": "Edmonton Transit System",
+   "url": "http://gtfs.edmonton.ca/TMGTFSRealTimeWebService/Vehicle/VehiclePositions.pb",
+   "static": "mdb-714",
+   "bbox": [
+    -113.935,
+    53.25,
+    -113.203,
+    53.715
+   ],
+   "vehicles": 12
   },
   {
    "id": "mdb-1537",
@@ -129,7 +233,7 @@
     -121.785,
     47.867
    ],
-   "vehicles": 85
+   "vehicles": 69
   },
   {
    "id": "mdb-1602",
@@ -142,7 +246,33 @@
     -70.257,
     42.799
    ],
-   "vehicles": 35
+   "vehicles": 33
+  },
+  {
+   "id": "mdb-1607",
+   "name": "Halifax Transit",
+   "url": "http://gtfs.halifax.ca/realtime/Vehicle/VehiclePositions.pb",
+   "static": "mdb-734",
+   "bbox": [
+    -63.86,
+    44.565,
+    -63.282,
+    44.888
+   ],
+   "vehicles": 3
+  },
+  {
+   "id": "mdb-1612",
+   "name": "MiWay",
+   "url": "https://www.miapp.ca/GTFS_RT/Vehicle/VehiclePositions.pb",
+   "static": "mdb-730",
+   "bbox": [
+    -79.792,
+    43.483,
+    -79.523,
+    43.736
+   ],
+   "vehicles": 3
   },
   {
    "id": "mdb-1619",
@@ -168,7 +298,7 @@
     -86.296,
     36.526
    ],
-   "vehicles": 12
+   "vehicles": 5
   },
   {
    "id": "mdb-1624",
@@ -181,7 +311,7 @@
     -71.954,
     41.1
    ],
-   "vehicles": 9
+   "vehicles": 12
   },
   {
    "id": "mdb-1630",
@@ -324,7 +454,7 @@
     -116.876,
     34.103
    ],
-   "vehicles": 45
+   "vehicles": 53
   },
   {
    "id": "mdb-1678",
@@ -337,7 +467,7 @@
     -104.669,
     40.207
    ],
-   "vehicles": 67
+   "vehicles": 59
   },
   {
    "id": "mdb-1683",
@@ -353,6 +483,19 @@
    "vehicles": 0
   },
   {
+   "id": "mdb-1690",
+   "name": "Thunder Bay Transit",
+   "url": "http://api.nextlift.ca/gtfs-realtime/vehicleupdates.pb",
+   "static": "mdb-736",
+   "bbox": [
+    -89.389,
+    48.339,
+    -89.182,
+    48.479
+   ],
+   "vehicles": 4
+  },
+  {
    "id": "mdb-1711",
    "name": "Port Authority of Allegheny County",
    "url": "http://truetime.portauthority.org/gtfsrt-train/vehicles",
@@ -363,7 +506,7 @@
     -79.704,
     40.668
    ],
-   "vehicles": 22
+   "vehicles": 20
   },
   {
    "id": "mdb-1714",
@@ -376,7 +519,7 @@
     -79.704,
     40.668
    ],
-   "vehicles": 70
+   "vehicles": 67
   },
   {
    "id": "mdb-1722",
@@ -389,7 +532,20 @@
     -111.661,
     33.714
    ],
-   "vehicles": 100
+   "vehicles": 84
+  },
+  {
+   "id": "mdb-1750",
+   "name": "York Region Transit",
+   "url": "http://rtu.york.ca/gtfsrealtime/VehiclePositions",
+   "static": "mdb-728",
+   "bbox": [
+    -79.66,
+    43.729,
+    -79.212,
+    44.321
+   ],
+   "vehicles": 0
   },
   {
    "id": "mdb-1766",
@@ -402,7 +558,7 @@
     -81.205,
     28.742
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "mdb-1771",
@@ -454,7 +610,7 @@
     -77.049,
     38.927
    ],
-   "vehicles": 4
+   "vehicles": 3
   },
   {
    "id": "mdb-1794",
@@ -480,7 +636,7 @@
     -121.732,
     37.338
    ],
-   "vehicles": 19
+   "vehicles": 17
   },
   {
    "id": "mdb-1980",
@@ -587,6 +743,19 @@
    "vehicles": 0
   },
   {
+   "id": "mdb-2380",
+   "name": "Société de transport collectif de Pierre-De Saurel",
+   "url": "https://zenbus.net/gtfs/rt/poll.proto?dataset=pierre-de-saurel",
+   "static": "mdb-2379",
+   "bbox": [
+    -73.524,
+    45.521,
+    -73.091,
+    46.047
+   ],
+   "vehicles": 0
+  },
+  {
    "id": "mdb-2398",
    "name": "Via Mobility",
    "url": "https://passio3.com/viaboulder/passioTransit/gtfs/realtime/vehiclePositions",
@@ -610,7 +779,7 @@
     -71.401,
     42.022
    ],
-   "vehicles": 1
+   "vehicles": 3
   },
   {
    "id": "mdb-2428",
@@ -635,6 +804,409 @@
     43.564,
     -116.118,
     43.68
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2465",
+   "name": "BC Transit (Smithers)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=31",
+   "static": "mdb-2472",
+   "bbox": [
+    -127.342,
+    54.682,
+    -127.047,
+    55.031
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2476",
+   "name": "BC Transit (Nanaimo)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=41",
+   "static": "mdb-2473",
+   "bbox": [
+    -124.726,
+    48.774,
+    -123.702,
+    49.464
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2477",
+   "name": "BC Transit (Hazelton | Kitimat | Terrace)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=26",
+   "static": "mdb-2462",
+   "bbox": [
+    -128.718,
+    53.966,
+    -127.165,
+    55.353
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2482",
+   "name": "BC Transit (Quesnel)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=32",
+   "static": "mdb-2463",
+   "bbox": [
+    -123.584,
+    52.912,
+    -121.51,
+    53.107
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2485",
+   "name": "BC Transit (Revelstoke)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=36",
+   "static": "mdb-2464",
+   "bbox": [
+    -118.232,
+    50.954,
+    -118.157,
+    51.021
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2488",
+   "name": "BC Transit (Salt Spring Island)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=39",
+   "static": "mdb-2466",
+   "bbox": [
+    -123.572,
+    48.769,
+    -123.445,
+    48.915
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2491",
+   "name": "BC Transit (Mount Waddington)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=17",
+   "static": "mdb-2467",
+   "bbox": [
+    -127.588,
+    50.569,
+    -127.01,
+    50.731
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2497",
+   "name": "BC Transit (100 Mile House)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=34",
+   "static": "mdb-2469",
+   "bbox": [
+    -121.379,
+    51.629,
+    -121.287,
+    51.751
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2500",
+   "name": "BC Transit (Pemberton Valley)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=50",
+   "static": "mdb-2470",
+   "bbox": [
+    -122.962,
+    50.113,
+    -122.64,
+    50.333
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2503",
+   "name": "BC Transit (Merritt)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=37",
+   "static": "mdb-2471",
+   "bbox": [
+    -120.883,
+    50.102,
+    -120.749,
+    50.177
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2513",
+   "name": "BC Transit (Bulkley-Nechako | Prince George)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=22",
+   "static": "mdb-2510",
+   "bbox": [
+    -127.168,
+    53.808,
+    -122.738,
+    54.786
+   ],
+   "vehicles": 1
+  },
+  {
+   "id": "mdb-2517",
+   "name": "BC Transit (Central Fraser Valley| Chilliwack| Agassiz-Harrison | Hope)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=13",
+   "static": "mdb-1991",
+   "bbox": [
+    -122.901,
+    49.004,
+    -121.418,
+    49.394
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2518",
+   "name": "BC Transit (Clearwater)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=35",
+   "static": "mdb-2515",
+   "bbox": [
+    -120.374,
+    50.653,
+    -119.725,
+    51.685
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2523",
+   "name": "BC Transit (Columbia Valley | Cranbrook | Elk Valley | Kimberley)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=21",
+   "static": "mdb-2520",
+   "bbox": [
+    -116.135,
+    49.489,
+    -114.87,
+    50.699
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2527",
+   "name": "BC Transit (Comox Valley Transit System)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=45",
+   "static": "mdb-2524",
+   "bbox": [
+    -125.148,
+    49.447,
+    -124.711,
+    49.876
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2535",
+   "name": "BC Transit (Shuswap | Vernon)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=14",
+   "static": "mdb-2508",
+   "bbox": [
+    -119.493,
+    49.936,
+    -118.962,
+    50.933
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2539",
+   "name": "BC Transit (Creston Valley)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=16",
+   "static": "mdb-2536",
+   "bbox": [
+    -116.555,
+    49.088,
+    -116.466,
+    49.182
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2542",
+   "name": "BC Transit (Dawson Creek)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=27",
+   "static": "mdb-710",
+   "bbox": [
+    -120.255,
+    55.738,
+    -120.209,
+    55.776
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2546",
+   "name": "BC Transit (Port Edward | Prince Rupert)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=23",
+   "static": "mdb-2543",
+   "bbox": [
+    -130.353,
+    54.217,
+    -130.258,
+    54.331
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2550",
+   "name": "BC Transit (Fort St. John)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=28",
+   "static": "mdb-2547",
+   "bbox": [
+    -120.874,
+    56.229,
+    -120.803,
+    56.267
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2554",
+   "name": "BC Transit (Kamloops Transit System)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=46",
+   "static": "mdb-2551",
+   "bbox": [
+    -120.423,
+    50.634,
+    -120.067,
+    50.862
+   ],
+   "vehicles": 1
+  },
+  {
+   "id": "mdb-2558",
+   "name": "BC Transit (Kelowna Regional Transit System)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=47",
+   "static": "mdb-2555",
+   "bbox": [
+    -119.79,
+    49.752,
+    -119.347,
+    50.074
+   ],
+   "vehicles": 3
+  },
+  {
+   "id": "mdb-2559",
+   "name": "BC Transit (Powell River)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=29",
+   "static": "mdb-2529",
+   "bbox": [
+    -124.762,
+    49.654,
+    -124.178,
+    49.982
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2562",
+   "name": "BC Transit (South Okanagan-Similkameen)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=15",
+   "static": "mdb-2532",
+   "bbox": [
+    -120.508,
+    49.016,
+    -119.441,
+    49.887
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2566",
+   "name": "BC Transit (Squamish)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=43",
+   "static": "mdb-2563",
+   "bbox": [
+    -123.158,
+    49.695,
+    -123.099,
+    49.775
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2570",
+   "name": "BC Transit (Sunshine Coast Transit System)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=18",
+   "static": "mdb-2567",
+   "bbox": [
+    -123.912,
+    49.392,
+    -123.475,
+    49.514
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2574",
+   "name": "BC Transit (Victoria Regional Transit System)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=48",
+   "static": "mdb-2571",
+   "bbox": [
+    -123.796,
+    48.336,
+    -123.285,
+    48.698
+   ],
+   "vehicles": 17
+  },
+  {
+   "id": "mdb-2578",
+   "name": "BC Transit (West Coast)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=51",
+   "static": "mdb-2575",
+   "bbox": [
+    -125.909,
+    48.938,
+    -125.525,
+    49.154
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2582",
+   "name": "BC Transit (West Kootenay Transit System)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=20",
+   "static": "mdb-2579",
+   "bbox": [
+    -118.145,
+    49.071,
+    -116.896,
+    50.297
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2586",
+   "name": "BC Transit (Whistler)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=44",
+   "static": "mdb-2583",
+   "bbox": [
+    -123.045,
+    50.077,
+    -122.927,
+    50.159
+   ],
+   "vehicles": 4
+  },
+  {
+   "id": "mdb-2590",
+   "name": "BC Transit (Williams Lake)",
+   "url": "https://bct.tmix.se/gtfs-realtime/vehicleupdates.pb?operatorIds=33",
+   "static": "mdb-2587",
+   "bbox": [
+    -122.167,
+    52.107,
+    -121.99,
+    52.151
    ],
    "vehicles": 0
   },
@@ -675,7 +1247,7 @@
     -85.542,
     38.347
    ],
-   "vehicles": 0
+   "vehicles": 2
   },
   {
    "id": "mdb-2707",
@@ -727,7 +1299,7 @@
     -88.158,
     40.153
    ],
-   "vehicles": 13
+   "vehicles": 12
   },
   {
    "id": "mdb-2897",
@@ -753,7 +1325,7 @@
     -74.754,
     40.306
    ],
-   "vehicles": 0
+   "vehicles": 2
   },
   {
    "id": "mdb-3063",
@@ -766,7 +1338,7 @@
     -74.752,
     40.335
    ],
-   "vehicles": 491
+   "vehicles": 472
   },
   {
    "id": "mdb-3070",
@@ -778,6 +1350,19 @@
     39.274,
     -77.311,
     39.706
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-3074",
+   "name": "Everett Transit",
+   "url": "https://everett.mapstrat.com/current/gtfrealtime_VehiclePositions.bin",
+   "static": "mdb-3038",
+   "bbox": [
+    -122.306,
+    47.879,
+    -122.184,
+    48.013
    ],
    "vehicles": 0
   },
@@ -818,7 +1403,7 @@
     -81.438,
     41.638
    ],
-   "vehicles": 148
+   "vehicles": 164
   },
   {
    "id": "mdb-3431",
@@ -857,7 +1442,7 @@
     -75.086,
     38.456
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "mdb-3458",
@@ -922,7 +1507,7 @@
     -98.307,
     29.651
    ],
-   "vehicles": 401
+   "vehicles": 397
   },
   {
    "id": "tld-1127-vp",
@@ -948,7 +1533,7 @@
     -120.749,
     37.962
    ],
-   "vehicles": 1
+   "vehicles": 0
   },
   {
    "id": "tld-1261-vp",
@@ -1078,7 +1663,7 @@
     -122.135,
     49
    ],
-   "vehicles": 5
+   "vehicles": 2
   },
   {
    "id": "tld-4360-vp",
@@ -1091,7 +1676,7 @@
     -119.48,
     34.455
    ],
-   "vehicles": 1
+   "vehicles": 0
   },
   {
    "id": "tld-4363-vp",
@@ -1104,7 +1689,7 @@
     -117.076,
     47.769
    ],
-   "vehicles": 2
+   "vehicles": 0
   },
   {
    "id": "tld-4374-vp",
@@ -1354,6 +1939,32 @@
    "vehicles": 0
   },
   {
+   "id": "tld-4691-vp",
+   "name": "Regional Municipality of Wood Buffalo Transit",
+   "url": "https://rmwb-gtfsrt.civilia.ca/pb/vehiclePositions.pb",
+   "static": "tld-4690",
+   "bbox": [
+    -111.485,
+    56.654,
+    -111.326,
+    56.789
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tld-4753-vp",
+   "name": "Société de Transport de Sherbrooke, Service opéré par Taxis de Sherbrooke",
+   "url": "https://gtfs.sts.qc.ca:8443/gtfsrt/vehiclePositions.pb",
+   "static": "mdb-1996",
+   "bbox": [
+    -72.08,
+    45.31,
+    -71.815,
+    45.482
+   ],
+   "vehicles": 0
+  },
+  {
    "id": "tld-4758-sa_tu_vp",
    "name": "Alexandria Transit Company",
    "url": "https://realtime.prod.dash.obaweb.org/agency/71/tripUpdates",
@@ -1442,7 +2053,7 @@
     -113.865,
     46.925
    ],
-   "vehicles": 7
+   "vehicles": 8
   },
   {
    "id": "tld-4832-vp",
@@ -1640,6 +2251,45 @@
    "vehicles": 5
   },
   {
+   "id": "tld-5619-vp",
+   "name": "Bus Mont-Tremblant",
+   "url": "https://zenbus.net/gtfs/rt/poll.proto?file=vp&dataset=tcmt6w8qbuxm",
+   "static": "tld-4761",
+   "bbox": [
+    -74.632,
+    46.108,
+    -74.563,
+    46.21
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tld-5631-vp",
+   "name": "Saint Jean Sur Richelieu",
+   "url": "https://zenbus.net/gtfs/rt/poll.proto?file=vp&dataset=saint-jean-sur-richelieu",
+   "static": "tld-5630",
+   "bbox": [
+    -73.469,
+    45.275,
+    -73.23,
+    45.466
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tld-5723-vp",
+   "name": "L'Inter des Laurentides",
+   "url": "https://zenbus.net/gtfs/rt/poll.proto?file=vp&dataset=linter",
+   "static": "tld-5722",
+   "bbox": [
+    -74.582,
+    45.773,
+    -73.997,
+    46.125
+   ],
+   "vehicles": 0
+  },
+  {
    "id": "tld-5839-vp",
    "name": "Berks Area Regional Transportation Authority",
    "url": "https://busfinder.bartabus.com/Infopoint/gtfs-realtime.ashx?type=vehicleposition",
@@ -1675,6 +2325,19 @@
     31.417,
     -100.38,
     31.509
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tld-5870-vp",
+   "name": "MRC de Montcalm",
+   "url": "https://zenbus.net/gtfs/rt/poll.proto?file=vp&dataset=mrc-montcalm",
+   "static": "tld-5869",
+   "bbox": [
+    -74.018,
+    45.722,
+    -73.676,
+    45.888
    ],
    "vehicles": 0
   },
@@ -1767,7 +2430,7 @@
     -78.416,
     35.917
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "tld-6714-vp",

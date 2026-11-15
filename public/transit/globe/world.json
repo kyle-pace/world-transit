@@ -1,0 +1,24 @@
+{
+ "updated": "2026-11-15T09:10:40.438Z",
+ "countries": [
+  "BM",
+  "CA",
+  "CR",
+  "GL",
+  "MX",
+  "US"
+ ],
+ "feeds": 961,
+ "failed": 72,
+ "routes": 17624,
+ "stops": 681097,
+ "duplicates": 1120,
+ "agencies": 966,
+ "modes": {
+  "bus": 16965,
+  "rail": 279,
+  "tram": 153,
+  "ferry": 179,
+  "other": 48
+ }
+}

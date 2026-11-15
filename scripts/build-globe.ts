@@ -24,7 +24,7 @@
                        key globe/<country>.pmtiles), which the Worker serves at
                        /transit/globe/<country>.pmtiles. Needs `wrangler login`.
 */
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { createWriteStream, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -39,7 +39,10 @@ const arg = (name: string, fallback?: string) => {
   const i = process.argv.indexOf(`--${name}`);
   return i > 0 ? process.argv[i + 1] : fallback;
 };
-const COUNTRY = (arg('country', 'US') as string).toUpperCase();
+// Which countries to download this run. Tiles, counts and the live list always cover
+// every feed cached so far, so countries add up run after run into one world file.
+const COUNTRIES = new Set((arg('countries') ?? arg('country') ?? 'US').toUpperCase().split(',').map((c) => c.trim()).filter(Boolean));
+const WORLD = 'world';
 const LIMIT = Number(arg('limit', '0'));
 const CONCURRENCY = Number(arg('concurrency', '6'));
 const TILES_ONLY = process.argv.includes('--tiles-only');
@@ -65,6 +68,7 @@ interface Feed {
   provider: string;
   name: string;
   state: string;
+  country: string;
   urls: string[];
 }
 
@@ -117,7 +121,7 @@ async function loadFeeds(): Promise<{ feeds: Feed[]; keyed: number }> {
   let keyed = 0;
   const feeds: Feed[] = [];
   for (const r of rows) {
-    if (get(r, 'data_type') !== 'gtfs' || get(r, 'location.country_code') !== COUNTRY) continue;
+    if (get(r, 'data_type') !== 'gtfs' || !COUNTRIES.has(get(r, 'location.country_code'))) continue;
     if (get(r, 'status') !== 'active' || get(r, 'redirect.id')) continue;
     // Feeds that need an API key are left out for now; the catalog's own copy (urls.latest)
     // usually still works for them, but their terms need reading first.
@@ -127,7 +131,7 @@ async function loadFeeds(): Promise<{ feeds: Feed[]; keyed: number }> {
     }
     const urls = [get(r, 'urls.latest'), get(r, 'urls.direct_download')].filter((u) => /^https?:\/\//.test(u));
     if (!urls.length) continue;
-    feeds.push({ id: get(r, 'id'), provider: get(r, 'provider'), name: get(r, 'name'), state: get(r, 'location.subdivision_name'), urls });
+    feeds.push({ id: get(r, 'id'), provider: get(r, 'provider'), name: get(r, 'name'), state: get(r, 'location.subdivision_name'), country: get(r, 'location.country_code'), urls });
   }
   return { feeds: LIMIT ? feeds.slice(0, LIMIT) : feeds, keyed };
 }
@@ -139,6 +143,8 @@ interface FeedResult {
   ok: boolean;
   provider: string;
   state: string;
+  country?: string;
+  crashed?: boolean;
   error?: string;
   source?: string;
   routes?: number;
@@ -149,7 +155,7 @@ interface FeedResult {
 
 async function buildFeed(feed: Feed, color: string): Promise<FeedResult> {
   const started = Date.now();
-  const base = { id: feed.id, provider: feed.provider, state: feed.state };
+  const base = { id: feed.id, provider: feed.provider, state: feed.state, country: feed.country };
   const work = join(TMP, 'work', feed.id);
   rmSync(work, { recursive: true, force: true });
   mkdirSync(work, { recursive: true });
@@ -208,6 +214,33 @@ async function buildFeed(feed: Feed, color: string): Promise<FeedResult> {
   } finally {
     rmSync(work, { recursive: true, force: true });
   }
+}
+
+/**
+ * Run one feed in its own Node process. Some feeds cover a whole country (Germany's has
+ * millions of trips); if one runs out of memory, only that feed fails, the run goes on,
+ * and the feed is tried again alone at the end with more room.
+ */
+function buildFeedIsolated(feed: Feed, color: string, heapMb = 3000): Promise<FeedResult> {
+  return new Promise((done) => {
+    const started = Date.now();
+    const child = spawn(process.execPath, [`--max-old-space-size=${heapMb}`, fileURLToPath(import.meta.url), '--one', JSON.stringify({ feed, color })], {
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    let out = '';
+    let err = '';
+    child.stdout.on('data', (d) => (out += d));
+    child.stderr.on('data', (d) => (err += d));
+    child.on('close', (code) => {
+      const last = out.trim().split('\n').pop() ?? '';
+      try {
+        done(JSON.parse(last));
+      } catch {
+        const oom = /heap out of memory|Allocation failed/i.test(err);
+        done({ id: feed.id, provider: feed.provider, state: feed.state, country: feed.country, ok: false, crashed: true, error: oom ? 'ran out of memory' : `crashed (exit ${code}): ${err.trim().split('\n').pop()?.slice(0, 160)}`, ms: Date.now() - started });
+      }
+    });
+  });
 }
 
 // ---------- Tiles ----------
@@ -309,7 +342,7 @@ async function buildTiles(): Promise<{ out: string; counts: Counts }> {
   // Sorted, so the same feeds always win a duplicate and colors stay put between builds.
   const counts = await mergeFeeds(cached.sort().map((f) => join(CACHE, f)), routesFile, stopsFile);
   mkdirSync(TILES_DIR, { recursive: true });
-  const out = join(TILES_DIR, `${COUNTRY.toLowerCase()}.pmtiles`);
+  const out = join(TILES_DIR, `${WORLD}.pmtiles`);
   const tmpOut = `${out}.tmp.pmtiles`;
   const t = spawnSync(
     'tippecanoe',
@@ -342,13 +375,13 @@ function writeSummary(reportFile: string, counts: Counts) {
   const report: Record<string, FeedResult> = existsSync(reportFile) ? JSON.parse(readFileSync(reportFile, 'utf8')) : {};
   const summary = {
     updated: new Date().toISOString(),
-    country: COUNTRY,
+    countries: [...new Set(Object.values(report).filter((r) => r.ok).map((r) => r.country ?? 'US'))].sort(),
     feeds: Object.values(report).filter((r) => r.ok).length,
     failed: Object.values(report).filter((r) => !r.ok).length,
     ...counts,
   };
   mkdirSync(OUT_DIR, { recursive: true });
-  writeFileSync(join(OUT_DIR, `${COUNTRY.toLowerCase()}.json`), JSON.stringify(summary, null, 1) + '\n');
+  writeFileSync(join(OUT_DIR, `${WORLD}.json`), JSON.stringify(summary, null, 1) + '\n');
   console.log(`Summary: ${summary.feeds} feeds, ${summary.agencies} agencies, ${counts.routes} routes (${counts.duplicates} duplicates dropped), ${counts.stops} stops.`);
 }
 
@@ -374,7 +407,7 @@ const routeKey = (p: { agency: string; short: string; long: string; mode: string
  * globe and answers right now, plus a route lookup for each (route id -> name, color),
  * so the page can say what a vehicle is and color it like its line.
  *
- * Writes src/lib/globe-live-us.json (the Worker reads feed URLs from it, the page reads
+ * Writes src/lib/globe-live.json (the Worker reads feed URLs from it, the page reads
  * ids and areas) and public/transit/globe/routes/<schedule>.json. If no feed answers at
  * all (the network is down), nothing is written and the last list stays.
  */
@@ -389,7 +422,7 @@ async function buildLiveList() {
   let keyed = 0;
   let noSchedule = 0;
   for (const r of rows) {
-    if (get(r, 'data_type') !== 'gtfs_rt' || get(r, 'location.country_code') !== COUNTRY) continue;
+    if (get(r, 'data_type') !== 'gtfs_rt') continue;
     if (!get(r, 'entity_type').split('|').includes('vp')) continue;
     if (['deprecated', 'inactive'].includes(get(r, 'status')) || get(r, 'redirect.id')) continue;
     if (!['0', ''].includes(get(r, 'urls.authentication_type'))) {
@@ -406,7 +439,7 @@ async function buildLiveList() {
     seenUrls.add(url);
     candidates.push({ id: get(r, 'id'), name: get(r, 'provider') || get(r, 'name'), url, static: schedule });
   }
-  console.log(`\nLive: ${candidates.length} open vehicle feeds with a schedule on the globe (${keyed} need a key, ${noSchedule} have no schedule here). Checking each…`);
+  console.log(`\nLive: ${candidates.length} open vehicle feeds with a schedule on the globe (${keyed} need a key, ${noSchedule} have no schedule on the globe). Checking each…`);
 
   // Final line colors, after duplicates and recoloring (the merged file tippecanoe read).
   const finalColor = new Map<string, string>();
@@ -463,7 +496,7 @@ async function buildLiveList() {
     writeFileSync(join(routesDir, `${schedule}.json`), JSON.stringify(lookup));
   }
   writeFileSync(
-    join(root, `src/lib/globe-live-${COUNTRY.toLowerCase()}.json`),
+    join(root, 'src/lib/globe-live.json'),
     JSON.stringify({ updated: new Date().toISOString(), feeds }, null, 1) + '\n',
   );
   const moving = feeds.reduce((sum, f) => sum + f.vehicles, 0);
@@ -475,7 +508,13 @@ async function buildLiveList() {
 
 async function main() {
   mkdirSync(CACHE, { recursive: true });
-  const reportFile = join(TMP, `report-${COUNTRY.toLowerCase()}.json`);
+  // Child mode (buildFeedIsolated): build one feed and print its result as the last line.
+  if (process.argv.includes('--one')) {
+    const { feed, color } = JSON.parse(arg('one')!);
+    console.log(JSON.stringify(await buildFeed(feed, color)));
+    return;
+  }
+  const reportFile = join(TMP, 'report.json');
   const previous: Record<string, FeedResult> = existsSync(reportFile) ? JSON.parse(readFileSync(reportFile, 'utf8')) : {};
 
   if (LIVE_ONLY) return buildLiveList();
@@ -483,7 +522,7 @@ async function main() {
   if (!TILES_ONLY) {
     const { feeds, keyed } = await loadFeeds();
     const todo = feeds.filter((f) => !existsSync(join(CACHE, `${f.id}.ndjson`)));
-    console.log(`${COUNTRY}: ${feeds.length} open feeds (${keyed} need a key, skipped); ${feeds.length - todo.length} cached, ${todo.length} to fetch.`);
+    console.log(`${[...COUNTRIES].join(', ')}: ${feeds.length} open feeds (${keyed} need a key, skipped); ${feeds.length - todo.length} cached, ${todo.length} to fetch.`);
     const report: Record<string, FeedResult> = { ...previous };
     let next = 0;
     let done = 0;
@@ -491,7 +530,7 @@ async function main() {
       while (next < todo.length) {
         const i = next++;
         const feed = todo[i];
-        const r = await buildFeed(feed, PALETTE[Number(feed.id.replace(/\D/g, '')) % PALETTE.length]);
+        const r = await buildFeedIsolated(feed, PALETTE[Number(feed.id.replace(/\D/g, '')) % PALETTE.length]);
         report[feed.id] = r;
         done++;
         console.log(`[${done}/${todo.length}] ${r.ok ? 'ok  ' : 'FAIL'} ${feed.id} ${feed.provider}${r.ok ? ` (${r.lines} lines, ${r.stops} stops, ${Math.round(r.ms! / 1000)}s)` : `: ${r.error}`}`);
@@ -500,6 +539,14 @@ async function main() {
       }
     };
     await Promise.all(Array.from({ length: CONCURRENCY }, worker));
+    // Feeds that crashed (usually out of memory with others running): once more, alone,
+    // with most of the machine's memory.
+    for (const feed of todo.filter((f) => report[f.id]?.crashed)) {
+      console.log(`Retrying ${feed.id} ${feed.provider} alone…`);
+      const r = await buildFeedIsolated(feed, PALETTE[Number(feed.id.replace(/\D/g, '')) % PALETTE.length], 6000);
+      report[feed.id] = r;
+      console.log(`  ${r.ok ? 'ok' : 'FAIL'}${r.ok ? ` (${r.lines} lines, ${r.stops} stops)` : `: ${r.error}`}`);
+    }
     writeFileSync(reportFile, JSON.stringify(report, null, 1));
     const results = Object.values(report);
     console.log(`\n${results.filter((r) => r.ok).length} feeds ok, ${results.filter((r) => !r.ok).length} failed. Report: ${reportFile}`);
@@ -515,7 +562,7 @@ async function main() {
     console.log(`::warning title=Live feeds not updated::${(err as Error).message}`);
   }
   if (UPLOAD) {
-    const key = `${BUCKET}/globe/${COUNTRY.toLowerCase()}.pmtiles`;
+    const key = `${BUCKET}/globe/${WORLD}.pmtiles`;
     const up = spawnSync('npx', ['wrangler', 'r2', 'object', 'put', key, '--file', out, '--content-type', 'application/octet-stream', '--remote'], { stdio: 'inherit', cwd: root });
     if (up.status !== 0) throw new Error('upload to R2 failed');
     console.log(`Uploaded to R2: ${key}`);

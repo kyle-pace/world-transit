@@ -200,16 +200,14 @@ export function startGlobe(root: HTMLElement) {
     map.on('mouseleave', id, () => (map.getCanvas().style.cursor = ''));
   }
 
-  // Jump buttons: fly to a region (or jump, with reduced motion).
-  root.querySelectorAll<HTMLButtonElement>('[data-fly]').forEach((b) =>
-    b.addEventListener('click', () => {
-      const [lon, lat, z] = b.dataset.fly!.split(',').map(Number);
-      // "The whole country" (zoom 0 in the list) goes back to the starting view for this screen.
-      const target = { center: [lon, lat] as [number, number], zoom: z || homeZoom(), pitch: 0, bearing: 0 };
-      if (reducedMotion()) map.jumpTo(target);
-      else map.flyTo({ ...target, duration: 2500, essential: false });
-    }),
-  );
+  // Go to: fly to a place (or jump, with reduced motion). Zoom 0 means the starting view.
+  const places = root.querySelector<HTMLSelectElement>('[data-places]');
+  places?.addEventListener('change', () => {
+    const [lon, lat, z] = places.value.split(',').map(Number);
+    const target = { center: [lon, lat] as [number, number], zoom: z || homeZoom(), pitch: 0, bearing: 0 };
+    if (reducedMotion()) map.jumpTo(target);
+    else map.flyTo({ ...target, duration: 2500, essential: false });
+  });
 
   map.on('error', (e) => {
     if (status && /pmtiles|transit/i.test(String(e.error?.message))) status.textContent = 'The routes didn’t load. Try reloading the page.';

@@ -1,22 +1,22 @@
 ---
-// The transit globe (/transit/globe/), a prototype: every route and stop in the US's open
-// schedules on a globe. Logic: src/components/transit-globe.ts. Data:
-// public/transit/globe/us.pmtiles and us.json, built by scripts/build-globe.ts.
+// The transit globe (/transit/globe/), a prototype: every route and stop in the world's open
+// schedules on a globe, with live vehicles. Logic: src/components/transit-globe.ts. Data:
+// world.pmtiles (R2) and public/transit/globe/world.json, built by scripts/build-globe.ts.
 // Same look as the live map (design/PLAN.md): the map fills the window with one sign on it.
 import LabLayout from 'kp-design/layouts/LabLayout.astro';
 import '../../styles/theme.css';
 import { ICONS, type IconMode } from '../../components/transit-icons';
 
 // Optional at build time: the summary only exists once scripts/build-globe.ts has run.
-type Summary = { updated: string; feeds: number; agencies: number; routes: number; stops: number };
-const found = import.meta.glob<Summary>('../../../public/transit/globe/us.json', { eager: true, import: 'default' });
+type Summary = { updated: string; countries: string[]; feeds: number; agencies: number; routes: number; stops: number };
+const found = import.meta.glob<Summary>('../../../public/transit/globe/world.json', { eager: true, import: 'default' });
 const summary: Summary | null = Object.values(found)[0] ?? null;
 const n = (x: number) => x.toLocaleString('en-US');
 
 // Live vehicle feeds (scripts/build-globe.ts): just what the page needs, the URLs stay
 // with the Worker (src/pages/transit/api/globe/[feed].json.ts).
 type LiveList = { feeds: { id: string; name: string; static: string; bbox: number[] }[] };
-const liveFound = import.meta.glob<LiveList>('../../lib/globe-live-us.json', { eager: true, import: 'default' });
+const liveFound = import.meta.glob<LiveList>('../../lib/globe-live.json', { eager: true, import: 'default' });
 const liveList: LiveList = Object.values(liveFound)[0] ?? { feeds: [] };
 const liveRows = JSON.stringify(liveList.feeds.map((f) => [f.id, f.name, f.static, f.bbox]));
 
@@ -26,22 +26,55 @@ const modes: { value: IconMode; label: string; bold: boolean }[] = [
   { value: 'ferry', label: 'Ferries', bold: true },
   { value: 'bus', label: 'Buses', bold: false },
 ];
-// [label, lon, lat, zoom]
-const places: [string, number, number, number][] = [
-  ['The whole country', -98, 39, 0],
-  ['New York', -73.95, 40.72, 10],
-  ['Chicago', -87.68, 41.86, 10],
-  ['Puget Sound', -122.33, 47.6, 9],
-  ['San Francisco Bay', -122.3, 37.78, 9.5],
-  ['Los Angeles', -118.25, 34.04, 9.5],
-  ['Washington, DC', -77.03, 38.9, 10.5],
-  ['Hawaii', -157.9, 21.4, 7],
+// Go to: [label, lon, lat, zoom], grouped by region. Zoom 0 is the starting view.
+const places: [string, [string, number, number, number][]][] = [
+  [
+    'North America',
+    [
+      ['The whole continent', -98, 39, 0],
+      ['New York', -73.95, 40.72, 10],
+      ['Chicago', -87.68, 41.86, 10],
+      ['Puget Sound', -122.33, 47.6, 9],
+      ['San Francisco Bay', -122.3, 37.78, 9.5],
+      ['Los Angeles', -118.25, 34.04, 9.5],
+      ['Washington, DC', -77.03, 38.9, 10.5],
+      ['Toronto', -79.38, 43.68, 10],
+      ['Montréal', -73.6, 45.52, 10.5],
+      ['Vancouver', -123.05, 49.25, 10],
+      ['Hawaii', -157.9, 21.4, 7],
+    ],
+  ],
+  [
+    'Europe',
+    [
+      ['London', -0.12, 51.5, 10],
+      ['Paris', 2.35, 48.86, 10.5],
+      ['Berlin', 13.4, 52.52, 10],
+      ['Madrid', -3.7, 40.42, 10.5],
+      ['Rome', 12.5, 41.9, 10.5],
+      ['Amsterdam', 4.9, 52.37, 10.5],
+      ['Warsaw', 21.01, 52.23, 10.5],
+      ['Helsinki', 24.94, 60.19, 10.5],
+    ],
+  ],
+  [
+    'Asia and the Pacific',
+    [
+      ['Tokyo', 139.75, 35.68, 10],
+      ['Osaka', 135.5, 34.69, 10.5],
+      ['Sydney', 151.2, -33.87, 10],
+      ['Melbourne', 144.96, -37.81, 10],
+      ['Auckland', 174.76, -36.85, 10.5],
+      ['Kuala Lumpur', 101.69, 3.14, 10.5],
+      ['Singapore', 103.82, 1.35, 11],
+    ],
+  ],
 ];
 ---
 
 <LabLayout
-  title="US transit on a globe"
-  description="Every bus, train and ferry route in the United States that publishes an open schedule, on one globe you can spin and zoom into a single street."
+  title="World transit on a globe"
+  description="Every bus, train and ferry route with an open schedule, on one globe you can spin and zoom into a single street, with vehicles moving live where agencies share them."
   image="/transit/share.png"
   imageAlt="Washington transit: the name on a green sign beside a dark map of Puget Sound's transit routes in many colors."
   themeColor={{ light: '#eceee8', dark: '#121719' }}
@@ -52,13 +85,13 @@ const places: [string, number, number, number][] = [
     <li><a href="/transit/about/">About</a></li>
   </ul>
 
-  <section class="transit" id="transit-globe" data-country="us" data-live={liveRows} aria-labelledby="globe-title">
+  <section class="transit" id="transit-globe" data-country="world" data-live={liveRows} aria-labelledby="globe-title">
     <div class="frame" data-frame>
       <div class="sign">
         <div class="plate sign-plate">
-          <h1 id="globe-title">US transit</h1>
+          <h1 id="globe-title">World transit</h1>
           <p class="readout" data-status aria-live="polite">
-            {summary ? `${n(summary.routes)} routes from ${n(summary.agencies)} agencies` : 'Routes not built yet'}
+            {summary ? `${n(summary.routes)} routes from ${n(summary.agencies)} agencies in ${summary.countries.length} countries` : 'Routes not built yet'}
           </p>
           <p class="readout live" data-live-status aria-live="polite">Zoom in to a region to see live vehicles</p>
         </div>
@@ -95,22 +128,25 @@ const places: [string, number, number, number][] = [
                 <span class="row-label">Vehicles reporting where they are ({n(liveList.feeds.length)} agencies)</span>
               </label>
             </fieldset>
-            <fieldset class="legend places">
-              <legend>Go to</legend>
-              <div class="place-list">
+            <label class="jump">
+              <span>Go to</span>
+              <select data-places>
+                <option value="" selected disabled>Pick a place</option>
                 {
-                  places.map(([label, lon, lat, zoom]) => (
-                    <button type="button" data-fly={`${lon},${lat},${zoom}`}>
-                      {label}
-                    </button>
+                  places.map(([region, list]) => (
+                    <optgroup label={region}>
+                      {list.map(([label, lon, lat, zoom]) => (
+                        <option value={`${lon},${lat},${zoom}`}>{label}</option>
+                      ))}
+                    </optgroup>
                   ))
                 }
-              </div>
-            </fieldset>
+              </select>
+            </label>
           </details>
         </div>
       </div>
-      <div class="map" data-map role="region" aria-label="Globe of US transit routes. Drag to spin, scroll or pinch to zoom."></div>
+      <div class="map" data-map role="region" aria-label="Globe of transit routes and live vehicles. Drag to spin, scroll or pinch to zoom."></div>
     </div>
   </section>
 
@@ -285,35 +321,28 @@ const places: [string, number, number, number][] = [
     opacity: 0.35;
   }
 
-  /* Places read like a station's list of destinations: plain rows, not buttons in a grid. */
-  .place-list {
+  .jump {
     display: flex;
-    flex-direction: column;
-  }
-
-  .place-list button {
-    min-height: 2.5rem;
-    padding: 0;
-    border: 0;
-    border-top: 1px solid var(--line);
-    background: none;
-    color: var(--accent-ink);
-    font: inherit;
+    gap: var(--space-3);
+    align-items: center;
+    margin-bottom: var(--space-3);
     font-size: var(--step--1);
     font-weight: 600;
-    text-align: left;
-    cursor: pointer;
   }
 
-  .place-list button:last-child {
-    border-bottom: 1px solid var(--line);
+  .jump select {
+    flex: 1;
+    min-width: 0;
+    min-height: 2.5rem;
+    font: inherit;
+    color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--control-line);
+    border-radius: var(--radius-sm);
+    padding: 0 var(--space-2);
   }
 
-  .place-list button:hover {
-    text-decoration: underline;
-  }
-
-  .place-list button:focus-visible {
+  .jump select:focus-visible {
     outline: 3px solid var(--accent-ink);
     outline-offset: 1px;
   }

@@ -1,7 +1,7 @@
 /*
   Live vehicles on the globe (/transit/globe/), drawn by transit-globe.ts.
 
-  The page knows every live feed's area (src/lib/globe-live-us.json, written by
+  The page knows every live feed's area (src/lib/globe-live.json, written by
   scripts/build-globe.ts). Every 15 seconds while the tab is visible, and right after the
   map stops moving, it asks /transit/api/globe/<feed>.json for the feeds whose areas
   overlap the screen, nearest first and at most MAX_FEEDS. Zoomed out past a region,
