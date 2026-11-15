@@ -422,6 +422,24 @@ export function minZoomFor(mode: string, lines: number[][][]): number {
   return length > 400 ? 0 : length > 120 ? 3 : length > 30 ? 5 : 6;
 }
 
+/**
+ * From orbit, draw each corridor once. Country rail feeds often list every train as its
+ * own route (China Railway: 4,600 routes on the same tracks filled the world tile), so a
+ * line that would show below zoom 5 claims the ~25 km cells it crosses, and a later line
+ * mostly on claimed cells waits until zoom 5, where tiles are small.
+ */
+const CORRIDOR = 0.25; // degrees
+export function corridorZoom(minzoom: number, lines: number[][][], claimed: Set<number>): number {
+  if (minzoom >= 5) return minzoom;
+  const cells = new Set<number>();
+  for (const line of lines) for (const [lon, lat] of line) cells.add(Math.floor((lon + 180) / CORRIDOR) * 10_000 + Math.floor((lat + 90) / CORRIDOR));
+  let fresh = 0;
+  for (const c of cells) if (!claimed.has(c)) fresh++;
+  if (fresh < cells.size * 0.2) return 5;
+  for (const c of cells) claimed.add(c);
+  return minzoom;
+}
+
 /** A line whose points are (almost) all this feed's stops was drawn stop to stop. */
 export function breakLongHops(lines: number[][][], stopsAt: Set<string>, mode: string): number[][][] {
   const limit = MAX_HOP_KM[mode] ?? 3;
@@ -455,6 +473,7 @@ async function mergeFeeds(files: string[], routesOut: string, stopsOut: string):
   const counts: Counts = { routes: 0, stops: 0, duplicates: 0, osmOverlaps: 0, longHopOnly: 0, agencies: 0, modes: {} };
   const agencies = new Set<string>();
   const covered = { rail: new Set<number>(), road: new Set<number>() };
+  const corridors = new Set<number>(); // cells claimed by lines drawn from orbit
   const write = async (stream: ReturnType<typeof createWriteStream>, f: unknown) => {
     if (!stream.write(JSON.stringify(f) + '\n')) await new Promise((r) => stream.once('drain', r));
   };
@@ -484,7 +503,7 @@ async function mergeFeeds(files: string[], routesOut: string, stopsOut: string):
         }
         p.official = p.color;
         delete f.tippecanoe.layer;
-        f.tippecanoe.minzoom = minZoomFor(p.mode, f.geometry.coordinates);
+        f.tippecanoe.minzoom = corridorZoom(minZoomFor(p.mode, f.geometry.coordinates), f.geometry.coordinates, corridors);
         await write(routes, f);
         keep(f);
       }
@@ -531,7 +550,7 @@ async function mergeFeeds(files: string[], routesOut: string, stopsOut: string):
       if (members.length >= 4 || key.includes('|none|')) members.forEach((f, n) => (f.properties.color = DISTINCT[n % DISTINCT.length]));
       for (const f of members) {
         delete f.tippecanoe.layer;
-        f.tippecanoe.minzoom = minZoomFor(f.properties.mode, f.geometry.coordinates);
+        f.tippecanoe.minzoom = corridorZoom(minZoomFor(f.properties.mode, f.geometry.coordinates), f.geometry.coordinates, corridors);
         await write(routes, f);
         keep(f);
       }

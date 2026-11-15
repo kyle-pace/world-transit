@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-15T16:28:18.688Z",
+ "updated": "2026-11-15T17:08:15.246Z",
  "feeds": [
   {
    "id": "jbda-chitacity-chita-aiaibus-vp",
@@ -649,7 +649,7 @@
     -123.364,
     48.999
    ],
-   "vehicles": 2
+   "vehicles": 4
   },
   {
    "id": "mdb-1382",
@@ -688,7 +688,7 @@
     -89.874,
     38.809
    ],
-   "vehicles": 84
+   "vehicles": 79
   },
   {
    "id": "mdb-1417",
@@ -727,7 +727,7 @@
     -84.174,
     42.776
    ],
-   "vehicles": 25
+   "vehicles": 28
   },
   {
    "id": "mdb-1427",
@@ -740,7 +740,7 @@
     -97.37,
     30.596
    ],
-   "vehicles": 261
+   "vehicles": 257
   },
   {
    "id": "mdb-1430",
@@ -766,7 +766,7 @@
     -76.438,
     44.279
    ],
-   "vehicles": 54
+   "vehicles": 52
   },
   {
    "id": "mdb-1436",
@@ -792,7 +792,7 @@
     -121.6,
     48.279
    ],
-   "vehicles": 64
+   "vehicles": 69
   },
   {
    "id": "mdb-1458",
@@ -818,7 +818,7 @@
     -92.009,
     46.856
    ],
-   "vehicles": 25
+   "vehicles": 24
   },
   {
    "id": "mdb-1489",
@@ -844,7 +844,7 @@
     -113.203,
     53.715
    ],
-   "vehicles": 243
+   "vehicles": 259
   },
   {
    "id": "mdb-1537",
@@ -870,7 +870,7 @@
     -121.785,
     47.867
    ],
-   "vehicles": 293
+   "vehicles": 327
   },
   {
    "id": "mdb-1602",
@@ -883,7 +883,7 @@
     -70.257,
     42.799
    ],
-   "vehicles": 382
+   "vehicles": 385
   },
   {
    "id": "mdb-1607",
@@ -896,7 +896,7 @@
     -63.282,
     44.888
    ],
-   "vehicles": 97
+   "vehicles": 95
   },
   {
    "id": "mdb-1612",
@@ -909,7 +909,7 @@
     -79.523,
     43.736
    ],
-   "vehicles": 153
+   "vehicles": 155
   },
   {
    "id": "mdb-1619",
@@ -922,7 +922,7 @@
     -76.073,
     39.558
    ],
-   "vehicles": 1
+   "vehicles": 0
   },
   {
    "id": "mdb-1622",
@@ -935,7 +935,7 @@
     -86.296,
     36.526
    ],
-   "vehicles": 134
+   "vehicles": 136
   },
   {
    "id": "mdb-1624",
@@ -948,7 +948,7 @@
     -71.954,
     41.1
    ],
-   "vehicles": 44
+   "vehicles": 45
   },
   {
    "id": "mdb-1630",
@@ -1065,7 +1065,7 @@
     16.378,
     53.49
    ],
-   "vehicles": 1900
+   "vehicles": 1872
   },
   {
    "id": "mdb-1649",
@@ -1078,7 +1078,7 @@
     -76.281,
     42.591
    ],
-   "vehicles": 12
+   "vehicles": 14
   },
   {
    "id": "mdb-1662",
@@ -1104,7 +1104,7 @@
     -116.876,
     34.103
    ],
-   "vehicles": 87
+   "vehicles": 91
   },
   {
    "id": "mdb-1678",
@@ -1117,7 +1117,7 @@
     -104.669,
     40.207
    ],
-   "vehicles": 312
+   "vehicles": 328
   },
   {
    "id": "mdb-1683",
@@ -1130,7 +1130,7 @@
     -92.805,
     45.333
    ],
-   "vehicles": 291
+   "vehicles": 310
   },
   {
    "id": "mdb-1690",
@@ -1143,7 +1143,7 @@
     -89.182,
     48.479
    ],
-   "vehicles": 39
+   "vehicles": 38
   },
   {
    "id": "mdb-1704",
@@ -1169,7 +1169,7 @@
     -79.704,
     40.668
    ],
-   "vehicles": 27
+   "vehicles": 29
   },
   {
    "id": "mdb-1714",
@@ -1182,7 +1182,7 @@
     -79.704,
     40.668
    ],
-   "vehicles": 175
+   "vehicles": 179
   },
   {
    "id": "mdb-1722",
@@ -1195,7 +1195,7 @@
     -111.661,
     33.714
    ],
-   "vehicles": 373
+   "vehicles": 385
   },
   {
    "id": "mdb-1750",
@@ -1208,7 +1208,7 @@
     -79.212,
     44.321
    ],
-   "vehicles": 99
+   "vehicles": 98
   },
   {
    "id": "mdb-1766",
@@ -1221,7 +1221,7 @@
     -81.205,
     28.742
    ],
-   "vehicles": 120
+   "vehicles": 114
   },
   {
    "id": "mdb-1771",
@@ -1247,7 +1247,7 @@
     -76.992,
     43.259
    ],
-   "vehicles": 38
+   "vehicles": 41
   },
   {
    "id": "mdb-1776",
@@ -1260,7 +1260,7 @@
     12.79,
     42.092
    ],
-   "vehicles": 746
+   "vehicles": 754
   },
   {
    "id": "mdb-1787",
@@ -1274,19 +1274,6 @@
     39.414
    ],
    "vehicles": 0
-  },
-  {
-   "id": "mdb-1790",
-   "name": "Arlington Transit",
-   "url": "https://realtime.arlingtontransit.com/gtfsrt/vehicles",
-   "static": "mdb-485",
-   "bbox": [
-    -77.162,
-    38.839,
-    -77.049,
-    38.927
-   ],
-   "vehicles": 16
   },
   {
    "id": "mdb-1794",
@@ -1312,7 +1299,7 @@
     31.15,
     78.247
    ],
-   "vehicles": 10
+   "vehicles": 9
   },
   {
    "id": "mdb-1801",
@@ -1325,7 +1312,7 @@
     31.15,
     78.247
    ],
-   "vehicles": 39
+   "vehicles": 42
   },
   {
    "id": "mdb-1803",
@@ -1351,7 +1338,7 @@
     -121.732,
     37.338
    ],
-   "vehicles": 44
+   "vehicles": 48
   },
   {
    "id": "mdb-1968",
@@ -1364,7 +1351,7 @@
     14.779,
     53.595
    ],
-   "vehicles": 133
+   "vehicles": 130
   },
   {
    "id": "mdb-1980",
@@ -1377,7 +1364,7 @@
     -111.572,
     35.24
    ],
-   "vehicles": 9
+   "vehicles": 11
   },
   {
    "id": "mdb-2028",
@@ -1390,7 +1377,7 @@
     -8.451,
     39.079
    ],
-   "vehicles": 373
+   "vehicles": 399
   },
   {
    "id": "mdb-2097",
@@ -1403,7 +1390,7 @@
     -89.206,
     43.199
    ],
-   "vehicles": 40
+   "vehicles": 41
   },
   {
    "id": "mdb-2104",
@@ -1416,7 +1403,7 @@
     26.386,
     44.751
    ],
-   "vehicles": 375
+   "vehicles": 404
   },
   {
    "id": "mdb-2113",
@@ -1442,7 +1429,7 @@
     27.757,
     47.288
    ],
-   "vehicles": 66
+   "vehicles": 72
   },
   {
    "id": "mdb-2125",
@@ -1468,7 +1455,7 @@
     -4.336,
     36.78
    ],
-   "vehicles": 95
+   "vehicles": 84
   },
   {
    "id": "mdb-2218",
@@ -1507,7 +1494,7 @@
     -122.264,
     37.852
    ],
-   "vehicles": 4
+   "vehicles": 5
   },
   {
    "id": "mdb-2229",
@@ -1546,7 +1533,7 @@
     17.282,
     52.752
    ],
-   "vehicles": 295
+   "vehicles": 294
   },
   {
    "id": "mdb-2340",
@@ -1572,7 +1559,7 @@
     29.109,
     47.147
    ],
-   "vehicles": 173
+   "vehicles": 138
   },
   {
    "id": "mdb-2376",
@@ -1585,7 +1572,7 @@
     24.163,
     49.975
    ],
-   "vehicles": 404
+   "vehicles": 403
   },
   {
    "id": "mdb-2380",
@@ -1598,7 +1585,7 @@
     -73.091,
     46.047
    ],
-   "vehicles": 4
+   "vehicles": 3
   },
   {
    "id": "mdb-2383",
@@ -1611,7 +1598,7 @@
     25.517,
     54.857
    ],
-   "vehicles": 202
+   "vehicles": 197
   },
   {
    "id": "mdb-2391",
@@ -1624,7 +1611,7 @@
     15.919,
     50.956
    ],
-   "vehicles": 1276
+   "vehicles": 1255
   },
   {
    "id": "mdb-2398",
@@ -1650,7 +1637,7 @@
     -3.764,
     40.314
    ],
-   "vehicles": 17
+   "vehicles": 16
   },
   {
    "id": "mdb-2422",
@@ -1663,7 +1650,7 @@
     -71.401,
     42.022
    ],
-   "vehicles": 117
+   "vehicles": 120
   },
   {
    "id": "mdb-2428",
@@ -1715,7 +1702,7 @@
     -123.702,
     49.464
    ],
-   "vehicles": 16
+   "vehicles": 17
   },
   {
    "id": "mdb-2477",
@@ -1845,7 +1832,7 @@
     -121.418,
     49.394
    ],
-   "vehicles": 24
+   "vehicles": 25
   },
   {
    "id": "mdb-2518",
@@ -1975,7 +1962,7 @@
     -119.347,
     50.074
    ],
-   "vehicles": 22
+   "vehicles": 24
   },
   {
    "id": "mdb-2559",
@@ -1988,7 +1975,7 @@
     -124.178,
     49.982
    ],
-   "vehicles": 3
+   "vehicles": 2
   },
   {
    "id": "mdb-2562",
@@ -2040,7 +2027,7 @@
     -123.285,
     48.698
    ],
-   "vehicles": 93
+   "vehicles": 101
   },
   {
    "id": "mdb-2578",
@@ -2053,7 +2040,7 @@
     -125.525,
     49.154
    ],
-   "vehicles": 2
+   "vehicles": 3
   },
   {
    "id": "mdb-2582",
@@ -2079,7 +2066,7 @@
     -122.927,
     50.159
    ],
-   "vehicles": 12
+   "vehicles": 13
   },
   {
    "id": "mdb-2590",
@@ -2105,7 +2092,7 @@
     20.353,
     50.245
    ],
-   "vehicles": 453
+   "vehicles": 442
   },
   {
    "id": "mdb-2614",
@@ -2118,7 +2105,7 @@
     23.841,
     46.899
    ],
-   "vehicles": 81
+   "vehicles": 79
   },
   {
    "id": "mdb-2619",
@@ -2131,7 +2118,7 @@
     -83.339,
     33.965
    ],
-   "vehicles": 0
+   "vehicles": 3
   },
   {
    "id": "mdb-2645",
@@ -2157,7 +2144,7 @@
     -85.542,
     38.347
    ],
-   "vehicles": 45
+   "vehicles": 43
   },
   {
    "id": "mdb-2696",
@@ -2170,7 +2157,7 @@
     8.46,
     45.536
    ],
-   "vehicles": 232
+   "vehicles": 239
   },
   {
    "id": "mdb-2707",
@@ -2212,6 +2199,19 @@
    "vehicles": 3
   },
   {
+   "id": "mdb-2835",
+   "name": "Renfe commuter trains (Cercanias)",
+   "url": "https://gtfsrt.renfe.com/vehicle_positions.pb",
+   "static": "mdb-2653",
+   "bbox": [
+    -8.231,
+    36.409,
+    3.163,
+    43.689
+   ],
+   "vehicles": 300
+  },
+  {
    "id": "mdb-2847",
    "name": "Urban Mobility Center - Sofia Traffic",
    "url": "https://gtfs.sofiatraffic.bg/api/v1/vehicle-positions",
@@ -2222,7 +2222,7 @@
     23.607,
     42.855
    ],
-   "vehicles": 374
+   "vehicles": 372
   },
   {
    "id": "mdb-2889",
@@ -2261,7 +2261,7 @@
     -9.093,
     38.799
    ],
-   "vehicles": 232
+   "vehicles": 231
   },
   {
    "id": "mdb-3058",
@@ -2274,7 +2274,7 @@
     -2.881,
     43.402
    ],
-   "vehicles": 9
+   "vehicles": 13
   },
   {
    "id": "mdb-3060",
@@ -2287,7 +2287,7 @@
     -74.754,
     40.306
    ],
-   "vehicles": 31
+   "vehicles": 30
   },
   {
    "id": "mdb-3063",
@@ -2300,7 +2300,7 @@
     -74.752,
     40.335
    ],
-   "vehicles": 757
+   "vehicles": 748
   },
   {
    "id": "mdb-3070",
@@ -2326,7 +2326,7 @@
     -122.184,
     48.013
    ],
-   "vehicles": 5
+   "vehicles": 7
   },
   {
    "id": "mdb-3077",
@@ -2365,7 +2365,7 @@
     25.665,
     60.977
    ],
-   "vehicles": 642
+   "vehicles": 634
   },
   {
    "id": "mdb-3231",
@@ -2378,7 +2378,7 @@
     30.772,
     50.567
    ],
-   "vehicles": 313
+   "vehicles": 304
   },
   {
    "id": "mdb-3387",
@@ -2391,7 +2391,7 @@
     13.989,
     43.333
    ],
-   "vehicles": 0
+   "vehicles": 73
   },
   {
    "id": "mdb-3410",
@@ -2404,7 +2404,7 @@
     -81.438,
     41.638
    ],
-   "vehicles": 202
+   "vehicles": 201
   },
   {
    "id": "mdb-3418",
@@ -2417,7 +2417,7 @@
     28.198,
     59.441
    ],
-   "vehicles": 20
+   "vehicles": 17
   },
   {
    "id": "mdb-3422",
@@ -2430,7 +2430,7 @@
     12.447,
     45.495
    ],
-   "vehicles": 52
+   "vehicles": 49
   },
   {
    "id": "mdb-3428",
@@ -2443,7 +2443,7 @@
     22.657,
     50.355
    ],
-   "vehicles": 17
+   "vehicles": 14
   },
   {
    "id": "mdb-3429",
@@ -2534,7 +2534,7 @@
     -80.076,
     26.352
    ],
-   "vehicles": 102
+   "vehicles": 110
   },
   {
    "id": "mdb-3484",
@@ -2560,7 +2560,7 @@
     79.994,
     7.101
    ],
-   "vehicles": 2
+   "vehicles": 0
   },
   {
    "id": "mdb-3511",
@@ -2586,7 +2586,7 @@
     -83.837,
     36.045
    ],
-   "vehicles": 21
+   "vehicles": 22
   },
   {
    "id": "mdb-3528",
@@ -2612,7 +2612,7 @@
     12.391,
     45.662
    ],
-   "vehicles": 113
+   "vehicles": 109
   },
   {
    "id": "mdb-3550",
@@ -2625,7 +2625,7 @@
     12.447,
     45.495
    ],
-   "vehicles": 52
+   "vehicles": 49
   },
   {
    "id": "mdb-3553",
@@ -2638,7 +2638,7 @@
     10.562,
     45.021
    ],
-   "vehicles": 21
+   "vehicles": 22
   },
   {
    "id": "mdb-3556",
@@ -2651,7 +2651,7 @@
     11.291,
     44.942
    ],
-   "vehicles": 4
+   "vehicles": 5
   },
   {
    "id": "mdb-3559",
@@ -2664,7 +2664,7 @@
     10.918,
     44.993
    ],
-   "vehicles": 21
+   "vehicles": 18
   },
   {
    "id": "mdb-3562",
@@ -2677,7 +2677,7 @@
     10.067,
     45.143
    ],
-   "vehicles": 8
+   "vehicles": 11
   },
   {
    "id": "mdb-3565",
@@ -2690,7 +2690,7 @@
     12.376,
     44.472
    ],
-   "vehicles": 399
+   "vehicles": 416
   },
   {
    "id": "mdb-3568",
@@ -2703,7 +2703,7 @@
     13.909,
     46.591
    ],
-   "vehicles": 83
+   "vehicles": 89
   },
   {
    "id": "mdb-3575",
@@ -2716,7 +2716,7 @@
     18.166,
     48.291
    ],
-   "vehicles": 183
+   "vehicles": 176
   },
   {
    "id": "mdb-3578",
@@ -2729,7 +2729,7 @@
     12.76,
     44.615
    ],
-   "vehicles": 45
+   "vehicles": 46
   },
   {
    "id": "mdb-3581",
@@ -2742,7 +2742,7 @@
     17.028,
     41.17
    ],
-   "vehicles": 34
+   "vehicles": 39
   },
   {
    "id": "mdb-3586",
@@ -2755,7 +2755,7 @@
     12.341,
     45.781
    ],
-   "vehicles": 62
+   "vehicles": 63
   },
   {
    "id": "mdb-3589",
@@ -2768,7 +2768,7 @@
     8.46,
     45.536
    ],
-   "vehicles": 239
+   "vehicles": 243
   },
   {
    "id": "odpt-KenkoHokubuKotsu-Localbus-vp",
@@ -2823,188 +2823,6 @@
    "vehicles": 0
   },
   {
-   "id": "odpt-UrbanDevelopment_AomoriCity-AllLines-vp",
-   "name": "青森市",
-   "url": "https://api-public.odpt.org/api/v4/gtfs/realtime/odpt_UrbanDevelopment_AomoriCity_AllLines_vehicle",
-   "static": "odpt-UrbanDevelopment_AomoriCity-AllLines",
-   "bbox": [
-    140.571,
-    40.707,
-    140.869,
-    40.858
-   ],
-   "vehicles": 0
-  },
-  {
-   "id": "tdg-10231",
-   "name": "Zenbus",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/372463bd-d7b4-4668-a9b5-bd71a28f389d",
-   "static": "tdg-10230",
-   "bbox": [
-    -0.702,
-    44.778,
-    -0.53,
-    44.834
-   ],
-   "vehicles": 3
-  },
-  {
-   "id": "tdg-12600",
-   "name": "Zenbus",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/47aa1c93-4868-47da-ae43-e2fcbce3575f",
-   "static": "tdg-12601",
-   "bbox": [
-    -0.822,
-    45.641,
-    -0.374,
-    45.827
-   ],
-   "vehicles": 0
-  },
-  {
-   "id": "tdg-12609",
-   "name": "Zenbus",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/6a1ef3cc-13cc-4770-a347-f183dc6accd6",
-   "static": "tdg-12608",
-   "bbox": [
-    -0.643,
-    48.286,
-    -0.594,
-    48.318
-   ],
-   "vehicles": 0
-  },
-  {
-   "id": "tdg-15449",
-   "name": "Lulu en Bus (Ex. Lunéo)",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/0e17b681-e017-46e2-a792-b3b6ead2c06c",
-   "static": "tdg-83509",
-   "bbox": [
-    6.476,
-    48.572,
-    6.536,
-    48.606
-   ],
-   "vehicles": 0
-  },
-  {
-   "id": "tdg-25678",
-   "name": "Zenbus",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/0057d63f-cf69-4d67-8c44-3c546ec7d403",
-   "static": "tdg-11725",
-   "bbox": [
-    1.975,
-    44.571,
-    2.046,
-    44.628
-   ],
-   "vehicles": 0
-  },
-  {
-   "id": "tdg-34266",
-   "name": "Zenbus",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/afee6b6e-2c3f-4317-9d0a-d70540acf8d8",
-   "static": "tdg-34265",
-   "bbox": [
-    -0.659,
-    43.153,
-    -0.579,
-    43.22
-   ],
-   "vehicles": 0
-  },
-  {
-   "id": "tdg-36515",
-   "name": "Région Réunion",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/c0a17be1-e89a-48a3-aca1-d8eb8e89a55e",
-   "static": "tdg-80934",
-   "bbox": [
-    55.219,
-    -21.383,
-    55.827,
-    -20.872
-   ],
-   "vehicles": 12
-  },
-  {
-   "id": "tdg-38878",
-   "name": "Transdev • Pays de la Loire",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/dd56dfc5-85b6-43f9-8b1b-8eebd4cb2c2e",
-   "static": "tdg-79151",
-   "bbox": [
-    -2.179,
-    47.203,
-    -2.042,
-    47.269
-   ],
-   "vehicles": 1
-  },
-  {
-   "id": "tdg-40392",
-   "name": "Transdev • Centre-Val de Loire",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/8bd532f4-8813-4313-be7c-304b8f8f47a7",
-   "static": "tdg-79576",
-   "bbox": [
-    0.798,
-    48.311,
-    0.843,
-    48.331
-   ],
-   "vehicles": 0
-  },
-  {
-   "id": "tdg-40623",
-   "name": "Communauté d'Agglomération Hérault Méditerranée",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/7dab24f0-3114-49b9-827d-376d10a4b193",
-   "static": "tdg-64163",
-   "bbox": [
-    3.407,
-    43.274,
-    3.523,
-    43.463
-   ],
-   "vehicles": 1
-  },
-  {
-   "id": "tdg-52582",
-   "name": "Transdev • Pays de la Loire",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/0fbf9dc8-d2db-405d-ade4-fdd04a6f8272",
-   "static": "tdg-79537",
-   "bbox": [
-    -0.363,
-    47.822,
-    -0.293,
-    47.858
-   ],
-   "vehicles": 0
-  },
-  {
-   "id": "tdg-52918",
-   "name": "Vienne Condrieu Agglomération",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/4e87a135-b46e-46b3-8aaa-0233ec3c242a",
-   "static": "tdg-52917",
-   "bbox": [
-    4.598,
-    45.406,
-    5.479,
-    45.672
-   ],
-   "vehicles": 3
-  },
-  {
-   "id": "tdg-67153",
-   "name": "Transdev • Normandie",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/ea44be8d-36ef-4aac-b56f-98b78eb54382",
-   "static": "tdg-83783",
-   "bbox": [
-    0.457,
-    49.46,
-    0.772,
-    49.661
-   ],
-   "vehicles": 0
-  },
-  {
    "id": "tdg-67732",
    "name": "DiviaMobilités",
    "url": "https://proxy.transport.data.gouv.fr/resource/divia-dijon-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
@@ -3028,7 +2846,7 @@
     -4.348,
     48.457
    ],
-   "vehicles": 39
+   "vehicles": 38
   },
   {
    "id": "tdg-79015",
@@ -3093,7 +2911,7 @@
     -0.951,
     49.716
    ],
-   "vehicles": 16
+   "vehicles": 15
   },
   {
    "id": "tdg-79993",
@@ -3119,7 +2937,7 @@
     7.058,
     43.629
    ],
-   "vehicles": 33
+   "vehicles": 32
   },
   {
    "id": "tdg-80381",
@@ -3171,7 +2989,7 @@
     2.423,
     49.97
    ],
-   "vehicles": 22
+   "vehicles": 20
   },
   {
    "id": "tdg-80723",
@@ -3184,7 +3002,7 @@
     0.804,
     48.481
    ],
-   "vehicles": 12
+   "vehicles": 23
   },
   {
    "id": "tdg-80732",
@@ -3197,7 +3015,7 @@
     4.566,
     43.976
    ],
-   "vehicles": 12
+   "vehicles": 11
   },
   {
    "id": "tdg-80939",
@@ -3301,7 +3119,7 @@
     2.887,
     49.447
    ],
-   "vehicles": 2
+   "vehicles": 1
   },
   {
    "id": "tdg-81140",
@@ -3561,7 +3379,7 @@
     4.128,
     43.673
    ],
-   "vehicles": 3
+   "vehicles": 1
   },
   {
    "id": "tdg-81953",
@@ -3616,19 +3434,6 @@
    "vehicles": 0
   },
   {
-   "id": "tdg-8202",
-   "name": "Zenbus",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/7dd97f96-2fb2-4647-8498-ef234ed0faaa",
-   "static": "tdg-8201",
-   "bbox": [
-    2.449,
-    48.861,
-    2.509,
-    48.884
-   ],
-   "vehicles": 1
-  },
-  {
    "id": "tdg-82095",
    "name": "Transdev GMVA Mobilités • Kicéo",
    "url": "https://proxy.transport.data.gouv.fr/resource/kiceo-vannes-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
@@ -3639,7 +3444,7 @@
     -2.514,
     47.826
    ],
-   "vehicles": 5
+   "vehicles": 7
   },
   {
    "id": "tdg-82142",
@@ -3665,7 +3470,7 @@
     -1.478,
     48.325
    ],
-   "vehicles": 47
+   "vehicles": 45
   },
   {
    "id": "tdg-82186",
@@ -3704,7 +3509,7 @@
     5.38,
     52.254
    ],
-   "vehicles": 72
+   "vehicles": 73
   },
   {
    "id": "tdg-82474",
@@ -3717,7 +3522,7 @@
     6.2,
     43.196
    ],
-   "vehicles": 56
+   "vehicles": 55
   },
   {
    "id": "tdg-82549",
@@ -3808,7 +3613,7 @@
     1.259,
     49.539
    ],
-   "vehicles": 64
+   "vehicles": 66
   },
   {
    "id": "tdg-82713",
@@ -3873,7 +3678,7 @@
     3.376,
     43.471
    ],
-   "vehicles": 7
+   "vehicles": 9
   },
   {
    "id": "tdg-82875",
@@ -3899,7 +3704,7 @@
     0.35,
     48.078
    ],
-   "vehicles": 22
+   "vehicles": 24
   },
   {
    "id": "tdg-82896",
@@ -3912,7 +3717,7 @@
     0.366,
     49.705
    ],
-   "vehicles": 37
+   "vehicles": 36
   },
   {
    "id": "tdg-82909",
@@ -3938,7 +3743,7 @@
     -0.462,
     45.026
    ],
-   "vehicles": 221
+   "vehicles": 231
   },
   {
    "id": "tdg-83078",
@@ -3951,7 +3756,7 @@
     1.613,
     49.257
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "tdg-83079",
@@ -3964,7 +3769,7 @@
     4.824,
     43.869
    ],
-   "vehicles": 3
+   "vehicles": 2
   },
   {
    "id": "tdg-83118",
@@ -3977,7 +3782,7 @@
     5.226,
     45.219
    ],
-   "vehicles": 15
+   "vehicles": 16
   },
   {
    "id": "tdg-83139",
@@ -4042,7 +3847,7 @@
     1.259,
     49.539
    ],
-   "vehicles": 73
+   "vehicles": 75
   },
   {
    "id": "tdg-83298",
@@ -4068,7 +3873,7 @@
     7.386,
     44.287
    ],
-   "vehicles": 88
+   "vehicles": 85
   },
   {
    "id": "tdg-83331",
@@ -4146,7 +3951,7 @@
     1.508,
     47.734
    ],
-   "vehicles": 5
+   "vehicles": 8
   },
   {
    "id": "tdg-83468",
@@ -4172,7 +3977,7 @@
     0.415,
     49.764
    ],
-   "vehicles": 1
+   "vehicles": 0
   },
   {
    "id": "tdg-83538",
@@ -4198,7 +4003,7 @@
     7.877,
     48.283
    ],
-   "vehicles": 1
+   "vehicles": 3
   },
   {
    "id": "tdg-83743",
@@ -4211,7 +4016,7 @@
     3.231,
     43.318
    ],
-   "vehicles": 2
+   "vehicles": 1
   },
   {
    "id": "tdg-83748",
@@ -4224,7 +4029,7 @@
     -3.87,
     48.152
    ],
-   "vehicles": 3
+   "vehicles": 1
   },
   {
    "id": "tdg-83764",
@@ -4237,7 +4042,7 @@
     -2.182,
     47.512
    ],
-   "vehicles": 8
+   "vehicles": 5
   },
   {
    "id": "tdg-83766",
@@ -4250,7 +4055,7 @@
     -2.182,
     47.512
    ],
-   "vehicles": 8
+   "vehicles": 5
   },
   {
    "id": "tdg-83796",
@@ -4419,7 +4224,7 @@
     6.932,
     43.535
    ],
-   "vehicles": 7
+   "vehicles": 6
   },
   {
    "id": "tdg-84038",
@@ -4432,7 +4237,7 @@
     0.366,
     49.705
    ],
-   "vehicles": 37
+   "vehicles": 36
   },
   {
    "id": "tdg-84047",
@@ -4445,7 +4250,7 @@
     -2.514,
     47.826
    ],
-   "vehicles": 5
+   "vehicles": 7
   },
   {
    "id": "tdg-84050",
@@ -4458,7 +4263,7 @@
     3.071,
     50.633
    ],
-   "vehicles": 35
+   "vehicles": 34
   },
   {
    "id": "tdg-84058",
@@ -4484,7 +4289,7 @@
     -60.832,
     14.654
    ],
-   "vehicles": 2
+   "vehicles": 1
   },
   {
    "id": "tdg-84081",
@@ -4497,7 +4302,7 @@
     -60.945,
     14.691
    ],
-   "vehicles": 16
+   "vehicles": 10
   },
   {
    "id": "tdg-84088",
@@ -4536,7 +4341,7 @@
     4.812,
     45.79
    ],
-   "vehicles": 45
+   "vehicles": 44
   },
   {
    "id": "tdg-84122",
@@ -4549,7 +4354,7 @@
     3.687,
     50.514
    ],
-   "vehicles": 20
+   "vehicles": 19
   },
   {
    "id": "tdg-84125",
@@ -4562,7 +4367,7 @@
     4.566,
     43.976
    ],
-   "vehicles": 12
+   "vehicles": 11
   },
   {
    "id": "tdg-84138",
@@ -4575,7 +4380,7 @@
     3.474,
     46.159
    ],
-   "vehicles": 0
+   "vehicles": 2
   },
   {
    "id": "tdg-84157",
@@ -4601,7 +4406,7 @@
     3.086,
     48.868
    ],
-   "vehicles": 27
+   "vehicles": 32
   },
   {
    "id": "tdg-84191",
@@ -4640,7 +4445,20 @@
     4.041,
     43.752
    ],
-   "vehicles": 100
+   "vehicles": 99
+  },
+  {
+   "id": "tdg-84209",
+   "name": "RENFE VIAJEROS SOCIEDAD MERCANTIL ESTATAL SA",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/cb62a16d-f879-44e6-8e8b-8eafded361b7",
+   "static": "tdg-82386",
+   "bbox": [
+    -3.691,
+    40.406,
+    5.382,
+    45.76
+   ],
+   "vehicles": 0
   },
   {
    "id": "tdg-84229",
@@ -4695,32 +4513,6 @@
    "vehicles": 0
   },
   {
-   "id": "tdg-8488",
-   "name": "Zenbus",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/9b9013ec-4cbb-4f18-b44a-1e94088320a8",
-   "static": "tdg-8487",
-   "bbox": [
-    3.447,
-    44.515,
-    3.517,
-    44.547
-   ],
-   "vehicles": 0
-  },
-  {
-   "id": "tdg-8598",
-   "name": "Zenbus",
-   "url": "https://www.data.gouv.fr/api/1/datasets/r/89a81efd-a8f4-4558-9988-9e7c56ab15fe",
-   "static": "tdg-8597",
-   "bbox": [
-    -1.368,
-    46.194,
-    -1.355,
-    46.206
-   ],
-   "vehicles": 0
-  },
-  {
    "id": "tld-1125-vp",
    "name": "VIA Metropolitan Transit",
    "url": "http://gtfs.viainfo.net/vehicle/vehiclepositions.pb",
@@ -4731,7 +4523,7 @@
     -98.307,
     29.651
    ],
-   "vehicles": 412
+   "vehicles": 414
   },
   {
    "id": "tld-1127-vp",
@@ -4757,7 +4549,7 @@
     -120.749,
     37.962
    ],
-   "vehicles": 17
+   "vehicles": 30
   },
   {
    "id": "tld-1261-vp",
@@ -4835,7 +4627,7 @@
     -118.219,
     34.507
    ],
-   "vehicles": 21
+   "vehicles": 20
   },
   {
    "id": "tld-4336-vp",
@@ -4874,7 +4666,7 @@
     -77.022,
     39.029
    ],
-   "vehicles": 65
+   "vehicles": 61
   },
   {
    "id": "tld-4358-vp",
@@ -4887,7 +4679,7 @@
     -122.135,
     49
    ],
-   "vehicles": 20
+   "vehicles": 27
   },
   {
    "id": "tld-4360-vp",
@@ -4952,7 +4744,7 @@
     -76.073,
     39.558
    ],
-   "vehicles": 1
+   "vehicles": 0
   },
   {
    "id": "tld-4488-vp",
@@ -5017,7 +4809,7 @@
     -80.639,
     35.504
    ],
-   "vehicles": 75
+   "vehicles": 77
   },
   {
    "id": "tld-4549-vp",
@@ -5043,7 +4835,7 @@
     -78.224,
     41.981
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "tld-4554-vp",
@@ -5186,7 +4978,7 @@
     -85.509,
     42.333
    ],
-   "vehicles": 15
+   "vehicles": 14
   },
   {
    "id": "tld-4679-vp",
@@ -5199,7 +4991,7 @@
     -71.794,
     42.596
    ],
-   "vehicles": 51
+   "vehicles": 52
   },
   {
    "id": "tld-4689-vp",
@@ -5329,7 +5121,7 @@
     -113.865,
     46.925
    ],
-   "vehicles": 14
+   "vehicles": 11
   },
   {
    "id": "tld-4832-vp",
@@ -5368,7 +5160,7 @@
     -79.839,
     40.454
    ],
-   "vehicles": 4
+   "vehicles": 5
   },
   {
    "id": "tld-5532-vp",
@@ -5420,7 +5212,7 @@
     -117.959,
     34.073
    ],
-   "vehicles": 4
+   "vehicles": 5
   },
   {
    "id": "tld-5549-vp",
@@ -5524,7 +5316,7 @@
     -80.062,
     26.759
    ],
-   "vehicles": 6
+   "vehicles": 5
   },
   {
    "id": "tld-5619-vp",
@@ -5537,7 +5329,7 @@
     -74.563,
     46.21
    ],
-   "vehicles": 1
+   "vehicles": 2
   },
   {
    "id": "tld-5631-vp",
@@ -5550,7 +5342,7 @@
     -73.23,
     45.466
    ],
-   "vehicles": 6
+   "vehicles": 5
   },
   {
    "id": "tld-5723-vp",
@@ -5589,7 +5381,7 @@
     -75.954,
     40.187
    ],
-   "vehicles": 8
+   "vehicles": 9
   },
   {
    "id": "tld-5865-vp",
@@ -5680,7 +5472,7 @@
     21.464,
     52.494
    ],
-   "vehicles": 1039
+   "vehicles": 1030
   },
   {
    "id": "tld-6075-tu_vp",
@@ -5693,7 +5485,7 @@
     22.486,
     53.94
    ],
-   "vehicles": 5
+   "vehicles": 7
   },
   {
    "id": "tld-6096-vp",
@@ -5745,7 +5537,7 @@
     -78.416,
     35.917
    ],
-   "vehicles": 70
+   "vehicles": 69
   },
   {
    "id": "tld-6714-vp",
@@ -5771,7 +5563,7 @@
     -117.732,
     33.732
    ],
-   "vehicles": 5
+   "vehicles": 6
   },
   {
    "id": "tld-6732-vp",
@@ -5823,7 +5615,7 @@
     -78.292,
     36.096
    ],
-   "vehicles": 19
+   "vehicles": 17
   },
   {
    "id": "tld-6784-vp",
@@ -5836,7 +5628,7 @@
     -90.998,
     30.588
    ],
-   "vehicles": 20
+   "vehicles": 17
   },
   {
    "id": "tld-6786-vp",

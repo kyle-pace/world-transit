@@ -43,3 +43,15 @@ test('from orbit only long rail shows; buses and trams wait for region level', (
   assert.equal(minZoomFor('bus', long), 7);
   assert.equal(minZoomFor('tram', short), 7);
 });
+
+import { corridorZoom } from '../scripts/build-globe.ts';
+
+test('from orbit, a second train on the same corridor waits for zoom 5', () => {
+  const claimed = new Set();
+  const line = [[[116.4, 39.9], [117.2, 39.1], [118.0, 38.0], [121.47, 31.23]]]; // Beijing–Shanghai-ish
+  assert.equal(corridorZoom(0, line, claimed), 0, 'the first one shows from orbit');
+  assert.equal(corridorZoom(0, line, claimed), 5, 'the same tracks again wait');
+  const other = [[[-0.12, 51.5], [-1.9, 52.48], [-2.24, 53.48]]]; // London–Manchester-ish
+  assert.equal(corridorZoom(0, other, claimed), 0, 'a new corridor still shows');
+  assert.equal(corridorZoom(6, line, claimed), 6, 'lines that start at 5+ are left alone');
+});
