@@ -797,6 +797,8 @@ async function buildLiveList() {
     }
     writeFileSync(join(routesDir, `${schedule}.json`), JSON.stringify(lookup));
   }
+  // What the page needs, fetched after the map loads (URLs stay with the Worker).
+  writeFileSync(join(OUT_DIR, 'live-feeds.json'), JSON.stringify(feeds.map((f) => [f.id, f.name, f.static, f.bbox])));
   writeFileSync(
     join(root, 'src/lib/globe-live.json'),
     JSON.stringify({ updated: new Date().toISOString(), feeds }, null, 1) + '\n',

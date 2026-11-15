@@ -45,7 +45,8 @@ export function startGlobe(root: HTMLElement) {
   const status = root.querySelector<HTMLElement>('[data-status]');
   const liveStatus = root.querySelector<HTMLElement>('[data-live-status]');
   const liveInput = root.querySelector<HTMLInputElement>('[data-live]');
-  const liveFeeds: LiveFeedRow[] = JSON.parse(root.dataset.live ?? '[]');
+  // The live feeds' list (ids and areas) loads after the map, so the page stays light.
+  const liveFeeds: LiveFeedRow[] = [];
 
   const protocol = new Protocol();
   maplibregl.addProtocol('pmtiles', protocol.tile);
@@ -72,7 +73,14 @@ export function startGlobe(root: HTMLElement) {
   const live = liveVehicles(map, liveFeeds, (text) => {
     if (liveStatus && liveStatus.textContent !== text) liveStatus.textContent = text;
   });
-  map.once('load', () => live.start());
+  map.once('load', async () => {
+    try {
+      liveFeeds.push(...((await fetch('/transit/globe/live-feeds.json').then((r) => r.json())) as LiveFeedRow[]));
+    } catch {
+      // No live list: routes still show; vehicles just don't.
+    }
+    live.start();
+  });
   liveInput?.addEventListener('change', () => live.setVisible(liveInput.checked));
   map.addControl(new maplibregl.FullscreenControl({ container: root.querySelector<HTMLElement>('[data-frame]')! }), 'top-right');
 

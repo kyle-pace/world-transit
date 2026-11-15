@@ -18,7 +18,6 @@ const n = (x: number) => x.toLocaleString('en-US');
 type LiveList = { feeds: { id: string; name: string; static: string; bbox: number[] }[] };
 const liveFound = import.meta.glob<LiveList>('../../lib/globe-live.json', { eager: true, import: 'default' });
 const liveList: LiveList = Object.values(liveFound)[0] ?? { feeds: [] };
-const liveRows = JSON.stringify(liveList.feeds.map((f) => [f.id, f.name, f.static, f.bbox]));
 
 const modes: { value: IconMode; label: string; bold: boolean }[] = [
   { value: 'rail', label: 'Trains', bold: true },
@@ -119,7 +118,7 @@ const places: [string, [string, number, number, number][]][] = [
     <li><a href="/transit/about/">About</a></li>
   </ul>
 
-  <section class="transit" id="transit-globe" data-country="world" data-live={liveRows} aria-labelledby="globe-title">
+  <section class="transit" id="transit-globe" data-country="world" aria-labelledby="globe-title">
     <div class="frame" data-frame>
       <div class="sign">
         <div class="plate sign-plate">
