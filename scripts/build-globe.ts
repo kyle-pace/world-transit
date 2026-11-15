@@ -150,6 +150,70 @@ async function loadFeeds(): Promise<{ feeds: Feed[]; keyed: number }> {
 }
 
 /**
+ * File-safe ids for the extra catalogs. Non-Latin ids would all shrink to the same few
+ * characters, so a short hash of the original keeps every id unique.
+ */
+function safe(s: string) {
+  let h = 0;
+  for (const ch of s) h = (Math.imul(h, 31) + ch.codePointAt(0)!) >>> 0;
+  return `${s.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-|-$/g, '').slice(0, 60)}-${h.toString(36)}`;
+}
+
+/**
+ * Open live vehicle feeds from Transitland Atlas and Transitous, each matched to a
+ * schedule from the same catalog file that's on the globe (so its vehicles get route
+ * names and colors). Feeds that only carry delay predictions are weeded out by the
+ * check: they decode, but with no vehicles.
+ */
+function extraLiveCandidates(knownUrls: Set<string>): { id: string; name: string; url: string; static: string }[] {
+  const out: { id: string; name: string; url: string; static: string }[] = [];
+  const cached = (id: string) => existsSync(join(CACHE, `${id}.ndjson`));
+  const atlas = join(CATALOGS, 'transitland-atlas', 'feeds');
+  if (existsSync(atlas))
+    for (const file of readdirSync(atlas).filter((f) => f.endsWith('.json'))) {
+      let dmfr: { feeds?: { id: string; spec?: string; urls?: { static_current?: string; realtime_vehicle_positions?: string }; authorization?: unknown; associated_feeds?: { feed_onestop_id?: string }[] }[] };
+      try {
+        dmfr = JSON.parse(readFileSync(join(atlas, file), 'utf8'));
+      } catch {
+        continue;
+      }
+      const statics = (dmfr.feeds ?? []).filter((f) => f.spec === 'gtfs').map((f) => `tl-${safe(f.id)}`).filter(cached);
+      for (const f of dmfr.feeds ?? []) {
+        const url = f.urls?.realtime_vehicle_positions;
+        if (!url || f.authorization || knownUrls.has(url)) continue;
+        const assoc = (f.associated_feeds ?? []).map((a) => `tl-${safe(a.feed_onestop_id ?? '')}`).find(cached);
+        const schedule = assoc ?? statics[0];
+        if (!schedule) continue;
+        knownUrls.add(url);
+        out.push({ id: `tl-${safe(f.id)}`, name: f.id, url, static: schedule });
+      }
+    }
+  const transitous = join(CATALOGS, 'transitous', 'feeds');
+  if (existsSync(transitous))
+    for (const file of readdirSync(transitous).filter((f) => f.endsWith('.json'))) {
+      let cfg: { sources?: { name?: string; type?: string; url?: string; spec?: string; skip?: boolean; 'api-key'?: unknown; headers?: unknown }[] };
+      try {
+        cfg = JSON.parse(readFileSync(join(transitous, file), 'utf8'));
+      } catch {
+        continue;
+      }
+      const base = file.replace(/\.json$/, '');
+      const staticId = (name?: string) => `tr-${safe(base)}-${safe(name ?? 'feed')}`;
+      const statics = (cfg.sources ?? []).filter((x) => x.spec !== 'gtfs-rt').map((x) => staticId(x.name)).filter(cached);
+      for (const src of cfg.sources ?? []) {
+        if (src.spec !== 'gtfs-rt' || src.skip || src.headers || src['api-key'] || !src.url || knownUrls.has(src.url)) continue;
+        // Feeds named for delays or alerts never carry positions.
+        if (/trip_?updates|feed_type=trip|alerts/i.test(src.url)) continue;
+        const schedule = cached(staticId(src.name)) ? staticId(src.name) : statics[0];
+        if (!schedule) continue;
+        knownUrls.add(src.url);
+        out.push({ id: `tr-${safe(base)}-${safe(`${src.name ?? 'rt'}-${src.url}`)}`, name: src.name ?? base, url: src.url, static: schedule });
+      }
+    }
+  return out;
+}
+
+/**
  * Open schedules from Transitland Atlas and Transitous that the Mobility Database doesn't
  * list (by URL). Transitous files are named by country; Transitland doesn't say, so those
  * feeds get their country from where their routes are, once built (country-at.ts).
@@ -162,13 +226,6 @@ function extraFeeds(known: Set<string>): Feed[] {
     return path;
   };
   mkdirSync(CATALOGS, { recursive: true });
-  // File-safe ids. Non-Latin ids would all shrink to the same few characters, so a short
-  // hash of the original keeps every id unique.
-  const safe = (s: string) => {
-    let h = 0;
-    for (const ch of s) h = (Math.imul(h, 31) + ch.codePointAt(0)!) >>> 0;
-    return `${s.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-|-$/g, '').slice(0, 60)}-${h.toString(36)}`;
-  };
   const out: Feed[] = [];
   const add = (f: Feed) => {
     const u = f.urls[0].trim().replace(/\/$/, '');
@@ -678,6 +735,7 @@ async function buildLiveList() {
     seenUrls.add(url);
     candidates.push({ id: get(r, 'id'), name: get(r, 'provider') || get(r, 'name'), url, static: schedule });
   }
+  candidates.push(...extraLiveCandidates(seenUrls));
   console.log(`\nLive: ${candidates.length} open vehicle feeds with a schedule on the globe (${keyed} need a key, ${noSchedule} have no schedule on the globe). Checking each…`);
 
   // Final line colors, after duplicates and recoloring (the merged file tippecanoe read).
@@ -696,17 +754,26 @@ async function buildLiveList() {
       const c = candidates[i];
       try {
         const live = compactFeed(await fetchLiveFeed(c.url, 10_000));
-        let [w, s, e, n] = [180, 90, -180, -90];
+        // From the other catalogs, a feed with no vehicles and no sign it's a positions
+        // feed is most likely delays only.
+        if (/^t[lr]-/.test(c.id) && !live.v.length && !/vehicle|position|vp/i.test(c.url)) throw new Error('no vehicles (delays only?)');
+        // The feed's area: the middle 96% of its points, so a few stray stops (a
+        // Eurostar stop in Paris on Britain's feed) can't stretch it across a sea.
+        const xs: number[] = [];
+        const ys: number[] = [];
         for await (const feature of readFeatures(join(CACHE, `${c.static}.ndjson`))) {
           const g = feature.geometry;
           const pts: number[][] = g.type === 'Point' ? [g.coordinates] : g.coordinates.flat();
           for (const [x, y] of pts) {
-            if (x < w) w = x;
-            if (x > e) e = x;
-            if (y < s) s = y;
-            if (y > n) n = y;
+            xs.push(x);
+            ys.push(y);
           }
         }
+        if (!xs.length) throw new Error('its schedule has no points');
+        xs.sort((p, q) => p - q);
+        ys.sort((p, q) => p - q);
+        const at = (arr: number[], f: number) => arr[Math.min(arr.length - 1, Math.max(0, Math.floor(f * (arr.length - 1))))];
+        const [w, s, e, n] = [at(xs, 0.02), at(ys, 0.02), at(xs, 0.98), at(ys, 0.98)];
         results[i] = { ...c, bbox: [w, s, e, n].map((v) => Math.round(v * 1000) / 1000) as LiveFeed['bbox'], vehicles: live.v.length };
       } catch (err) {
         problems.push(`${c.id} ${c.name}: ${(err as Error).message}`);

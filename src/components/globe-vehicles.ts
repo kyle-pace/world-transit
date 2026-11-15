@@ -118,7 +118,11 @@ export function liveVehicles(map: MapLibreMap, feeds: LiveFeedRow[], onStatus: (
         }),
       );
       if (run !== generation) return; // the map moved while we were fetching
-      const count = draw();
+      draw();
+      // Only what's on screen: a feed overlapping the view can reach far beyond it.
+      const b = map.getBounds();
+      let count = 0;
+      for (const list of byFeed.values()) for (const f of list) if (b.contains(f.geometry.coordinates as [number, number])) count++;
       onStatus(count ? `${count.toLocaleString('en-US')} vehicles moving in view` : 'No vehicles reporting in view right now');
     }
     if (visible && document.visibilityState === 'visible') timer = window.setTimeout(refresh, POLL_MS);
