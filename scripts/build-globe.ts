@@ -468,6 +468,9 @@ async function buildTiles(): Promise<{ out: string; counts: Counts }> {
       '--simplification=8', '--simplify-only-low-zooms',
       '--drop-smallest-as-needed', '--coalesce-smallest-as-needed',
       '--extend-zooms-if-still-dropping',
+      // Twice the default tile size, so central London and Paris keep every line whole
+      // instead of being thinned; only the densest city tiles get this big.
+      '--maximum-tile-bytes=1000000',
       '--read-parallel',
       // Named layers from one file each. (With hundreds of input files, tippecanoe
       // put some features in layers named after the file instead.)

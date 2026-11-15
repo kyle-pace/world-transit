@@ -1,6 +1,630 @@
 {
- "updated": "2026-11-15T09:11:00.287Z",
+ "updated": "2026-11-15T15:04:23.364Z",
  "feeds": [
+  {
+   "id": "jbda-chitacity-chita-aiaibus-vp",
+   "name": "知多市",
+   "url": "https://realtime.gtfs.info/chita/vehicle.pb",
+   "static": "jbda-chitacity-chita-aiaibus",
+   "bbox": [
+    136.829,
+    34.935,
+    136.916,
+    35.003
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-chitetsu-chitetsubus-vp",
+   "name": "富山地方鉄道",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/chitetsu/VehiclePositions.pb",
+   "static": "jbda-chitetsu-chitetsubus",
+   "bbox": [
+    136.986,
+    36.562,
+    137.511,
+    36.907
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-chitetsu-chitetsushinaidensha-vp",
+   "name": "富山地方鉄道",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/chitetsu_tram/VehiclePositions.pb",
+   "static": "jbda-chitetsu-chitetsushinaidensha",
+   "bbox": [
+    137.191,
+    36.671,
+    137.235,
+    36.761
+   ],
+   "vehicles": 1
+  },
+  {
+   "id": "jbda-imizucity-imizushi-vp",
+   "name": "射水市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/imizu-city/VehiclePositions.pb",
+   "static": "jbda-imizucity-imizushi",
+   "bbox": [
+    137.027,
+    36.663,
+    137.173,
+    36.782
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-isecity-communitybus-vp",
+   "name": "伊勢市",
+   "url": "https://bus-vision.jp/realtime/iseshi_vpos_update_v2.bin",
+   "static": "jbda-isecity-communitybus",
+   "bbox": [
+    136.649,
+    34.464,
+    136.8,
+    34.564
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-kaetsunou-kaetsunouhimi-vp",
+   "name": "加越能バス",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/kaetsuno_himi/VehiclePositions.pb",
+   "static": "jbda-kaetsunou-kaetsunouhimi",
+   "bbox": [
+    136.969,
+    36.849,
+    136.991,
+    36.866
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-kaetsunou-kaetsunouippan-vp",
+   "name": "加越能バス",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/kaetsuno/VehiclePositions.pb",
+   "static": "jbda-kaetsunou-kaetsunouippan",
+   "bbox": [
+    136.646,
+    36.519,
+    137.16,
+    36.958
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-kaetsunou-kaetsunousekaiisan-vp",
+   "name": "加越能バス",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/kaetsuno_sekaiisan/VehiclePositions.pb",
+   "static": "jbda-kaetsunou-kaetsunousekaiisan",
+   "bbox": [
+    136.868,
+    36.262,
+    137.02,
+    36.743
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-kamiichitown-kamiichi-vp",
+   "name": "上市町",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/kamiichi-town/VehiclePositions.pb",
+   "static": "jbda-kamiichitown-kamiichi",
+   "bbox": [
+    137.317,
+    36.663,
+    137.4,
+    36.736
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-keisei-transitbus-keiseitransitbus-vp",
+   "name": "京成バス千葉ウエスト株式会社",
+   "url": "https://s3-ajt-mobusta-gtfs.s3.ap-northeast-1.amazonaws.com/realtime/35/vehicle_position.bin",
+   "static": "jbda-keisei-transitbus-keiseitransitbus",
+   "bbox": [
+    139.884,
+    35.631,
+    139.958,
+    35.729
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-komonotown-communitybus-vp",
+   "name": "菰野町",
+   "url": "https://bus-vision.jp/realtime/komono_vpos_update_v2.bin",
+   "static": "jbda-komonotown-communitybus",
+   "bbox": [
+    136.479,
+    34.997,
+    136.542,
+    35.09
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-kuma-bus-kuma-bus-vp",
+   "name": "熊本バス",
+   "url": "https://km.bus-vision.jp/realtime/kumabus_vpos_update.bin",
+   "static": "jbda-kuma-bus-kuma-bus",
+   "bbox": [
+    130.67,
+    32.614,
+    130.992,
+    32.804
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-kumamoto-toshibus-kumamoto-toshibus-vp",
+   "name": "熊本都市バス",
+   "url": "https://km.bus-vision.jp/realtime/toshibus_vpos_update.bin",
+   "static": "jbda-kumamoto-toshibus-kumamoto-toshibus",
+   "bbox": [
+    130.667,
+    32.754,
+    130.809,
+    32.842
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-kumamotodentetsu-kumamotodentetsu-bus-vp",
+   "name": "熊本電鉄",
+   "url": "https://km.bus-vision.jp/realtime/dentetsu_vpos_update.bin",
+   "static": "jbda-kumamotodentetsu-kumamotodentetsu-bus",
+   "bbox": [
+    130.688,
+    32.778,
+    130.845,
+    32.985
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-kurobecity-shinkansenikuji-ishida-aimoto-minibus-vp",
+   "name": "黒部市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/kurobe_city_bus/VehiclePositions.pb",
+   "static": "jbda-kurobecity-shinkansenikuji-ishida-aimoto-minibus",
+   "bbox": [
+    137.417,
+    36.854,
+    137.562,
+    36.906
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-manyosen-manyosen-vp",
+   "name": "万葉線",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/manyo_line/VehiclePositions.pb",
+   "static": "jbda-manyosen-manyosen",
+   "bbox": [
+    137.013,
+    36.742,
+    137.112,
+    36.789
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-mie-kotsu-sancochusei-vp",
+   "name": "三重交通",
+   "url": "https://bus-vision.jp/realtime/chusei_vpos_update_v2.bin",
+   "static": "jbda-mie-kotsu-sancochusei",
+   "bbox": [
+    136.35,
+    34.609,
+    136.595,
+    34.886
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-mie-kotsu-sancoiga-vp",
+   "name": "三重交通",
+   "url": "https://bus-vision.jp/realtime/iga_vpos_update_v2.bin",
+   "static": "jbda-mie-kotsu-sancoiga",
+   "bbox": [
+    136.003,
+    34.488,
+    136.884,
+    35.168
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-mie-kotsu-sancoinanki-vp",
+   "name": "三重交通",
+   "url": "https://bus-vision.jp/realtime/nanki_vpos_update_v2.bin",
+   "static": "jbda-mie-kotsu-sancoinanki",
+   "bbox": [
+    135.987,
+    33.725,
+    136.339,
+    34.237
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-mie-kotsu-sancoise-vp",
+   "name": "三重交通",
+   "url": "https://bus-vision.jp/realtime/ise_vpos_update_v2.bin",
+   "static": "jbda-mie-kotsu-sancoise",
+   "bbox": [
+    136.44,
+    34.249,
+    136.852,
+    34.54
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-mie-kotsu-sancokuwana-vp",
+   "name": "三重交通",
+   "url": "https://bus-vision.jp/realtime/kuwana_vpos_update_v2.bin",
+   "static": "jbda-mie-kotsu-sancokuwana",
+   "bbox": [
+    136.515,
+    35.026,
+    136.917,
+    35.172
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-mie-kotsu-sancomatsusaka-vp",
+   "name": "三重交通",
+   "url": "https://bus-vision.jp/realtime/matsusaka_vpos_update_v2.bin",
+   "static": "jbda-mie-kotsu-sancomatsusaka",
+   "bbox": [
+    136.216,
+    34.379,
+    136.552,
+    34.626
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-mie-kotsu-sancoshima-vp",
+   "name": "三重交通",
+   "url": "https://bus-vision.jp/realtime/shima_vpos_update_v2.bin",
+   "static": "jbda-mie-kotsu-sancoshima",
+   "bbox": [
+    136.629,
+    34.253,
+    136.902,
+    34.502
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-mie-kotsu-sancoyokkaichi-vp",
+   "name": "三重交通",
+   "url": "https://bus-vision.jp/realtime/yokkaichi_vpos_update_v2.bin",
+   "static": "jbda-mie-kotsu-sancoyokkaichi",
+   "bbox": [
+    136.447,
+    34.874,
+    136.884,
+    35.168
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-nagai-unyu-Nagaibus-vp",
+   "name": "永井運輸株式会社",
+   "url": "https://nagai.nolbe.net/buslocation/VehiclePosition.pb",
+   "static": "jbda-nagai-unyu-Nagaibus",
+   "bbox": [
+    139.047,
+    36.271,
+    139.194,
+    36.459
+   ],
+   "vehicles": 1
+  },
+  {
+   "id": "jbda-naganocity-shiei_noriaibus-vp",
+   "name": "長野市",
+   "url": "https://realtime.gtfs.info/api/vehicle/F23EA2FD-DAB8-4E7D-AC4F-67E482555472",
+   "static": "jbda-naganocity-shiei_noriaibus",
+   "bbox": [
+    137.931,
+    36.559,
+    138.258,
+    36.682
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-namerikawacity-norumycar-vp",
+   "name": "滑川市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/namerikawa-city/VehiclePositions.pb",
+   "static": "jbda-namerikawacity-norumycar",
+   "bbox": [
+    137.317,
+    36.72,
+    137.44,
+    36.799
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-nantocity-nanbus-vp",
+   "name": "南砺市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/nanto-city/VehiclePositions.pb",
+   "static": "jbda-nantocity-nanbus",
+   "bbox": [
+    136.799,
+    36.352,
+    137.142,
+    36.612
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-nyuzentown-noranmaicar-vp",
+   "name": "入善町",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/nyuzen_noran/VehiclePositions.pb",
+   "static": "jbda-nyuzentown-noranmaicar",
+   "bbox": [
+    137.495,
+    36.857,
+    137.56,
+    36.942
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-owariasahicity-communitybus-vp",
+   "name": "尾張旭市",
+   "url": "https://gtfs-rt-files.buscatch.jp/owariasahi-city/asapygo/VehiclePositions.pb",
+   "static": "jbda-owariasahicity-communitybus",
+   "bbox": [
+    137.004,
+    35.19,
+    137.064,
+    35.233
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-oyabecity-oyabecitybus-vp",
+   "name": "小矢部市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/oyabe-city/VehiclePositions.pb",
+   "static": "jbda-oyabecity-oyabecitybus",
+   "bbox": [
+    136.803,
+    36.607,
+    136.928,
+    36.722
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-sankobus-sankobus-vp",
+   "name": "産交バス",
+   "url": "https://km.bus-vision.jp/realtime/sankobus_vpos_update.bin",
+   "static": "jbda-sankobus-sankobus",
+   "bbox": [
+    129.992,
+    32.128,
+    131.672,
+    33.599
+   ],
+   "vehicles": 3
+  },
+  {
+   "id": "jbda-takaokacity-koueibus-vp",
+   "name": "高岡市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/takaoka-city/VehiclePositions.pb",
+   "static": "jbda-takaokacity-koueibus",
+   "bbox": [
+    136.854,
+    36.686,
+    136.959,
+    36.775
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-takeyakoutu-takeyakotsu-vp",
+   "name": "株式会社タケヤ交通",
+   "url": "https://realtime.gtfs.info/takeyakotsu/vehicle.pb",
+   "static": "jbda-takeyakoutu-takeyakotsu",
+   "bbox": [
+    140.524,
+    37.995,
+    140.992,
+    38.275
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-tateyamatown-tateyama-vp",
+   "name": "立山町",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/tateyama-town/VehiclePositions.pb",
+   "static": "jbda-tateyamatown-tateyama",
+   "bbox": [
+    137.291,
+    36.574,
+    137.396,
+    36.7
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-tokonamecity-Gruun-vp",
+   "name": "常滑市",
+   "url": "https://realtime.gtfs.info/gruun/vehicle.pb",
+   "static": "jbda-tokonamecity-Gruun",
+   "bbox": [
+    136.825,
+    34.807,
+    136.916,
+    34.937
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-tonamicity-tonamishieibasu-vp",
+   "name": "砺波市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/tonami-city/VehiclePositions.pb",
+   "static": "jbda-tonamicity-tonamishieibasu",
+   "bbox": [
+    136.917,
+    36.567,
+    137.056,
+    36.675
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-toyama-asahitown-asahimachibus-vp",
+   "name": "富山県朝日町",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/asahimachi/VehiclePositions.pb",
+   "static": "jbda-toyama-asahitown-asahimachibus",
+   "bbox": [
+    137.531,
+    36.857,
+    137.661,
+    36.985
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-toyamacity-fuchucommunitybus-vp",
+   "name": "富山市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/toyama-city-fuchu/VehiclePositions.pb",
+   "static": "jbda-toyamacity-fuchucommunitybus",
+   "bbox": [
+    137.087,
+    36.619,
+    137.181,
+    36.681
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-toyamacity-horikawaminamicommunitybus-vp",
+   "name": "富山市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/toyama-city-horikawaminami/VehiclePositions.pb",
+   "static": "jbda-toyamacity-horikawaminamicommunitybus",
+   "bbox": [
+    137.211,
+    36.657,
+    137.238,
+    36.676
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-toyamacity-kurehaikiikibus-vp",
+   "name": "富山市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/toyama-city-kureha/VehiclePositions.pb",
+   "static": "jbda-toyamacity-kurehaikiikibus",
+   "bbox": [
+    137.108,
+    36.67,
+    137.195,
+    36.742
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-toyamacity-maidohayabus-vp",
+   "name": "富山市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/toyama-city-maidohaya/VehiclePositions.pb",
+   "static": "jbda-toyamacity-maidohayabus",
+   "bbox": [
+    137.202,
+    36.684,
+    137.232,
+    36.703
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-toyamacity-oyamacommunitybus-vp",
+   "name": "富山市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/toyama-city-oyama/VehiclePositions.pb",
+   "static": "jbda-toyamacity-oyamacommunitybus",
+   "bbox": [
+    137.254,
+    36.538,
+    137.393,
+    36.611
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-toyamacity-yamadacommunitybus-vp",
+   "name": "富山市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/toyama-city-yamada/VehiclePositions.pb",
+   "static": "jbda-toyamacity-yamadacommunitybus",
+   "bbox": [
+    137.046,
+    36.552,
+    137.142,
+    36.65
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-toyamacity-yatsuocommunitybus-vp",
+   "name": "富山市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/toyama-city-yatsuo/VehiclePositions.pb",
+   "static": "jbda-toyamacity-yatsuocommunitybus",
+   "bbox": [
+    137.062,
+    36.433,
+    137.182,
+    36.622
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-tsuchiuracity-tsuchimarubus-vp",
+   "name": "土浦市",
+   "url": "https://realtime.gtfs.info/tsuchiura/vehicle.pb",
+   "static": "jbda-tsuchiuracity-tsuchimarubus",
+   "bbox": [
+    140.141,
+    36.025,
+    140.194,
+    36.08
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-uozucity-junkai-vp",
+   "name": "魚津市",
+   "url": "https://gtfs-rt-files.buscatch.jp/toyama/uozu_shimin/VehiclePositions.pb",
+   "static": "jbda-uozucity-junkai",
+   "bbox": [
+    137.387,
+    36.761,
+    137.495,
+    36.856
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "jbda-yanbaru-expressbus-yanbaru-express-bus-vp",
+   "name": "合同会社やんばる急行バス",
+   "url": "https://gtfs.yanbaru-bus-navi.com/gtfs-rt/yanbaru/vehicle_position.pb",
+   "static": "jbda-yanbaru-expressbus-yanbaru-express-bus",
+   "bbox": [
+    127.651,
+    26.171,
+    128.026,
+    26.711
+   ],
+   "vehicles": 0
+  },
   {
    "id": "mdb-1378",
    "name": "BC Transit (Campbell River Transit)",
@@ -12,7 +636,7 @@
     -125.127,
     50.064
    ],
-   "vehicles": 0
+   "vehicles": 3
   },
   {
    "id": "mdb-1379",
@@ -38,7 +662,7 @@
     -79.611,
     44.42
    ],
-   "vehicles": 0
+   "vehicles": 15
   },
   {
    "id": "mdb-1405",
@@ -64,7 +688,7 @@
     -89.874,
     38.809
    ],
-   "vehicles": 0
+   "vehicles": 84
   },
   {
    "id": "mdb-1417",
@@ -76,6 +700,19 @@
     43.255,
     -79.725,
     43.412
+   ],
+   "vehicles": 21
+  },
+  {
+   "id": "mdb-1423",
+   "name": "Canberra Metro Operations",
+   "url": "http://files.transport.act.gov.au/feeds/lightrail.pb",
+   "static": "mdb-935",
+   "bbox": [
+    149.129,
+    -35.278,
+    149.151,
+    -35.186
    ],
    "vehicles": 0
   },
@@ -90,7 +727,7 @@
     -84.174,
     42.776
    ],
-   "vehicles": 0
+   "vehicles": 25
   },
   {
    "id": "mdb-1427",
@@ -103,7 +740,7 @@
     -97.37,
     30.596
    ],
-   "vehicles": 149
+   "vehicles": 241
   },
   {
    "id": "mdb-1430",
@@ -129,7 +766,7 @@
     -76.438,
     44.279
    ],
-   "vehicles": 8
+   "vehicles": 45
   },
   {
    "id": "mdb-1436",
@@ -155,7 +792,7 @@
     -121.6,
     48.279
    ],
-   "vehicles": 1
+   "vehicles": 46
   },
   {
    "id": "mdb-1458",
@@ -168,7 +805,7 @@
     -79.638,
     43.337
    ],
-   "vehicles": 3
+   "vehicles": 111
   },
   {
    "id": "mdb-1461",
@@ -181,7 +818,7 @@
     -92.009,
     46.856
    ],
-   "vehicles": 0
+   "vehicles": 26
   },
   {
    "id": "mdb-1489",
@@ -194,7 +831,7 @@
     -84.258,
     39.357
    ],
-   "vehicles": 24
+   "vehicles": 95
   },
   {
    "id": "mdb-1496",
@@ -207,7 +844,7 @@
     -113.203,
     53.715
    ],
-   "vehicles": 12
+   "vehicles": 149
   },
   {
    "id": "mdb-1537",
@@ -220,7 +857,7 @@
     -122.483,
     47.161
    ],
-   "vehicles": 1
+   "vehicles": 18
   },
   {
    "id": "mdb-1542",
@@ -233,7 +870,7 @@
     -121.785,
     47.867
    ],
-   "vehicles": 69
+   "vehicles": 248
   },
   {
    "id": "mdb-1602",
@@ -246,7 +883,7 @@
     -70.257,
     42.799
    ],
-   "vehicles": 33
+   "vehicles": 376
   },
   {
    "id": "mdb-1607",
@@ -259,7 +896,7 @@
     -63.282,
     44.888
    ],
-   "vehicles": 3
+   "vehicles": 92
   },
   {
    "id": "mdb-1612",
@@ -272,7 +909,7 @@
     -79.523,
     43.736
    ],
-   "vehicles": 3
+   "vehicles": 135
   },
   {
    "id": "mdb-1619",
@@ -298,7 +935,7 @@
     -86.296,
     36.526
    ],
-   "vehicles": 5
+   "vehicles": 126
   },
   {
    "id": "mdb-1624",
@@ -311,7 +948,7 @@
     -71.954,
     41.1
    ],
-   "vehicles": 12
+   "vehicles": 44
   },
   {
    "id": "mdb-1630",
@@ -418,6 +1055,19 @@
    "vehicles": 0
   },
   {
+   "id": "mdb-1646",
+   "name": "OVapi",
+   "url": "http://gtfs.ovapi.nl/nl/vehiclePositions.pb",
+   "static": "mdb-1077",
+   "bbox": [
+    -0.129,
+    47.263,
+    16.378,
+    53.49
+   ],
+   "vehicles": 1968
+  },
+  {
    "id": "mdb-1649",
    "name": "Tompkins Consolidated Area Transit (TCAT)",
    "url": "https://realtimetcatbus.availtec.com/InfoPoint/GTFS-Realtime.ashx?&Type=VehiclePosition&serverid=0",
@@ -428,7 +1078,7 @@
     -76.281,
     42.591
    ],
-   "vehicles": 0
+   "vehicles": 10
   },
   {
    "id": "mdb-1662",
@@ -441,7 +1091,7 @@
     -71.135,
     42.02
    ],
-   "vehicles": 0
+   "vehicles": 60
   },
   {
    "id": "mdb-1665",
@@ -454,7 +1104,7 @@
     -116.876,
     34.103
    ],
-   "vehicles": 53
+   "vehicles": 82
   },
   {
    "id": "mdb-1678",
@@ -467,7 +1117,7 @@
     -104.669,
     40.207
    ],
-   "vehicles": 59
+   "vehicles": 277
   },
   {
    "id": "mdb-1683",
@@ -480,7 +1130,7 @@
     -92.805,
     45.333
    ],
-   "vehicles": 0
+   "vehicles": 269
   },
   {
    "id": "mdb-1690",
@@ -493,7 +1143,20 @@
     -89.182,
     48.479
    ],
-   "vehicles": 4
+   "vehicles": 42
+  },
+  {
+   "id": "mdb-1704",
+   "name": "TransLink Sunbus Cairns",
+   "url": "https://gtfsrt.api.translink.com.au/api/realtime/CNS/VehiclePositions",
+   "static": "mdb-674",
+   "bbox": [
+    145.662,
+    -17.105,
+    145.786,
+    -16.741
+   ],
+   "vehicles": 0
   },
   {
    "id": "mdb-1711",
@@ -506,7 +1169,7 @@
     -79.704,
     40.668
    ],
-   "vehicles": 20
+   "vehicles": 27
   },
   {
    "id": "mdb-1714",
@@ -519,7 +1182,7 @@
     -79.704,
     40.668
    ],
-   "vehicles": 67
+   "vehicles": 161
   },
   {
    "id": "mdb-1722",
@@ -532,7 +1195,7 @@
     -111.661,
     33.714
    ],
-   "vehicles": 84
+   "vehicles": 376
   },
   {
    "id": "mdb-1750",
@@ -545,7 +1208,7 @@
     -79.212,
     44.321
    ],
-   "vehicles": 0
+   "vehicles": 96
   },
   {
    "id": "mdb-1766",
@@ -558,7 +1221,7 @@
     -81.205,
     28.742
    ],
-   "vehicles": 1
+   "vehicles": 120
   },
   {
    "id": "mdb-1771",
@@ -571,7 +1234,7 @@
     -93.503,
     41.732
    ],
-   "vehicles": 0
+   "vehicles": 22
   },
   {
    "id": "mdb-1775",
@@ -584,7 +1247,20 @@
     -76.992,
     43.259
    ],
-   "vehicles": 0
+   "vehicles": 39
+  },
+  {
+   "id": "mdb-1776",
+   "name": "Roma Servizi per la Mobilità",
+   "url": "https://romamobilita.it/sites/default/files/rome_rtgtfs_vehicle_positions_feed.pb",
+   "static": "mdb-1294",
+   "bbox": [
+    12.238,
+    41.65,
+    12.79,
+    42.092
+   ],
+   "vehicles": 743
   },
   {
    "id": "mdb-1787",
@@ -610,7 +1286,7 @@
     -77.049,
     38.927
    ],
-   "vehicles": 3
+   "vehicles": 18
   },
   {
    "id": "mdb-1794",
@@ -623,7 +1299,46 @@
     -118.127,
     34.063
    ],
-   "vehicles": 0
+   "vehicles": 5
+  },
+  {
+   "id": "mdb-1797",
+   "name": "Go-Ahead",
+   "url": "https://api.entur.io/realtime/v1/gtfs-rt/vehicle-positions?datasource=GOA",
+   "static": "mdb-1078",
+   "bbox": [
+    4.513,
+    47.263,
+    31.15,
+    78.247
+   ],
+   "vehicles": 8
+  },
+  {
+   "id": "mdb-1801",
+   "name": "Vy Buss (SE)",
+   "url": "https://api.entur.io/realtime/v1/gtfs-rt/vehicle-positions?datasource=VYB",
+   "static": "mdb-1078",
+   "bbox": [
+    4.513,
+    47.263,
+    31.15,
+    78.247
+   ],
+   "vehicles": 37
+  },
+  {
+   "id": "mdb-1803",
+   "name": "Vy Express",
+   "url": "https://api.entur.io/realtime/v1/gtfs-rt/vehicle-positions?datasource=VYX",
+   "static": "mdb-1078",
+   "bbox": [
+    4.513,
+    47.263,
+    31.15,
+    78.247
+   ],
+   "vehicles": 61
   },
   {
    "id": "mdb-1910",
@@ -636,7 +1351,20 @@
     -121.732,
     37.338
    ],
-   "vehicles": 17
+   "vehicles": 31
+  },
+  {
+   "id": "mdb-1968",
+   "name": "Zarząd Dróg i Transportu Miejskiego (ZDiTM)",
+   "url": "https://www.zditm.szczecin.pl/storage/gtfs/gtfs-rt-vehicles.pb",
+   "static": "mdb-981",
+   "bbox": [
+    14.31,
+    53.282,
+    14.779,
+    53.595
+   ],
+   "vehicles": 136
   },
   {
    "id": "mdb-1980",
@@ -649,7 +1377,20 @@
     -111.572,
     35.24
    ],
-   "vehicles": 0
+   "vehicles": 10
+  },
+  {
+   "id": "mdb-2028",
+   "name": "Carris Metropolitana",
+   "url": "https://api.carrismetropolitana.pt/vehicles.pb",
+   "static": "mdb-2027",
+   "bbox": [
+    -9.497,
+    38.419,
+    -8.451,
+    39.079
+   ],
+   "vehicles": 390
   },
   {
    "id": "mdb-2097",
@@ -662,7 +1403,46 @@
     -89.206,
     43.199
    ],
-   "vehicles": 3
+   "vehicles": 43
+  },
+  {
+   "id": "mdb-2104",
+   "name": "Asociația de Dezvoltare Intercomunitară pentru Transport Public București – Ilfov (TPBI)",
+   "url": "https://gtfs.tpbi.ro/api/gtfs-rt/vehiclePositions",
+   "static": "mdb-2098",
+   "bbox": [
+    25.87,
+    44.255,
+    26.386,
+    44.751
+   ],
+   "vehicles": 444
+  },
+  {
+   "id": "mdb-2113",
+   "name": "Transbus Buzău",
+   "url": "https://gtfsagent.transportpublic.ro/transbus/vehiclePositions",
+   "static": "mdb-2106",
+   "bbox": [
+    26.476,
+    44.962,
+    27.148,
+    45.338
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-2118",
+   "name": "Compania de Transport Public Iași",
+   "url": "https://iasi-rt-feed.gtfs.ro/vehiclePositions",
+   "static": "mdb-2116",
+   "bbox": [
+    27.446,
+    47.065,
+    27.757,
+    47.288
+   ],
+   "vehicles": 81
   },
   {
    "id": "mdb-2125",
@@ -678,6 +1458,19 @@
    "vehicles": 0
   },
   {
+   "id": "mdb-2213",
+   "name": "Empresa Malagueña de Transportes (EMT)",
+   "url": "https://gtfs.emtmalaga.es/GTFSRTapi/api/vehicleposition",
+   "static": "mdb-2212",
+   "bbox": [
+    -4.576,
+    36.646,
+    -4.336,
+    36.78
+   ],
+   "vehicles": 94
+  },
+  {
    "id": "mdb-2218",
    "name": "Montebello Bus Lines",
    "url": "https://mbl.rideralerts.com/InfoPoint/GTFS-Realtime.ashx?Type=VehiclePosition",
@@ -688,7 +1481,7 @@
     -117.994,
     34.111
    ],
-   "vehicles": 0
+   "vehicles": 23
   },
   {
    "id": "mdb-2221",
@@ -740,7 +1533,59 @@
     -72.093,
     41.609
    ],
-   "vehicles": 0
+   "vehicles": 6
+  },
+  {
+   "id": "mdb-2335",
+   "name": "Zarząd Transportu Miejskiego Poznań (ZTM Poznań)",
+   "url": "https://www.ztm.poznan.pl/pl/dla-deweloperow/getGtfsRtFile/?file=vehicle_positions.pb",
+   "static": "mdb-982",
+   "bbox": [
+    16.457,
+    52.152,
+    17.282,
+    52.752
+   ],
+   "vehicles": 297
+  },
+  {
+   "id": "mdb-2340",
+   "name": "Zarząd Transportu Publicznego w Krakowie (ZTP Kraków)",
+   "url": "https://gtfs.ztp.krakow.pl/VehiclePositions_T.pb",
+   "static": "mdb-1270",
+   "bbox": [
+    19.889,
+    50.012,
+    20.118,
+    50.105
+   ],
+   "vehicles": 124
+  },
+  {
+   "id": "mdb-2342",
+   "name": "Regia Transport Electric Chișinău, Î.M. Parcul Urban de Autobuze",
+   "url": "https://chisinau-rt-feed.gtfs.ro/vehiclePositions",
+   "static": "mdb-2341",
+   "bbox": [
+    28.684,
+    46.883,
+    29.109,
+    47.147
+   ],
+   "vehicles": 170
+  },
+  {
+   "id": "mdb-2376",
+   "name": "Lvivavtodor",
+   "url": "https://track.ua-gis.com/gtfs/lviv/vehicle_position",
+   "static": "mdb-2374",
+   "bbox": [
+    23.86,
+    49.772,
+    24.163,
+    49.975
+   ],
+   "vehicles": 412
   },
   {
    "id": "mdb-2380",
@@ -753,7 +1598,33 @@
     -73.091,
     46.047
    ],
-   "vehicles": 0
+   "vehicles": 4
+  },
+  {
+   "id": "mdb-2383",
+   "name": "SĮ 'Susisiekimo paslaugos'",
+   "url": "https://www.stops.lt/vilnius/vehicle_positions.pb",
+   "static": "mdb-1044",
+   "bbox": [
+    25.046,
+    54.577,
+    25.517,
+    54.857
+   ],
+   "vehicles": 304
+  },
+  {
+   "id": "mdb-2391",
+   "name": "Prazska integrovana doprava (PID)",
+   "url": "https://api.golemio.cz/v2/vehiclepositions/gtfsrt/vehicle_positions.pb",
+   "static": "mdb-767",
+   "bbox": [
+    12.86,
+    49.012,
+    15.919,
+    50.956
+   ],
+   "vehicles": 1235
   },
   {
    "id": "mdb-2398",
@@ -766,7 +1637,20 @@
     -105.166,
     40.225
    ],
-   "vehicles": 0
+   "vehicles": 5
+  },
+  {
+   "id": "mdb-2402",
+   "name": "Empresa Municipal de Transportes de Fuenlabrada (EMTF)",
+   "url": "https://api.control.optibus.co/opendata/v1/gtfs-rt/vehicle-positions?uid=c-5cfcd2d1",
+   "static": "mdb-2400",
+   "bbox": [
+    -3.841,
+    40.276,
+    -3.764,
+    40.314
+   ],
+   "vehicles": 17
   },
   {
    "id": "mdb-2422",
@@ -779,7 +1663,7 @@
     -71.401,
     42.022
    ],
-   "vehicles": 3
+   "vehicles": 121
   },
   {
    "id": "mdb-2428",
@@ -831,7 +1715,7 @@
     -123.702,
     49.464
    ],
-   "vehicles": 0
+   "vehicles": 15
   },
   {
    "id": "mdb-2477",
@@ -844,7 +1728,7 @@
     -127.165,
     55.353
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "mdb-2482",
@@ -883,7 +1767,7 @@
     -123.445,
     48.915
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "mdb-2491",
@@ -922,7 +1806,7 @@
     -122.64,
     50.333
    ],
-   "vehicles": 0
+   "vehicles": 2
   },
   {
    "id": "mdb-2503",
@@ -948,7 +1832,7 @@
     -122.738,
     54.786
    ],
-   "vehicles": 1
+   "vehicles": 6
   },
   {
    "id": "mdb-2517",
@@ -961,7 +1845,7 @@
     -121.418,
     49.394
    ],
-   "vehicles": 0
+   "vehicles": 20
   },
   {
    "id": "mdb-2518",
@@ -1013,7 +1897,7 @@
     -118.962,
     50.933
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "mdb-2539",
@@ -1078,7 +1962,7 @@
     -120.067,
     50.862
    ],
-   "vehicles": 1
+   "vehicles": 11
   },
   {
    "id": "mdb-2558",
@@ -1091,7 +1975,7 @@
     -119.347,
     50.074
    ],
-   "vehicles": 3
+   "vehicles": 20
   },
   {
    "id": "mdb-2559",
@@ -1104,7 +1988,7 @@
     -124.178,
     49.982
    ],
-   "vehicles": 0
+   "vehicles": 2
   },
   {
    "id": "mdb-2562",
@@ -1130,7 +2014,7 @@
     -123.099,
     49.775
    ],
-   "vehicles": 0
+   "vehicles": 2
   },
   {
    "id": "mdb-2570",
@@ -1143,7 +2027,7 @@
     -123.475,
     49.514
    ],
-   "vehicles": 0
+   "vehicles": 4
   },
   {
    "id": "mdb-2574",
@@ -1156,7 +2040,7 @@
     -123.285,
     48.698
    ],
-   "vehicles": 17
+   "vehicles": 76
   },
   {
    "id": "mdb-2578",
@@ -1169,7 +2053,7 @@
     -125.525,
     49.154
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "mdb-2582",
@@ -1195,7 +2079,7 @@
     -122.927,
     50.159
    ],
-   "vehicles": 4
+   "vehicles": 11
   },
   {
    "id": "mdb-2590",
@@ -1209,6 +2093,32 @@
     52.151
    ],
    "vehicles": 0
+  },
+  {
+   "id": "mdb-2601",
+   "name": "Zarząd Transportu Publicznego w Krakowie (ZTP Kraków)",
+   "url": "https://gtfs.ztp.krakow.pl/VehiclePositions.pb",
+   "static": "mdb-1326",
+   "bbox": [
+    19.584,
+    49.902,
+    20.353,
+    50.245
+   ],
+   "vehicles": 460
+  },
+  {
+   "id": "mdb-2614",
+   "name": "Compania de Transport Public Cluj-Napoca",
+   "url": "https://cluj-rt-feed.gtfs.ro/vehiclePositions",
+   "static": "mdb-2121",
+   "bbox": [
+    23.288,
+    46.578,
+    23.841,
+    46.899
+   ],
+   "vehicles": 81
   },
   {
    "id": "mdb-2619",
@@ -1234,7 +2144,7 @@
     -69.962,
     43.918
    ],
-   "vehicles": 0
+   "vehicles": 16
   },
   {
    "id": "mdb-2665",
@@ -1247,7 +2157,20 @@
     -85.542,
     38.347
    ],
-   "vehicles": 2
+   "vehicles": 45
+  },
+  {
+   "id": "mdb-2696",
+   "name": "Gruppo Torinese Trasporti",
+   "url": "https://percorsieorari.gtt.to.it/das_gtfsrt/vehicle_position.aspx",
+   "static": "mdb-2687",
+   "bbox": [
+    7.144,
+    44.383,
+    8.46,
+    45.536
+   ],
+   "vehicles": 240
   },
   {
    "id": "mdb-2707",
@@ -1286,7 +2209,33 @@
     -121.702,
     45.503
    ],
-   "vehicles": 0
+   "vehicles": 2
+  },
+  {
+   "id": "mdb-2835",
+   "name": "Renfe commuter trains (Cercanias)",
+   "url": "https://gtfsrt.renfe.com/vehicle_positions.pb",
+   "static": "mdb-2653",
+   "bbox": [
+    -8.231,
+    36.409,
+    3.163,
+    43.689
+   ],
+   "vehicles": 305
+  },
+  {
+   "id": "mdb-2847",
+   "name": "Urban Mobility Center - Sofia Traffic",
+   "url": "https://gtfs.sofiatraffic.bg/api/v1/vehicle-positions",
+   "static": "mdb-2848",
+   "bbox": [
+    23.078,
+    42.479,
+    23.607,
+    42.855
+   ],
+   "vehicles": 379
   },
   {
    "id": "mdb-2889",
@@ -1299,7 +2248,7 @@
     -88.158,
     40.153
    ],
-   "vehicles": 12
+   "vehicles": 13
   },
   {
    "id": "mdb-2897",
@@ -1315,6 +2264,32 @@
    "vehicles": 0
   },
   {
+   "id": "mdb-2930",
+   "name": "Carris",
+   "url": "https://gateway.carris.pt/gateway/gtfs/api/v2.11/GTFS/realtime/vehiclepositions",
+   "static": "mdb-2929",
+   "bbox": [
+    -9.253,
+    38.665,
+    -9.093,
+    38.799
+   ],
+   "vehicles": 229
+  },
+  {
+   "id": "mdb-3058",
+   "name": "Metro Bilbao",
+   "url": "https://ctb-gtfs-rt.s3.eu-south-2.amazonaws.com/metro-bilbao-vehicle-positions.pb",
+   "static": "mdb-3052",
+   "bbox": [
+    -3.042,
+    43.235,
+    -2.881,
+    43.402
+   ],
+   "vehicles": 8
+  },
+  {
    "id": "mdb-3060",
    "name": "Southeastern Pennsylvania Transportation Authority (SEPTA)",
    "url": "https://www3.septa.org/gtfsrt/septarail-pa-us/Vehicle/rtVehiclePosition.pb",
@@ -1325,7 +2300,7 @@
     -74.754,
     40.306
    ],
-   "vehicles": 2
+   "vehicles": 32
   },
   {
    "id": "mdb-3063",
@@ -1338,7 +2313,7 @@
     -74.752,
     40.335
    ],
-   "vehicles": 472
+   "vehicles": 746
   },
   {
    "id": "mdb-3070",
@@ -1364,7 +2339,7 @@
     -122.184,
     48.013
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "mdb-3077",
@@ -1390,6 +2365,45 @@
     -73.871,
     41.193
    ],
+   "vehicles": 4
+  },
+  {
+   "id": "mdb-3229",
+   "name": "Helsingin seudun liikenne",
+   "url": "https://realtime.hsl.fi/realtime/vehicle-positions/v2/hsl",
+   "static": "mdb-865",
+   "bbox": [
+    24.028,
+    59.987,
+    25.665,
+    60.977
+   ],
+   "vehicles": 650
+  },
+  {
+   "id": "mdb-3231",
+   "name": "Kiev",
+   "url": "http://193.23.225.214:732/api/realtime",
+   "static": "mdb-3230",
+   "bbox": [
+    30.278,
+    50.226,
+    30.772,
+    50.567
+   ],
+   "vehicles": 329
+  },
+  {
+   "id": "mdb-3387",
+   "name": "Cotral - BusOne",
+   "url": "https://proxy.busone.app/cotral/gtfs-rt/vehicle-positions.pb",
+   "static": "mdb-3386",
+   "bbox": [
+    11.313,
+    41.207,
+    13.989,
+    43.333
+   ],
    "vehicles": 0
   },
   {
@@ -1403,7 +2417,59 @@
     -81.438,
     41.638
    ],
-   "vehicles": 164
+   "vehicles": 219
+  },
+  {
+   "id": "mdb-3418",
+   "name": "ELRON",
+   "url": "https://jbb.ghsq.de/gtfs/elron/VehiclePositions",
+   "static": "mdb-3153",
+   "bbox": [
+    24.061,
+    56.946,
+    28.198,
+    59.441
+   ],
+   "vehicles": 19
+  },
+  {
+   "id": "mdb-3422",
+   "name": "Azienda del Consorzio Trasporti Veneziano (ACTV) Navigazione",
+   "url": "https://tpl.actv.it/nav/GTFSRT/vehiclePositions",
+   "static": "mdb-1063",
+   "bbox": [
+    12.28,
+    45.224,
+    12.447,
+    45.495
+   ],
+   "vehicles": 51
+  },
+  {
+   "id": "mdb-3428",
+   "name": "PKS w Rzeszowie S.A.",
+   "url": "https://www.mpkrzeszow.pl/gtfs-pks/rt/gtfsrt.pb",
+   "static": "mdb-3180",
+   "bbox": [
+    21.695,
+    49.797,
+    22.657,
+    50.355
+   ],
+   "vehicles": 15
+  },
+  {
+   "id": "mdb-3429",
+   "name": "Rzeszowski Transport Miejski",
+   "url": "https://www.mpkrzeszow.pl/gtfs/rt/gtfsrt.pb",
+   "static": "mdb-3156",
+   "bbox": [
+    21.808,
+    49.919,
+    22.23,
+    50.123
+   ],
+   "vehicles": 60
   },
   {
    "id": "mdb-3431",
@@ -1458,6 +2524,32 @@
    "vehicles": 0
   },
   {
+   "id": "mdb-3466",
+   "name": "Tango Bus",
+   "url": "http://185.220.72.38:8085/ProfilGtfsRt2_0RSProducer-TANGO/VehiclePosition.pb",
+   "static": "tdg-82911",
+   "bbox": [
+    4.123,
+    43.671,
+    4.566,
+    43.976
+   ],
+   "vehicles": 12
+  },
+  {
+   "id": "mdb-3468",
+   "name": "Marne Bois Bateau Bus",
+   "url": "https://gtfs-rt.infra-hubup.fr/rivercat/vehicle_positions",
+   "static": "mdb-3470",
+   "bbox": [
+    2.467,
+    48.816,
+    2.518,
+    48.852
+   ],
+   "vehicles": 0
+  },
+  {
    "id": "mdb-3475",
    "name": "Broward County Transit",
    "url": "https://myride2.broward.org/gtfsrealtime/api/vehiclepositions",
@@ -1467,6 +2559,45 @@
     25.761,
     -80.076,
     26.352
+   ],
+   "vehicles": 106
+  },
+  {
+   "id": "mdb-3484",
+   "name": "FlexCom Kommunikációs Kft.",
+   "url": "https://gtfs.gpspositions.net/storage/realtime/OROSH_V_ONK/vehicle_positions.pb",
+   "static": "mdb-3482",
+   "bbox": [
+    20.593,
+    46.557,
+    20.673,
+    46.591
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "mdb-3489",
+   "name": "Lanka Metro Transit",
+   "url": "https://api.transit.seyone.dev/api/v1/realtime/vehicle-positions",
+   "static": "mdb-3490",
+   "bbox": [
+    79.842,
+    6.714,
+    79.994,
+    7.101
+   ],
+   "vehicles": 12
+  },
+  {
+   "id": "mdb-3511",
+   "name": "La Regional Vallisoletana S.A",
+   "url": "https://enzeyiwpoomhlxmcjivn.supabase.co/functions/v1/gtfs-rt",
+   "static": "mdb-3508",
+   "bbox": [
+    -4.815,
+    41.606,
+    -4.692,
+    41.666
    ],
    "vehicles": 0
   },
@@ -1481,7 +2612,7 @@
     -83.837,
     36.045
    ],
-   "vehicles": 0
+   "vehicles": 23
   },
   {
    "id": "mdb-3528",
@@ -1493,6 +2624,2138 @@
     44.697,
     -92.805,
     45.333
+   ],
+   "vehicles": 4
+  },
+  {
+   "id": "mdb-3547",
+   "name": "ACTV Automobilistico - BusOne",
+   "url": "https://proxy.busone.app/actv-aut/gtfs-rt/vehicle-positions.pb",
+   "static": "mdb-3590",
+   "bbox": [
+    11.882,
+    45.043,
+    12.391,
+    45.662
+   ],
+   "vehicles": 102
+  },
+  {
+   "id": "mdb-3550",
+   "name": "ACTV Navigazione - BusOne",
+   "url": "https://proxy.busone.app/actv-nav/gtfs-rt/vehicle-positions.pb",
+   "static": "mdb-3548",
+   "bbox": [
+    12.28,
+    45.224,
+    12.447,
+    45.495
+   ],
+   "vehicles": 51
+  },
+  {
+   "id": "mdb-3553",
+   "name": "TEP - BusOne",
+   "url": "https://proxy.busone.app/tep/gtfs-rt/vehicle-positions.pb",
+   "static": "mdb-3551",
+   "bbox": [
+    9.442,
+    44.369,
+    10.562,
+    45.021
+   ],
+   "vehicles": 21
+  },
+  {
+   "id": "mdb-3556",
+   "name": "SETA Modena - BusOne",
+   "url": "https://proxy.busone.app/seta-mo/gtfs-rt/vehicle-positions.pb",
+   "static": "mdb-3554",
+   "bbox": [
+    10.503,
+    44.132,
+    11.291,
+    44.942
+   ],
+   "vehicles": 4
+  },
+  {
+   "id": "mdb-3559",
+   "name": "SETA Reggio Emilia - BusOne",
+   "url": "https://proxy.busone.app/seta-re/gtfs-rt/vehicle-positions.pb",
+   "static": "mdb-3557",
+   "bbox": [
+    10.175,
+    44.247,
+    10.918,
+    44.993
+   ],
+   "vehicles": 19
+  },
+  {
+   "id": "mdb-3562",
+   "name": "SETA Piacenza - BusOne",
+   "url": "https://proxy.busone.app/seta-pc/gtfs-rt/vehicle-positions.pb",
+   "static": "mdb-3560",
+   "bbox": [
+    9.303,
+    44.526,
+    10.067,
+    45.143
+   ],
+   "vehicles": 7
+  },
+  {
+   "id": "mdb-3565",
+   "name": "Autolinee Toscane - BusOne",
+   "url": "https://proxy.busone.app/toscana/gtfs-rt/vehicle-positions.pb",
+   "static": "mdb-3563",
+   "bbox": [
+    9.755,
+    42.347,
+    12.376,
+    44.472
+   ],
+   "vehicles": 364
+  },
+  {
+   "id": "mdb-3568",
+   "name": "TPL FVG - BusOne",
+   "url": "https://proxy.busone.app/TPLFVG/gtfs-rt/vehicle-positions.pb",
+   "static": "mdb-3566",
+   "bbox": [
+    12.21,
+    45.502,
+    13.909,
+    46.591
+   ],
+   "vehicles": 91
+  },
+  {
+   "id": "mdb-3575",
+   "name": "STA - BusOne",
+   "url": "https://proxy.busone.app/sta/gtfs-rt/vehicle-positions.pb",
+   "static": "mdb-3573",
+   "bbox": [
+    9.18,
+    39.359,
+    18.166,
+    48.291
+   ],
+   "vehicles": 176
+  },
+  {
+   "id": "mdb-3578",
+   "name": "START Romagna - BusOne",
+   "url": "https://proxy.busone.app/start/gtfs-rt/vehicle-positions.pb",
+   "static": "mdb-3576",
+   "bbox": [
+    11.532,
+    43.669,
+    12.76,
+    44.615
+   ],
+   "vehicles": 45
+  },
+  {
+   "id": "mdb-3581",
+   "name": "AMTAB - BusOne",
+   "url": "https://proxy.busone.app/amtab/gtfs-rt/vehicle-positions.pb",
+   "static": "mdb-3579",
+   "bbox": [
+    16.728,
+    41.04,
+    17.028,
+    41.17
+   ],
+   "vehicles": 30
+  },
+  {
+   "id": "mdb-3586",
+   "name": "Busitalia Veneto - BusOne",
+   "url": "https://proxy.busone.app/biv/gtfs-rt/vehicle-positions.pb",
+   "static": "mdb-3584",
+   "bbox": [
+    11.385,
+    45.031,
+    12.341,
+    45.781
+   ],
+   "vehicles": 62
+  },
+  {
+   "id": "mdb-3589",
+   "name": "GTT - BusOne",
+   "url": "https://proxy.busone.app/gtt/gtfs-rt/vehicle-positions.pb",
+   "static": "mdb-3587",
+   "bbox": [
+    7.144,
+    44.383,
+    8.46,
+    45.536
+   ],
+   "vehicles": 243
+  },
+  {
+   "id": "odpt-KenkoHokubuKotsu-Localbus-vp",
+   "name": "株式会社県交北部交通",
+   "url": "https://api-public.odpt.org/api/v4/gtfs/realtime/odpt_KenkoHokubuKotsu_Localbus_vehicle",
+   "static": "odpt-KenkoHokubuKotsu-Localbus",
+   "bbox": [
+    133.173,
+    33.546,
+    133.565,
+    33.726
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "odpt-KochiKoryoKotsu-Localbus-vp",
+   "name": "高知高陵交通株式会社",
+   "url": "https://api-public.odpt.org/api/v4/gtfs/realtime/odpt_KochiKoryoKotsu_Localbus_vehicle",
+   "static": "odpt-KochiKoryoKotsu-Localbus",
+   "bbox": [
+    132.84,
+    33.244,
+    133.424,
+    33.498
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "odpt-KochiSeinanTraffic-Localbus-vp",
+   "name": "高知西南交通株式会社",
+   "url": "https://api-public.odpt.org/api/v4/gtfs/realtime/odpt_KochiSeinanTraffic_Localbus_vehicle",
+   "static": "odpt-KochiSeinanTraffic-Localbus",
+   "bbox": [
+    132.626,
+    32.724,
+    133.108,
+    33.178
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "odpt-SusakiCity-Citybus-vp",
+   "name": "須崎市",
+   "url": "https://api-public.odpt.org/api/v4/gtfs/realtime/odpt_SusakiCity_Citybus_vehicle",
+   "static": "odpt-SusakiCity-Citybus",
+   "bbox": [
+    133.283,
+    33.357,
+    133.326,
+    33.413
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "odpt-UrbanDevelopment_AomoriCity-AllLines-vp",
+   "name": "青森市",
+   "url": "https://api-public.odpt.org/api/v4/gtfs/realtime/odpt_UrbanDevelopment_AomoriCity_AllLines_vehicle",
+   "static": "odpt-UrbanDevelopment_AomoriCity-AllLines",
+   "bbox": [
+    140.571,
+    40.707,
+    140.869,
+    40.858
+   ],
+   "vehicles": 1
+  },
+  {
+   "id": "tdg-10231",
+   "name": "Zenbus",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/372463bd-d7b4-4668-a9b5-bd71a28f389d",
+   "static": "tdg-10230",
+   "bbox": [
+    -0.702,
+    44.778,
+    -0.53,
+    44.834
+   ],
+   "vehicles": 3
+  },
+  {
+   "id": "tdg-12600",
+   "name": "Zenbus",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/47aa1c93-4868-47da-ae43-e2fcbce3575f",
+   "static": "tdg-12601",
+   "bbox": [
+    -0.822,
+    45.641,
+    -0.374,
+    45.827
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-12609",
+   "name": "Zenbus",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/6a1ef3cc-13cc-4770-a347-f183dc6accd6",
+   "static": "tdg-12608",
+   "bbox": [
+    -0.643,
+    48.286,
+    -0.594,
+    48.318
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-15449",
+   "name": "Lulu en Bus (Ex. Lunéo)",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/0e17b681-e017-46e2-a792-b3b6ead2c06c",
+   "static": "tdg-83509",
+   "bbox": [
+    6.476,
+    48.572,
+    6.536,
+    48.606
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-25678",
+   "name": "Zenbus",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/0057d63f-cf69-4d67-8c44-3c546ec7d403",
+   "static": "tdg-11725",
+   "bbox": [
+    1.975,
+    44.571,
+    2.046,
+    44.628
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-34266",
+   "name": "Zenbus",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/afee6b6e-2c3f-4317-9d0a-d70540acf8d8",
+   "static": "tdg-34265",
+   "bbox": [
+    -0.659,
+    43.153,
+    -0.579,
+    43.22
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-36515",
+   "name": "Région Réunion",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/c0a17be1-e89a-48a3-aca1-d8eb8e89a55e",
+   "static": "tdg-80934",
+   "bbox": [
+    55.219,
+    -21.383,
+    55.827,
+    -20.872
+   ],
+   "vehicles": 31
+  },
+  {
+   "id": "tdg-38878",
+   "name": "Transdev • Pays de la Loire",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/dd56dfc5-85b6-43f9-8b1b-8eebd4cb2c2e",
+   "static": "tdg-79151",
+   "bbox": [
+    -2.179,
+    47.203,
+    -2.042,
+    47.269
+   ],
+   "vehicles": 1
+  },
+  {
+   "id": "tdg-40392",
+   "name": "Transdev • Centre-Val de Loire",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/8bd532f4-8813-4313-be7c-304b8f8f47a7",
+   "static": "tdg-79576",
+   "bbox": [
+    0.798,
+    48.311,
+    0.843,
+    48.331
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-40623",
+   "name": "Communauté d'Agglomération Hérault Méditerranée",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/7dab24f0-3114-49b9-827d-376d10a4b193",
+   "static": "tdg-64163",
+   "bbox": [
+    3.407,
+    43.274,
+    3.523,
+    43.463
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-52582",
+   "name": "Transdev • Pays de la Loire",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/0fbf9dc8-d2db-405d-ade4-fdd04a6f8272",
+   "static": "tdg-79537",
+   "bbox": [
+    -0.363,
+    47.822,
+    -0.293,
+    47.858
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-52918",
+   "name": "Vienne Condrieu Agglomération",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/4e87a135-b46e-46b3-8aaa-0233ec3c242a",
+   "static": "tdg-52917",
+   "bbox": [
+    4.598,
+    45.406,
+    5.479,
+    45.672
+   ],
+   "vehicles": 3
+  },
+  {
+   "id": "tdg-67153",
+   "name": "Transdev • Normandie",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/ea44be8d-36ef-4aac-b56f-98b78eb54382",
+   "static": "tdg-83783",
+   "bbox": [
+    0.457,
+    49.46,
+    0.772,
+    49.661
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-67732",
+   "name": "DiviaMobilités",
+   "url": "https://proxy.transport.data.gouv.fr/resource/divia-dijon-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-80742",
+   "bbox": [
+    4.916,
+    47.23,
+    5.183,
+    47.369
+   ],
+   "vehicles": 45
+  },
+  {
+   "id": "tdg-74509",
+   "name": "Brest métropole",
+   "url": "https://proxy.transport.data.gouv.fr/resource/bibus-brest-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-43286",
+   "bbox": [
+    -4.623,
+    48.34,
+    -4.348,
+    48.457
+   ],
+   "vehicles": 41
+  },
+  {
+   "id": "tdg-79015",
+   "name": "Zenbus",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/ae8b5fd2-283a-462c-aa34-27e02f6fc4a5",
+   "static": "tdg-79014",
+   "bbox": [
+    7.608,
+    48.709,
+    7.872,
+    48.853
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-79036",
+   "name": "Communauté d'agglomération Porte de l'Isère",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/120182b0-e338-4917-b2bb-ee37b60de1ba",
+   "static": "tdg-52937",
+   "bbox": [
+    5.094,
+    45.498,
+    5.382,
+    45.698
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-79742",
+   "name": "Transdev Fougères • SURF",
+   "url": "https://proxy.transport.data.gouv.fr/resource/surf-fougeres-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-64280",
+   "bbox": [
+    -1.235,
+    48.319,
+    -1.147,
+    48.371
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-79746",
+   "name": "Armor Argoat Mobilité • Guingamp-Paimpol Mobilité",
+   "url": "https://proxy.transport.data.gouv.fr/resource/axeo-guingamp-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-72361",
+   "bbox": [
+    -3.197,
+    48.543,
+    -2.967,
+    48.821
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-79830",
+   "name": "Communauté d'agglomération Le Cotentin",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/c94af528-293f-406f-a96f-bf847bcb252a",
+   "static": "tdg-79831",
+   "bbox": [
+    -1.945,
+    48.085,
+    -0.951,
+    49.716
+   ],
+   "vehicles": 15
+  },
+  {
+   "id": "tdg-79993",
+   "name": "Zenbus",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/1bffdcb5-1839-4725-90da-ca69d1ee05e6",
+   "static": "tdg-79992",
+   "bbox": [
+    1.205,
+    44.858,
+    1.238,
+    44.922
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-80184",
+   "name": "Palmbus",
+   "url": "https://proxy.transport.data.gouv.fr/resource/palmbus-cannes-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-79420",
+   "bbox": [
+    6.919,
+    43.481,
+    7.058,
+    43.629
+   ],
+   "vehicles": 29
+  },
+  {
+   "id": "tdg-80381",
+   "name": "Alliance Atlantique",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/68fc6b99-b51c-4a3c-9740-2edbc4a705bf",
+   "static": "tdg-82832",
+   "bbox": [
+    0.677,
+    47.745,
+    1.102,
+    47.829
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-80662",
+   "name": "ALTERNEO",
+   "url": "https://proxy.transport.data.gouv.fr/resource/alterneo-civis-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-80676",
+   "bbox": [
+    55.322,
+    -21.372,
+    55.588,
+    -21.115
+   ],
+   "vehicles": 7
+  },
+  {
+   "id": "tdg-80699",
+   "name": "Tours Métropole Val de Loire",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/02c21efd-d73c-43b5-b653-dc1048e0da94",
+   "static": "tdg-80694",
+   "bbox": [
+    0.479,
+    47.303,
+    0.85,
+    47.493
+   ],
+   "vehicles": 38
+  },
+  {
+   "id": "tdg-80710",
+   "name": "Ametis",
+   "url": "https://proxy.transport.data.gouv.fr/resource/ametis-amiens-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-80705",
+   "bbox": [
+    2.212,
+    49.816,
+    2.423,
+    49.97
+   ],
+   "vehicles": 15
+  },
+  {
+   "id": "tdg-80723",
+   "name": "Région des Pays de la Loire",
+   "url": "https://proxy.transport.data.gouv.fr/resource/aleop-pdl-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-80721",
+   "bbox": [
+    -2.348,
+    46.152,
+    0.804,
+    48.481
+   ],
+   "vehicles": 6
+  },
+  {
+   "id": "tdg-80732",
+   "name": "Tango",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/ee857dd3-ef88-4d71-ba0a-31ac996a2ba2",
+   "static": "tdg-82911",
+   "bbox": [
+    4.123,
+    43.671,
+    4.566,
+    43.976
+   ],
+   "vehicles": 12
+  },
+  {
+   "id": "tdg-80939",
+   "name": "Transdev • Pays de la Loire",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/476d53cd-374b-41b7-b11a-a158cc9abfaa",
+   "static": "tdg-80586",
+   "bbox": [
+    -0.152,
+    47.812,
+    0.539,
+    48.202
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81017",
+   "name": "Tout'enbus",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/af576ebf-d3a4-4a0f-b692-8ee580cb1877",
+   "static": "tdg-81255",
+   "bbox": [
+    4.313,
+    44.554,
+    4.467,
+    44.686
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81036",
+   "name": "Oise Mobilité - Syndicat mixte des transports collectifs de l'Oise",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/87ccbc7d-8793-4c56-8352-822bc40c9dcb",
+   "static": "tdg-81034",
+   "bbox": [
+    2.494,
+    49.254,
+    2.683,
+    49.347
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81044",
+   "name": "Oise Mobilité - Syndicat mixte des transports collectifs de l'Oise",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/34d40ea1-4514-4280-9d9b-ad94e9991a3d",
+   "static": "tdg-81042",
+   "bbox": [
+    2.375,
+    49.139,
+    2.492,
+    49.203
+   ],
+   "vehicles": 1
+  },
+  {
+   "id": "tdg-81060",
+   "name": "Oise Mobilité - Syndicat mixte des transports collectifs de l'Oise",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/a01c7604-5363-4ac1-83bc-b20acb1d9f86",
+   "static": "tdg-81058",
+   "bbox": [
+    2.685,
+    49.081,
+    3.105,
+    49.296
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81122",
+   "name": "Oise Mobilité - Syndicat mixte des transports collectifs de l'Oise",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/973e9d73-3ab8-4e47-9516-cb06b25737d8",
+   "static": "tdg-81072",
+   "bbox": [
+    2.37,
+    49.188,
+    2.509,
+    49.292
+   ],
+   "vehicles": 7
+  },
+  {
+   "id": "tdg-81126",
+   "name": "Oise Mobilité - Syndicat mixte des transports collectifs de l'Oise",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/5b42006f-d97b-4f58-9edd-82fd9022efff",
+   "static": "tdg-81074",
+   "bbox": [
+    2.05,
+    49.405,
+    2.125,
+    49.467
+   ],
+   "vehicles": 4
+  },
+  {
+   "id": "tdg-81134",
+   "name": "Oise Mobilité - Syndicat mixte des transports collectifs de l'Oise",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/8c90057e-c516-494b-9e08-67c6841876fe",
+   "static": "tdg-81066",
+   "bbox": [
+    2.759,
+    49.381,
+    2.887,
+    49.447
+   ],
+   "vehicles": 2
+  },
+  {
+   "id": "tdg-81140",
+   "name": "Oise Mobilité - Syndicat mixte des transports collectifs de l'Oise",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/052ae731-ee66-45c0-97f4-bdd29f93cead",
+   "static": "tdg-81138",
+   "bbox": [
+    1.951,
+    49.339,
+    2.332,
+    49.611
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81150",
+   "name": "Oise Mobilité - Syndicat mixte des transports collectifs de l'Oise",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/e6917aac-3de0-456f-8296-385ab4954c9b",
+   "static": "tdg-81146",
+   "bbox": [
+    2.719,
+    49.26,
+    2.932,
+    49.454
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81256",
+   "name": "Transdev • Bretagne ",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/365ca136-0b94-4c28-9931-a812e792e108",
+   "static": "tdg-81179",
+   "bbox": [
+    -2.987,
+    48.037,
+    -2.886,
+    48.088
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81300",
+   "name": "Oise Mobilité - Syndicat mixte des transports collectifs de l'Oise",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/64511de6-ed7b-4494-b049-49bf83772f1f",
+   "static": "tdg-81056",
+   "bbox": [
+    2.321,
+    49.31,
+    2.51,
+    49.399
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81306",
+   "name": "Oise Mobilité - Syndicat mixte des transports collectifs de l'Oise",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/189e343b-e3e4-4098-9652-49ef01612924",
+   "static": "tdg-81054",
+   "bbox": [
+    2.976,
+    49.567,
+    3.027,
+    49.601
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81312",
+   "name": "Oise Mobilité - Syndicat mixte des transports collectifs de l'Oise",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/f360bd88-af15-4fa0-87f2-b83f9b1e5ffc",
+   "static": "tdg-81068",
+   "bbox": [
+    2.229,
+    49.149,
+    2.304,
+    49.234
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81324",
+   "name": "Oise Mobilité - Syndicat mixte des transports collectifs de l'Oise",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/52f94449-5af7-4553-bcc6-44fc417ebdd2",
+   "static": "tdg-81070",
+   "bbox": [
+    2.029,
+    49.202,
+    2.159,
+    49.264
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81335",
+   "name": "Réseau moova - Communauté d'Agglomération de Vesoul",
+   "url": "https://proxy.transport.data.gouv.fr/resource/moova-vesoul-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-81222",
+   "bbox": [
+    6.035,
+    47.524,
+    6.241,
+    47.671
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81341",
+   "name": "Communauté d'Agglomération du Grand Dole",
+   "url": "https://proxy.transport.data.gouv.fr/resource/tgd-dole-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-81254",
+   "bbox": [
+    5.325,
+    46.949,
+    5.651,
+    47.285
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81420",
+   "name": "Keolis Menton Riviera",
+   "url": "https://proxy.transport.data.gouv.fr/resource/zest-menton-riviera-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-79559",
+   "bbox": [
+    7.399,
+    43.732,
+    7.665,
+    44.115
+   ],
+   "vehicles": 11
+  },
+  {
+   "id": "tdg-81512",
+   "name": "Eurométropole de Metz",
+   "url": "https://proxy.transport.data.gouv.fr/resource/lemet-metz-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-80725",
+   "bbox": [
+    6.003,
+    48.976,
+    6.324,
+    49.204
+   ],
+   "vehicles": 36
+  },
+  {
+   "id": "tdg-81543",
+   "name": "TCAT - Transports en Commun de l'Agglomération Troyenne",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/98230d13-cccb-4c27-b0bc-d1b9341ca77b",
+   "static": "tdg-79847",
+   "bbox": [
+    3.905,
+    48.184,
+    4.244,
+    48.4
+   ],
+   "vehicles": 11
+  },
+  {
+   "id": "tdg-81570",
+   "name": "Oise Mobilité - Syndicat mixte des transports collectifs de l'Oise",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/e42910ec-336a-48de-86ff-1183f0ffb68d",
+   "static": "tdg-81519",
+   "bbox": [
+    2.642,
+    49.314,
+    2.722,
+    49.438
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81579",
+   "name": "Sète Agglopole Méditerranée",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/b4b32f6f-26c8-4f4e-8253-5ce4d0462392",
+   "static": "tdg-81575",
+   "bbox": [
+    3.523,
+    43.311,
+    3.81,
+    43.515
+   ],
+   "vehicles": 11
+  },
+  {
+   "id": "tdg-81626",
+   "name": "Communauté d'Agglomération Gap-Tallard-Durance",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/11f653e9-0d6a-4e87-8cda-3069b3c6b441",
+   "static": "tdg-81547",
+   "bbox": [
+    6.031,
+    44.484,
+    6.121,
+    44.582
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81697",
+   "name": "Intercom Bernay Terres de Normandie",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/622b4abe-e029-4a6b-bd59-ef849e9b005f",
+   "static": "tdg-83775",
+   "bbox": [
+    0.577,
+    49.069,
+    0.616,
+    49.108
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81698",
+   "name": "Agglo Pays d'Issoire",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/bbc60d61-bf8f-40ec-9e3b-9c040cc2b06e",
+   "static": "tdg-81643",
+   "bbox": [
+    3.216,
+    45.542,
+    3.267,
+    45.551
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81786",
+   "name": "Angers Loire Métropole",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/83582223-990a-452d-ba3d-49f2977d0292",
+   "static": "tdg-80036",
+   "bbox": [
+    -0.753,
+    47.343,
+    -0.295,
+    47.617
+   ],
+   "vehicles": 19
+  },
+  {
+   "id": "tdg-81808",
+   "name": "Communauté de Communes du Sud Corse",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/a792a365-b5bc-48b8-81eb-512e8e83af08",
+   "static": "tdg-81252",
+   "bbox": [
+    9.263,
+    41.578,
+    9.284,
+    41.606
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81925",
+   "name": "Transp'Or - Pays de l'Or Agglomération",
+   "url": "https://proxy.transport.data.gouv.fr/resource/transpor-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-79551",
+   "bbox": [
+    3.891,
+    43.51,
+    4.128,
+    43.673
+   ],
+   "vehicles": 3
+  },
+  {
+   "id": "tdg-81953",
+   "name": "Tempo Bus",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/37b144db-2013-49ff-9a24-b8396f19655d",
+   "static": "tdg-80245",
+   "bbox": [
+    0.48,
+    44.063,
+    0.912,
+    44.306
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81967",
+   "name": "Réseau CARSUD",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/146fe36f-16c5-44bc-ac1a-06c0fedcc4dd",
+   "static": "tdg-81183",
+   "bbox": [
+    55.46,
+    -21.387,
+    55.802,
+    -21.182
+   ],
+   "vehicles": 3
+  },
+  {
+   "id": "tdg-81988",
+   "name": "Transport du Grand Longwy",
+   "url": "https://proxy.transport.data.gouv.fr/resource/tgl-longwy-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-84148",
+   "bbox": [
+    -3.39,
+    27.16,
+    5.938,
+    49.551
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-81998",
+   "name": "TLP Mobilités",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/38611abb-fb76-4072-8be9-514fdbc4b13a",
+   "static": "tdg-83134",
+   "bbox": [
+    -0.078,
+    43.083,
+    0.123,
+    43.295
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-8202",
+   "name": "Zenbus",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/7dd97f96-2fb2-4647-8498-ef234ed0faaa",
+   "static": "tdg-8201",
+   "bbox": [
+    2.449,
+    48.861,
+    2.509,
+    48.884
+   ],
+   "vehicles": 1
+  },
+  {
+   "id": "tdg-82095",
+   "name": "Transdev GMVA Mobilités • Kicéo",
+   "url": "https://proxy.transport.data.gouv.fr/resource/kiceo-vannes-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-82553",
+   "bbox": [
+    -2.953,
+    47.491,
+    -2.514,
+    47.826
+   ],
+   "vehicles": 6
+  },
+  {
+   "id": "tdg-82142",
+   "name": "Syndicat mixte Atoumod",
+   "url": "https://proxy.transport.data.gouv.fr/resource/astrobus-lisieux-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-82140",
+   "bbox": [
+    -0.136,
+    48.916,
+    0.441,
+    49.211
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-82163",
+   "name": "STAR",
+   "url": "https://proxy.transport.data.gouv.fr/resource/star-rennes-integration-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-83281",
+   "bbox": [
+    -1.956,
+    47.939,
+    -1.478,
+    48.325
+   ],
+   "vehicles": 46
+  },
+  {
+   "id": "tdg-82186",
+   "name": "Transdev Vierzon Mobilités • Le Vib",
+   "url": "https://proxy.transport.data.gouv.fr/resource/le-vib-vierzon-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-82554",
+   "bbox": [
+    2.038,
+    47.2,
+    2.11,
+    47.241
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-82273",
+   "name": "Sankéo",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/793437a0-d3df-4b77-89d5-72525d49800b",
+   "static": "tdg-83735",
+   "bbox": [
+    2.611,
+    42.616,
+    3.042,
+    42.87
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-82296",
+   "name": "Syndicat mixte Atoumod",
+   "url": "https://proxy.transport.data.gouv.fr/resource/atoumod-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-81942",
+   "bbox": [
+    -8.323,
+    43.303,
+    5.38,
+    52.254
+   ],
+   "vehicles": 61
+  },
+  {
+   "id": "tdg-82474",
+   "name": "Métropole Toulon Provence Méditerranée",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/9fe8291c-2fb2-4f89-b578-282ba05dd999",
+   "static": "tdg-79560",
+   "bbox": [
+    5.795,
+    43.028,
+    6.2,
+    43.196
+   ],
+   "vehicles": 53
+  },
+  {
+   "id": "tdg-82549",
+   "name": "NEMUS (Réseau de transports de Flers Agglo)",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/eff8bfff-3d8d-4264-b443-f8aab1d94909",
+   "static": "tdg-83782",
+   "bbox": [
+    -0.604,
+    48.726,
+    -0.542,
+    48.779
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-82551",
+   "name": "NEMUS (Réseau de transports de Flers Agglo)",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/9030bf31-561f-4ed2-b8c4-74e6189e46bf",
+   "static": "tdg-82094",
+   "bbox": [
+    -0.683,
+    48.586,
+    -0.347,
+    48.873
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-82578",
+   "name": "Keolis RIOM",
+   "url": "https://proxy.transport.data.gouv.fr/resource/riom-rlv-mobilites-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-82547",
+   "bbox": [
+    3.026,
+    45.794,
+    3.266,
+    45.966
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-82596",
+   "name": "Transdev • Bretagne ",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/b2bccdd8-ac63-4092-bed5-9431fb38bb5b",
+   "static": "tdg-79528",
+   "bbox": [
+    -2.564,
+    48.453,
+    -2.405,
+    48.649
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-82630",
+   "name": "Syndicat mixte Atoumod",
+   "url": "https://proxy.transport.data.gouv.fr/resource/moca-caux-austreberthe-gtfs-rt?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-82309",
+   "bbox": [
+    0.93,
+    49.527,
+    0.968,
+    49.574
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-82632",
+   "name": "Syndicat mixte Atoumod",
+   "url": "https://proxy.transport.data.gouv.fr/resource/moca-caux-austreberthe-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-82309",
+   "bbox": [
+    0.93,
+    49.527,
+    0.968,
+    49.574
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-82677",
+   "name": "Métropole Rouen Normandie",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/f5127667-1005-4515-b8d9-a2169ee83097",
+   "static": "tdg-64973",
+   "bbox": [
+    0.728,
+    49.262,
+    1.259,
+    49.539
+   ],
+   "vehicles": 67
+  },
+  {
+   "id": "tdg-82713",
+   "name": "Syndicat mixte Atoumod",
+   "url": "https://proxy.transport.data.gouv.fr/resource/hobus-honfleur-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-82711",
+   "bbox": [
+    0.203,
+    49.383,
+    0.266,
+    49.425
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-82719",
+   "name": "Fluo Grand Est",
+   "url": "https://proxy.transport.data.gouv.fr/resource/fluo-forbus-forbach-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-80467",
+   "bbox": [
+    6.708,
+    49.033,
+    7.079,
+    49.24
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-82723",
+   "name": "Syndicat mixte Atoumod",
+   "url": "https://proxy.transport.data.gouv.fr/resource/neva-granville-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-82721",
+   "bbox": [
+    -1.612,
+    48.797,
+    -1.395,
+    48.92
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-82731",
+   "name": "Syndicat mixte Atoumod",
+   "url": "https://proxy.transport.data.gouv.fr/resource/transurbain-evreux-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-80613",
+   "bbox": [
+    1.064,
+    48.964,
+    1.191,
+    49.077
+   ],
+   "vehicles": 4
+  },
+  {
+   "id": "tdg-82783",
+   "name": "Réseau beeMob - Transports en commun de l'Agglomération Béziers Méditerranée",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/ed8b8b27-96bd-4e46-b6c7-56b27fd0eb14",
+   "static": "tdg-83368",
+   "bbox": [
+    3.168,
+    43.236,
+    3.376,
+    43.471
+   ],
+   "vehicles": 10
+  },
+  {
+   "id": "tdg-82875",
+   "name": "Transdev Var",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/807dd36f-5813-487a-b410-20032bfbe3ad",
+   "static": "tdg-82874",
+   "bbox": [
+    6.295,
+    43.347,
+    6.347,
+    43.402
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-82889",
+   "name": "SETRAM",
+   "url": "https://proxy.transport.data.gouv.fr/resource/setram-lemans-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-79601",
+   "bbox": [
+    0.065,
+    47.906,
+    0.35,
+    48.078
+   ],
+   "vehicles": 22
+  },
+  {
+   "id": "tdg-82896",
+   "name": "Réseau de transport en commun Le Havre Seine Métropole LiA",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/b12cc05c-940d-4f43-b607-163f4632814e",
+   "static": "tdg-84037",
+   "bbox": [
+    0.069,
+    49.459,
+    0.366,
+    49.705
+   ],
+   "vehicles": 42
+  },
+  {
+   "id": "tdg-82909",
+   "name": "Fluo Grand Est",
+   "url": "https://proxy.transport.data.gouv.fr/resource/fluo-sel-et-vermois-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-82907",
+   "bbox": [
+    6.273,
+    48.592,
+    6.37,
+    48.638
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83026",
+   "name": "Bordeaux Métropole",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/df0af5aa-7f1d-43b3-aa90-39469f8cc65e",
+   "static": "tdg-83024",
+   "bbox": [
+    -0.799,
+    44.749,
+    -0.462,
+    45.026
+   ],
+   "vehicles": 205
+  },
+  {
+   "id": "tdg-83078",
+   "name": "Syndicat mixte Atoumod",
+   "url": "https://proxy.transport.data.gouv.fr/resource/sngo-vernon-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-80655",
+   "bbox": [
+    1.358,
+    49.01,
+    1.613,
+    49.257
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83079",
+   "name": "ENVIA",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/8e45727d-487f-4a14-823b-d906d6ebaa43",
+   "static": "tdg-82662",
+   "bbox": [
+    4.353,
+    43.351,
+    4.824,
+    43.869
+   ],
+   "vehicles": 2
+  },
+  {
+   "id": "tdg-83118",
+   "name": "Valence Romans Mobilités",
+   "url": "https://proxy.transport.data.gouv.fr/resource/citea-valence-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-82148",
+   "bbox": [
+    4.645,
+    44.804,
+    5.226,
+    45.219
+   ],
+   "vehicles": 14
+  },
+  {
+   "id": "tdg-83139",
+   "name": "Communauté d'Agglomération Beaune Côte et Sud",
+   "url": "https://proxy.transport.data.gouv.fr/resource/beaune-cote-et-bus-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-82660",
+   "bbox": [
+    4.625,
+    46.9,
+    4.891,
+    47.078
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83150",
+   "name": "Syndicat mixte Atoumod",
+   "url": "https://proxy.transport.data.gouv.fr/resource/vikibus-yvetot-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-81975",
+   "bbox": [
+    0.736,
+    49.606,
+    0.797,
+    49.636
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83192",
+   "name": "Communauté de Communes Chinon Vienne et Loire",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/8d37ead3-7887-438b-9b0b-e2675d0e3f2c",
+   "static": "tdg-82150",
+   "bbox": [
+    0.156,
+    47.163,
+    0.296,
+    47.285
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83201",
+   "name": "Coeur de Flandre Agglo",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/131da43c-d324-4f98-8481-0c7b20327df1",
+   "static": "tdg-83202",
+   "bbox": [
+    2.355,
+    50.674,
+    2.862,
+    50.847
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83297",
+   "name": "Métropole Rouen Normandie",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/0da9db94-d181-47b7-ae6f-cafe68014c4f",
+   "static": "tdg-64973",
+   "bbox": [
+    0.728,
+    49.262,
+    1.259,
+    49.539
+   ],
+   "vehicles": 75
+  },
+  {
+   "id": "tdg-83298",
+   "name": "Métropole Rouen Normandie",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/e28a981d-7f5f-4bd8-a4c1-e74a822f13f8",
+   "static": "tdg-64973",
+   "bbox": [
+    0.728,
+    49.262,
+    1.259,
+    49.539
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83319",
+   "name": "Métropole Nice Côte d'Azur",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/5f571595-aef1-480f-acde-b9315d9f5f3b",
+   "static": "tdg-83178",
+   "bbox": [
+    6.866,
+    43.651,
+    7.386,
+    44.287
+   ],
+   "vehicles": 86
+  },
+  {
+   "id": "tdg-83331",
+   "name": "Syndicat Mixte du Bassin d'Alès - Réseau Ales'Y",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/5a854ccb-ef82-4b04-8a35-a26c89bd69d6",
+   "static": "tdg-75062",
+   "bbox": [
+    3.827,
+    43.911,
+    4.355,
+    44.401
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83365",
+   "name": "Auray Quiberon Terre Atlantique",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/db7ab07b-daf3-4423-9884-d8d5c659dd13",
+   "static": "tdg-83300",
+   "bbox": [
+    -3.028,
+    47.66,
+    -2.958,
+    47.69
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83386",
+   "name": "Communauté d’Agglomération du Centre Littoral de Guyane",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/16f3e3ea-8527-4a6a-a37e-2b7eb312da51",
+   "static": "tdg-83304",
+   "bbox": [
+    -52.365,
+    4.823,
+    -52.285,
+    4.935
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83392",
+   "name": "Syndicat mixte Atoumod",
+   "url": "https://proxy.transport.data.gouv.fr/resource/deepmob-dieppe-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-80680",
+   "bbox": [
+    1.033,
+    49.865,
+    1.143,
+    49.934
+   ],
+   "vehicles": 2
+  },
+  {
+   "id": "tdg-83395",
+   "name": "CA Luberon Monts de Vaucluse",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/cc043d19-1258-433c-9d55-5c62fef2d038",
+   "static": "tdg-83394",
+   "bbox": [
+    5.006,
+    43.815,
+    5.106,
+    43.883
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83414",
+   "name": "JVMALIN",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/7c58df8c-4c5b-4e2a-ad07-635345745db5",
+   "static": "tdg-83526",
+   "bbox": [
+    1.031,
+    47.454,
+    1.508,
+    47.734
+   ],
+   "vehicles": 6
+  },
+  {
+   "id": "tdg-83468",
+   "name": "Communauté de Communes du Pays des Écrins",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/252fd29f-4a13-4e38-9e9e-6d3c09e9bb5a",
+   "static": "tdg-83467",
+   "bbox": [
+    6.415,
+    44.724,
+    6.596,
+    44.918
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83523",
+   "name": "Syndicat mixte Atoumod",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/fd40ae51-b748-4065-a341-24e888919b11",
+   "static": "tdg-82311",
+   "bbox": [
+    0.361,
+    49.743,
+    0.415,
+    49.764
+   ],
+   "vehicles": 1
+  },
+  {
+   "id": "tdg-83538",
+   "name": "Montélibus",
+   "url": "https://proxy.transport.data.gouv.fr/resource/montelibus-montelimar-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-82545",
+   "bbox": [
+    4.594,
+    44.457,
+    5.009,
+    44.735
+   ],
+   "vehicles": 1
+  },
+  {
+   "id": "tdg-83714",
+   "name": "Fluo Grand Est",
+   "url": "https://proxy.transport.data.gouv.fr/resource/fluo-haut-rhin-68-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-80419",
+   "bbox": [
+    6.876,
+    47.441,
+    7.877,
+    48.283
+   ],
+   "vehicles": 1
+  },
+  {
+   "id": "tdg-83743",
+   "name": "Le Grand Narbonne Communauté d'Agglomération",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/1fc16ad0-4aef-402d-9faa-da04ddd61fd2",
+   "static": "tdg-82661",
+   "bbox": [
+    2.821,
+    42.841,
+    3.231,
+    43.318
+   ],
+   "vehicles": 2
+  },
+  {
+   "id": "tdg-83748",
+   "name": "Quimper Bretagne Occidentale",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/6b7622db-c941-4d85-9856-c0315ddb78e1",
+   "static": "tdg-83408",
+   "bbox": [
+    -4.23,
+    47.911,
+    -3.87,
+    48.152
+   ],
+   "vehicles": 3
+  },
+  {
+   "id": "tdg-83764",
+   "name": "Transdev CapAtlantique Mobilités • Lila",
+   "url": "https://proxy.transport.data.gouv.fr/resource/lila-presquile-cap-atlantique-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-83762",
+   "bbox": [
+    -2.551,
+    47.236,
+    -2.182,
+    47.512
+   ],
+   "vehicles": 2
+  },
+  {
+   "id": "tdg-83766",
+   "name": "Transdev CapAtlantique Mobilités • Lila",
+   "url": "https://proxy.transport.data.gouv.fr/resource/lila-presquile-cap-atlantique-gtfs-rt?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-83762",
+   "bbox": [
+    -2.551,
+    47.236,
+    -2.182,
+    47.512
+   ],
+   "vehicles": 2
+  },
+  {
+   "id": "tdg-83796",
+   "name": "Transdev SMA Mobilités • MAT",
+   "url": "https://proxy.transport.data.gouv.fr/resource/mat-st-malo-gtfs-rt?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-82555",
+   "bbox": [
+    -2.027,
+    48.486,
+    -1.786,
+    48.705
+   ],
+   "vehicles": 9
+  },
+  {
+   "id": "tdg-83840",
+   "name": "ALEO",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/7c1a4aee-6445-4a2e-90aa-250ade5b9e80",
+   "static": "tdg-83839",
+   "bbox": [
+    3.285,
+    46.501,
+    3.446,
+    46.636
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83843",
+   "name": "Grand Bourg Agglomération",
+   "url": "https://proxy.transport.data.gouv.fr/resource/rubis-bourg-en-bresse-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-84244",
+   "bbox": [
+    5.068,
+    46.131,
+    5.431,
+    46.502
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83851",
+   "name": "Filibus - Chartres Métropole Transports",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/7e4b9d82-0863-4eaa-8051-a1dcf5e086f5",
+   "static": "tdg-80587",
+   "bbox": [
+    1.234,
+    48.264,
+    1.708,
+    48.594
+   ],
+   "vehicles": 5
+  },
+  {
+   "id": "tdg-83855",
+   "name": "Communauté d'Agglomération Lunel Agglo",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/5511d6c1-1454-4045-a2f5-1223f22d7530",
+   "static": "tdg-83852",
+   "bbox": [
+    4.014,
+    43.642,
+    4.177,
+    43.795
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83857",
+   "name": "Communauté Urbaine de Dunkerque / Réseau Dk Bus",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/39f7ea92-6ad5-4a02-ad14-4019ce4a8ecb",
+   "static": "tdg-82683",
+   "bbox": [
+    2.099,
+    50.941,
+    2.603,
+    51.086
+   ],
+   "vehicles": 45
+  },
+  {
+   "id": "tdg-83860",
+   "name": "Communauté de Communes Cœur de Loire",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/60dde12f-09d6-49ec-86c5-300a59119488",
+   "static": "tdg-83859",
+   "bbox": [
+    2.899,
+    47.353,
+    2.983,
+    47.437
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83868",
+   "name": "JVMALIN",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/cf98048e-7419-46ec-a1e3-36a34e1e11a9",
+   "static": "tdg-83529",
+   "bbox": [
+    0.901,
+    48.523,
+    1.556,
+    48.94
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83889",
+   "name": "J'ybus",
+   "url": "https://proxy.transport.data.gouv.fr/resource/jybus-rumilly-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-80092",
+   "bbox": [
+    5.928,
+    45.836,
+    6.095,
+    45.93
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83924",
+   "name": "Oise Mobilité - Syndicat mixte des transports collectifs de l'Oise",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/abe147f7-a064-43fe-be9e-6f35f5a9597f",
+   "static": "tdg-83922",
+   "bbox": [
+    2.436,
+    49.318,
+    2.497,
+    49.355
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-83928",
+   "name": "Communauté d'Agglomération du Pays de Saint-Omer",
+   "url": "https://proxy.transport.data.gouv.fr/resource/mouveo-saint-omer-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-83987",
+   "bbox": [
+    2.208,
+    50.608,
+    2.489,
+    50.77
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-84015",
+   "name": "Montluçon Communauté",
+   "url": "https://proxy.transport.data.gouv.fr/resource/maelis-montlucon-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-84114",
+   "bbox": [
+    2.507,
+    46.165,
+    2.725,
+    46.405
+   ],
+   "vehicles": 1
+  },
+  {
+   "id": "tdg-84017",
+   "name": "Estérel Côte d'Azur Agglomération",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/24e2ecf9-82a3-4bfc-bf86-db6ec81c480f",
+   "static": "tdg-82294",
+   "bbox": [
+    6.633,
+    43.341,
+    6.932,
+    43.535
+   ],
+   "vehicles": 8
+  },
+  {
+   "id": "tdg-84038",
+   "name": "Réseau de transport en commun Le Havre Seine Métropole LiA",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/d499d5a2-8bba-4862-847a-0423f7d8cf23",
+   "static": "tdg-84037",
+   "bbox": [
+    0.069,
+    49.459,
+    0.366,
+    49.705
+   ],
+   "vehicles": 42
+  },
+  {
+   "id": "tdg-84047",
+   "name": "Transdev GMVA Mobilités • Kicéo",
+   "url": "https://proxy.transport.data.gouv.fr/resource/kiceo-vannes-gtfs-rt?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-82553",
+   "bbox": [
+    -2.953,
+    47.491,
+    -2.514,
+    47.826
+   ],
+   "vehicles": 6
+  },
+  {
+   "id": "tdg-84050",
+   "name": "TADAO",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/c4563dcc-f547-489a-b63a-efb4dbb37262",
+   "static": "tdg-83643",
+   "bbox": [
+    2.321,
+    50.368,
+    3.071,
+    50.633
+   ],
+   "vehicles": 36
+  },
+  {
+   "id": "tdg-84058",
+   "name": "Grand Avignon",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/74235bed-95fc-4fa8-ab25-bab7e3c6a6f1",
+   "static": "tdg-84115",
+   "bbox": [
+    4.654,
+    43.886,
+    5.031,
+    44.053
+   ],
+   "vehicles": 19
+  },
+  {
+   "id": "tdg-84080",
+   "name": "Martinique Transport",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/092ad091-b0c1-4094-9897-198a3c78faa7",
+   "static": "tdg-79897",
+   "bbox": [
+    -61.089,
+    14.403,
+    -60.832,
+    14.654
+   ],
+   "vehicles": 24
+  },
+  {
+   "id": "tdg-84081",
+   "name": "Martinique Transport",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/6cfa1c1c-43ef-4b55-9cae-b106180eefdb",
+   "static": "tdg-79898",
+   "bbox": [
+    -61.118,
+    14.594,
+    -60.945,
+    14.691
+   ],
+   "vehicles": 21
+  },
+  {
+   "id": "tdg-84088",
+   "name": "SPL D'UN POINT A L'AUTRE",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/eb530fc3-b08f-42a2-a669-0eeeeecee32d",
+   "static": "tdg-84087",
+   "bbox": [
+    1.797,
+    43.681,
+    1.829,
+    43.713
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-84090",
+   "name": "SPL D'UN POINT A L'AUTRE",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/3577ce0e-7581-455c-81ec-f50008b7d6c0",
+   "static": "tdg-84089",
+   "bbox": [
+    1.661,
+    43.757,
+    1.703,
+    43.779
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-84094",
+   "name": "Région Occitanie / Pyrénées Méditerranée",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/3a40f4e7-3068-43d2-9cd1-7b33cb0c2fe5",
+   "static": "tdg-81026",
+   "bbox": [
+    -0.369,
+    42.367,
+    4.812,
+    45.79
+   ],
+   "vehicles": 28
+  },
+  {
+   "id": "tdg-84122",
+   "name": "Syndicat Intercommunal de Mobilité et d'Organisation Urbaine du Valenciennois",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/74975bc9-525c-4ecd-b6cb-d1ca08863ba8",
+   "static": "tdg-84121",
+   "bbox": [
+    3.254,
+    50.245,
+    3.687,
+    50.514
+   ],
+   "vehicles": 18
+  },
+  {
+   "id": "tdg-84125",
+   "name": "Tango",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/78b3c0a0-6e4f-443d-88f1-325e534f67e6",
+   "static": "tdg-82911",
+   "bbox": [
+    4.123,
+    43.671,
+    4.566,
+    43.976
+   ],
+   "vehicles": 12
+  },
+  {
+   "id": "tdg-84138",
+   "name": "VICHY COMMUNAUTE",
+   "url": "https://proxy.transport.data.gouv.fr/resource/mobivie-vichy-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-84137",
+   "bbox": [
+    3.382,
+    46.078,
+    3.474,
+    46.159
+   ],
+   "vehicles": 2
+  },
+  {
+   "id": "tdg-84157",
+   "name": "Carcassonne Agglo",
+   "url": "https://proxy.transport.data.gouv.fr/resource/rtca-carcassonne-gtfs-rt-vehicle-position?token=xdgqKBTAzhw4DSPz6zeGc4c5eW0LhwztcGv4-vpzP4U",
+   "static": "tdg-81876",
+   "bbox": [
+    2.145,
+    43.056,
+    2.68,
+    43.409
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-84178",
+   "name": "JVMALIN",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/abf87e83-dde3-4ecb-83ba-3e434ec90251",
+   "static": "tdg-83530",
+   "bbox": [
+    -0.095,
+    46.434,
+    3.086,
+    48.868
+   ],
+   "vehicles": 10
+  },
+  {
+   "id": "tdg-84191",
+   "name": "Communauté de Communes Coeur du Var",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/4e0b1b0b-538f-463a-947a-aef63da8eeca",
+   "static": "tdg-84190",
+   "bbox": [
+    6.173,
+    43.297,
+    6.359,
+    43.451
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-84194",
+   "name": "Communauté de Communes du Pays d'Orange en Provence",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/7695b3c3-f4ad-454f-9565-ed7be11a78fc",
+   "static": "tdg-82715",
+   "bbox": [
+    4.79,
+    44.094,
+    4.85,
+    44.155
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-84202",
+   "name": "Montpellier Méditerranée Métropole",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/19b807c6-d4fb-4720-90b5-74c1ccc13661",
+   "static": "tdg-84199",
+   "bbox": [
+    3.701,
+    43.524,
+    4.041,
+    43.752
+   ],
+   "vehicles": 95
+  },
+  {
+   "id": "tdg-84209",
+   "name": "RENFE VIAJEROS SOCIEDAD MERCANTIL ESTATAL SA",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/cb62a16d-f879-44e6-8e8b-8eafded361b7",
+   "static": "tdg-82386",
+   "bbox": [
+    -3.691,
+    40.406,
+    5.382,
+    45.76
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-84229",
+   "name": "Communauté d'agglomération Grand Auch Coeur de Gascogne ",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/6974ab10-1b0f-4c59-aec0-9924bccb8dbc",
+   "static": "tdg-84228",
+   "bbox": [
+    0.557,
+    43.605,
+    0.634,
+    43.714
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-84231",
+   "name": "Transdev Chamonix",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/977dbe7b-37a6-447b-ba35-574042301471",
+   "static": "tdg-82663",
+   "bbox": [
+    6.755,
+    45.885,
+    6.947,
+    46.05
+   ],
+   "vehicles": 4
+  },
+  {
+   "id": "tdg-84249",
+   "name": "Communauté Urbaine d'Arras",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/058d6107-7dd7-4caf-a22d-127cb3f6e0e3",
+   "static": "tdg-83372",
+   "bbox": [
+    2.644,
+    50.2,
+    2.903,
+    50.366
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-84268",
+   "name": "VITRE COMMUNAUTE",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/19c43179-d9c2-46b1-972b-508729e9cc5b",
+   "static": "tdg-84254",
+   "bbox": [
+    -1.447,
+    47.894,
+    -1.019,
+    48.265
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-8488",
+   "name": "Zenbus",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/9b9013ec-4cbb-4f18-b44a-1e94088320a8",
+   "static": "tdg-8487",
+   "bbox": [
+    3.447,
+    44.515,
+    3.517,
+    44.547
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tdg-8598",
+   "name": "Zenbus",
+   "url": "https://www.data.gouv.fr/api/1/datasets/r/89a81efd-a8f4-4558-9988-9e7c56ab15fe",
+   "static": "tdg-8597",
+   "bbox": [
+    -1.368,
+    46.194,
+    -1.355,
+    46.206
    ],
    "vehicles": 0
   },
@@ -1507,7 +4770,7 @@
     -98.307,
     29.651
    ],
-   "vehicles": 397
+   "vehicles": 412
   },
   {
    "id": "tld-1127-vp",
@@ -1533,7 +4796,7 @@
     -120.749,
     37.962
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "tld-1261-vp",
@@ -1546,7 +4809,7 @@
     -118.068,
     34.198
    ],
-   "vehicles": 0
+   "vehicles": 10
   },
   {
    "id": "tld-2266-vp_1",
@@ -1572,7 +4835,7 @@
     -78.778,
     36.101
    ],
-   "vehicles": 0
+   "vehicles": 36
   },
   {
    "id": "tld-4067-vp",
@@ -1611,7 +4874,7 @@
     -118.219,
     34.507
    ],
-   "vehicles": 0
+   "vehicles": 20
   },
   {
    "id": "tld-4336-vp",
@@ -1637,7 +4900,7 @@
     -73.769,
     40.805
    ],
-   "vehicles": 0
+   "vehicles": 13
   },
   {
    "id": "tld-4347-vp",
@@ -1650,7 +4913,7 @@
     -77.022,
     39.029
    ],
-   "vehicles": 0
+   "vehicles": 67
   },
   {
    "id": "tld-4358-vp",
@@ -1663,7 +4926,7 @@
     -122.135,
     49
    ],
-   "vehicles": 2
+   "vehicles": 5
   },
   {
    "id": "tld-4360-vp",
@@ -1689,7 +4952,7 @@
     -117.076,
     47.769
    ],
-   "vehicles": 0
+   "vehicles": 22
   },
   {
    "id": "tld-4374-vp",
@@ -1702,7 +4965,7 @@
     -95.791,
     36.245
    ],
-   "vehicles": 0
+   "vehicles": 5
   },
   {
    "id": "tld-4375-vp",
@@ -1731,6 +4994,58 @@
    "vehicles": 0
   },
   {
+   "id": "tld-4488-vp",
+   "name": "Translink",
+   "url": "https://gtfsrt.api.translink.com.au/api/realtime/MHB/VehiclePositions",
+   "static": "mdb-651",
+   "bbox": [
+    152.555,
+    -25.561,
+    152.909,
+    -25.184
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tld-4489-vp",
+   "name": "Translink",
+   "url": "https://gtfsrt.api.translink.com.au/api/realtime/NSI/VehiclePositions",
+   "static": "mdb-652",
+   "bbox": [
+    153.401,
+    -27.503,
+    153.544,
+    -27.395
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tld-4491-vp",
+   "name": "Translink",
+   "url": "https://gtfsrt.api.translink.com.au/api/realtime/INN/VehiclePositions",
+   "static": "mdb-673",
+   "bbox": [
+    145.988,
+    -17.544,
+    146.077,
+    -17.491
+   ],
+   "vehicles": 0
+  },
+  {
+   "id": "tld-4493-vp",
+   "name": "Translink",
+   "url": "https://gtfsrt.api.translink.com.au/api/realtime/BOW/VehiclePositions",
+   "static": "mdb-675",
+   "bbox": [
+    148.225,
+    -20.019,
+    148.266,
+    -19.971
+   ],
+   "vehicles": 0
+  },
+  {
    "id": "tld-4532-vp",
    "name": "Charlotte Area Transit System",
    "url": "https://gtfsrealtime.ridetransit.org/GTFSRealTime/Vehicle/VehiclePositions.pb",
@@ -1741,7 +5056,7 @@
     -80.639,
     35.504
    ],
-   "vehicles": 0
+   "vehicles": 76
   },
   {
    "id": "tld-4549-vp",
@@ -1819,7 +5134,7 @@
     -78.97,
     40.945
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "tld-4664-vp",
@@ -1871,7 +5186,7 @@
     -78.407,
     40.67
    ],
-   "vehicles": 0
+   "vehicles": 4
   },
   {
    "id": "tld-4675-vp",
@@ -1897,7 +5212,7 @@
     -85.476,
     43.694
    ],
-   "vehicles": 0
+   "vehicles": 24
   },
   {
    "id": "tld-4677-vp",
@@ -1910,7 +5225,7 @@
     -85.509,
     42.333
    ],
-   "vehicles": 0
+   "vehicles": 15
   },
   {
    "id": "tld-4679-vp",
@@ -1923,7 +5238,7 @@
     -71.794,
     42.596
    ],
-   "vehicles": 0
+   "vehicles": 45
   },
   {
    "id": "tld-4689-vp",
@@ -2001,7 +5316,7 @@
     -83.302,
     34.03
    ],
-   "vehicles": 0
+   "vehicles": 8
   },
   {
    "id": "tld-4784-vp",
@@ -2014,7 +5329,7 @@
     -82.451,
     27.814
    ],
-   "vehicles": 0
+   "vehicles": 4
   },
   {
    "id": "tld-4790-vp",
@@ -2027,7 +5342,7 @@
     -73.031,
     41.239
    ],
-   "vehicles": 0
+   "vehicles": 8
   },
   {
    "id": "tld-4793-vp",
@@ -2053,7 +5368,7 @@
     -113.865,
     46.925
    ],
-   "vehicles": 8
+   "vehicles": 12
   },
   {
    "id": "tld-4832-vp",
@@ -2079,7 +5394,7 @@
     -104.801,
     40.591
    ],
-   "vehicles": 0
+   "vehicles": 6
   },
   {
    "id": "tld-5504-vp",
@@ -2092,7 +5407,7 @@
     -79.839,
     40.454
    ],
-   "vehicles": 0
+   "vehicles": 4
   },
   {
    "id": "tld-5532-vp",
@@ -2118,7 +5433,7 @@
     -76.5,
     40.294
    ],
-   "vehicles": 0
+   "vehicles": 13
   },
   {
    "id": "tld-5545-vp",
@@ -2144,7 +5459,7 @@
     -117.959,
     34.073
    ],
-   "vehicles": 0
+   "vehicles": 2
   },
   {
    "id": "tld-5549-vp",
@@ -2222,7 +5537,7 @@
     -89.482,
     40.819
    ],
-   "vehicles": 0
+   "vehicles": 14
   },
   {
    "id": "tld-5582-vp",
@@ -2261,7 +5576,7 @@
     -74.563,
     46.21
    ],
-   "vehicles": 0
+   "vehicles": 2
   },
   {
    "id": "tld-5631-vp",
@@ -2274,7 +5589,7 @@
     -73.23,
     45.466
    ],
-   "vehicles": 0
+   "vehicles": 6
   },
   {
    "id": "tld-5723-vp",
@@ -2287,7 +5602,7 @@
     -73.997,
     46.125
    ],
-   "vehicles": 0
+   "vehicles": 3
   },
   {
    "id": "tld-5839-vp",
@@ -2300,7 +5615,7 @@
     -75.756,
     40.565
    ],
-   "vehicles": 0
+   "vehicles": 2
   },
   {
    "id": "tld-5840-vp",
@@ -2313,7 +5628,7 @@
     -75.954,
     40.187
    ],
-   "vehicles": 0
+   "vehicles": 8
   },
   {
    "id": "tld-5865-vp",
@@ -2365,7 +5680,7 @@
     -81.449,
     28.347
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "tld-5903-vp",
@@ -2378,7 +5693,46 @@
     -73.379,
     41.607
    ],
+   "vehicles": 4
+  },
+  {
+   "id": "tld-6067-vp",
+   "name": "Zarząd Transportu Miejskiego w Warszawie",
+   "url": "https://mkuran.pl/gtfs/warsaw/alerts.pb",
+   "static": "mdb-2092",
+   "bbox": [
+    20.586,
+    51.921,
+    21.464,
+    52.494
+   ],
    "vehicles": 0
+  },
+  {
+   "id": "tld-6068-vp",
+   "name": "Zarząd Transportu Miejskiego w Warszawie",
+   "url": "https://mkuran.pl/gtfs/warsaw/vehicles.pb",
+   "static": "mdb-2092",
+   "bbox": [
+    20.586,
+    51.921,
+    21.464,
+    52.494
+   ],
+   "vehicles": 1041
+  },
+  {
+   "id": "tld-6075-tu_vp",
+   "name": "Miejski Zakład Komunikacji Sp. z o.o. (Ełk)",
+   "url": "https://mkuran.pl/gtfs/elk.pb",
+   "static": "mdb-2086",
+   "bbox": [
+    22.169,
+    53.74,
+    22.486,
+    53.94
+   ],
+   "vehicles": 6
   },
   {
    "id": "tld-6096-vp",
@@ -2391,7 +5745,7 @@
     -100.729,
     46.856
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "tld-6626-vp",
@@ -2404,7 +5758,7 @@
     -78.995,
     35.972
    ],
-   "vehicles": 0
+   "vehicles": 9
   },
   {
    "id": "tld-6669-vp",
@@ -2430,7 +5784,7 @@
     -78.416,
     35.917
    ],
-   "vehicles": 1
+   "vehicles": 68
   },
   {
    "id": "tld-6714-vp",
@@ -2482,7 +5836,7 @@
     -105.206,
     36.979
    ],
-   "vehicles": 0
+   "vehicles": 2
   },
   {
    "id": "tld-6774-vp",
@@ -2508,7 +5862,7 @@
     -78.292,
     36.096
    ],
-   "vehicles": 0
+   "vehicles": 18
   },
   {
    "id": "tld-6784-vp",
@@ -2521,7 +5875,7 @@
     -90.998,
     30.588
    ],
-   "vehicles": 0
+   "vehicles": 17
   },
   {
    "id": "tld-6786-vp",
@@ -2547,7 +5901,7 @@
     -77.297,
     34.802
    ],
-   "vehicles": 0
+   "vehicles": 5
   },
   {
    "id": "tld-6821-vp",
@@ -2560,7 +5914,7 @@
     -78.703,
     35.832
    ],
-   "vehicles": 0
+   "vehicles": 8
   },
   {
    "id": "tld-6882-vp",
@@ -2573,7 +5927,7 @@
     -86.472,
     39.208
    ],
-   "vehicles": 0
+   "vehicles": 6
   },
   {
    "id": "tld-6884-vp",
@@ -2599,7 +5953,7 @@
     -78.662,
     35.804
    ],
-   "vehicles": 0
+   "vehicles": 4
   },
   {
    "id": "tld-7022-vp",
@@ -2638,7 +5992,7 @@
     -79.538,
     40.445
    ],
-   "vehicles": 0
+   "vehicles": 1
   },
   {
    "id": "tld-7029-vp",
