@@ -129,6 +129,24 @@ const places: [string, [string, number, number, number][]][] = [
           <p class="readout live" data-live-status aria-live="polite">Zoom in to a region to see live vehicles</p>
         </div>
         <div class="sign-body">
+          <div class="search">
+            <label class="visually-hidden" for="globe-search">Find a place or agency</label>
+            <svg viewBox="0 0 24 24" aria-hidden="true"
+              ><path d="M10.5 3a7.5 7.5 0 0 1 5.96 12.05l4.25 4.24-1.42 1.42-4.24-4.25A7.5 7.5 0 1 1 10.5 3Zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Z"></path></svg
+            >
+            <input
+              id="globe-search"
+              type="search"
+              data-search
+              placeholder="Find a place or agency"
+              autocomplete="off"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-controls="globe-results"
+              aria-expanded="false"
+            />
+            <ul id="globe-results" class="results" data-results role="listbox" aria-label="Places and agencies" hidden></ul>
+          </div>
           <details class="layers" data-layers open>
             <summary>
               <span>Lines and places</span>
@@ -159,6 +177,11 @@ const places: [string, [string, number, number, number][]][] = [
                 <input type="checkbox" data-live checked />
                 <svg class="pictogram" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6" fill="currentColor"></circle></svg>
                 <span class="row-label">Vehicles reporting where they are ({n(liveList.feeds.length)} agencies)</span>
+              </label>
+              <label class="row">
+                <input type="checkbox" data-live-only />
+                <svg class="pictogram" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle><circle cx="12" cy="12" r="3" fill="currentColor"></circle></svg>
+                <span class="row-label">Only places with live vehicles</span>
               </label>
             </fieldset>
             <label class="jump">
@@ -261,7 +284,87 @@ const places: [string, [string, number, number, number][]][] = [
   }
 
   .sign-body {
-    padding: 0 var(--gutter);
+    padding: var(--space-3) var(--gutter) 0;
+  }
+
+  /* ---------- Search (same look as the live map's) ---------- */
+
+  .search {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search svg {
+    position: absolute;
+    left: var(--space-3);
+    width: 1.15rem;
+    height: 1.15rem;
+    fill: var(--ink-muted);
+    pointer-events: none;
+  }
+
+  .search input {
+    width: 100%;
+    min-height: 2.75rem;
+    font: inherit;
+    font-size: var(--step-0);
+    color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--control-line);
+    border-radius: var(--radius-sm);
+    padding: var(--space-2) var(--space-3) var(--space-2) calc(var(--space-3) + 1.6rem);
+  }
+
+  .search input::placeholder {
+    color: var(--ink-muted);
+    opacity: 1;
+  }
+
+  .search input:focus-visible {
+    outline: 3px solid var(--accent-ink);
+    outline-offset: 1px;
+  }
+
+  .results {
+    position: absolute;
+    z-index: 5;
+    top: calc(100% + var(--space-1));
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: var(--bg-raised);
+    border: 1px solid var(--control-line);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.22);
+    font-size: var(--step--1);
+    overflow: hidden;
+  }
+
+  .results :global(li) {
+    display: grid;
+    padding: var(--space-2) var(--space-3);
+    border-top: 1px solid var(--line);
+    cursor: pointer;
+  }
+
+  .results :global(li:first-child) {
+    border-top: 0;
+  }
+
+  .results :global(li.active),
+  .results :global(li:hover) {
+    background: color-mix(in oklab, var(--plate), transparent 85%);
+  }
+
+  .results :global(.result-label) {
+    font-weight: 600;
+  }
+
+  .results :global(.result-detail) {
+    color: var(--ink-muted);
   }
 
   summary {

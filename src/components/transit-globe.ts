@@ -12,6 +12,7 @@ import maplibregl, { type Map as MapLibreMap } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { Protocol } from 'pmtiles';
 import { liveVehicles, type LiveFeedRow } from './globe-vehicles';
+import { globeSearch } from './globe-search';
 
 type Mode = 'bus' | 'rail' | 'tram' | 'ferry' | 'other';
 
@@ -45,6 +46,7 @@ export function startGlobe(root: HTMLElement) {
   const status = root.querySelector<HTMLElement>('[data-status]');
   const liveStatus = root.querySelector<HTMLElement>('[data-live-status]');
   const liveInput = root.querySelector<HTMLInputElement>('[data-live]');
+  const liveOnlyInput = root.querySelector<HTMLInputElement>('[data-live-only]');
   // The live feeds' list (ids and areas) loads after the map, so the page stays light.
   const liveFeeds: LiveFeedRow[] = [];
 
@@ -79,9 +81,37 @@ export function startGlobe(root: HTMLElement) {
     } catch {
       // No live list: routes still show; vehicles just don't.
     }
+    liveSchedules = [...new Set(liveFeeds.map((f) => f[2]))];
+    drawHotspots();
+    applyFilters();
     live.start();
   });
   liveInput?.addEventListener('change', () => live.setVisible(liveInput.checked));
+
+  // ---------- Only live places ----------
+  // Schedules that have a live feed: their routes stay when "Only live places" is on.
+  let liveSchedules: string[] = [];
+  const liveOnly = () => Boolean(liveOnlyInput?.checked);
+
+  /** One dot per live system from orbit, sized by its vehicles at the last check. */
+  function hotspotData(): GeoJSON.FeatureCollection<GeoJSON.Point> {
+    return {
+      type: 'FeatureCollection',
+      features: liveFeeds.map(([id, name, schedule, [w, s, e, n], vehicles]) => ({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [(w + e) / 2, (s + n) / 2] },
+        properties: { id, name, schedule, vehicles: vehicles ?? 0, w, s, e, n },
+      })),
+    };
+  }
+  function drawHotspots() {
+    map.getSource<maplibregl.GeoJSONSource>('hotspots')?.setData(hotspotData());
+  }
+  liveOnlyInput?.addEventListener('change', () => {
+    applyFilters();
+    // Turning it on from far away: the dots are the point, so make sure they're in view.
+    if (liveOnly() && map.getZoom() > 7 && !map.queryRenderedFeatures({ layers: ['vehicles'] }).length) live.start();
+  });
   map.addControl(new maplibregl.FullscreenControl({ container: root.querySelector<HTMLElement>('[data-frame]')! }), 'top-right');
 
   function tintBasemap() {
@@ -101,10 +131,17 @@ export function startGlobe(root: HTMLElement) {
 
   function applyFilters() {
     const modes = activeModes();
+    const only = liveOnly() && liveSchedules.length > 0;
+    const inLive: maplibregl.FilterSpecification = ['in', ['get', 'feed'], ['literal', liveSchedules]];
     for (const mode of MODE_ORDER) {
       const id = `routes-${mode}`;
-      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', modes.includes(mode) ? 'visible' : 'none');
+      if (!map.getLayer(id)) continue;
+      map.setLayoutProperty(id, 'visibility', modes.includes(mode) ? 'visible' : 'none');
+      const byMode: maplibregl.FilterSpecification = ['==', ['get', 'mode'], mode];
+      map.setFilter(id, only ? ['all', byMode, inLive] : byMode);
     }
+    if (map.getLayer('stops')) map.setFilter('stops', only ? inLive : null);
+    if (map.getLayer('hotspots')) map.setLayoutProperty('hotspots', 'visibility', only ? 'visible' : 'none');
   }
 
   function addOverlay() {
@@ -157,6 +194,23 @@ export function startGlobe(root: HTMLElement) {
       },
       firstLabel,
     );
+    // Live systems from orbit (shown with "Only live places"), fading out as vehicles take over.
+    map.addSource('hotspots', { type: 'geojson', data: hotspotData() });
+    map.addLayer({
+      id: 'hotspots',
+      type: 'circle',
+      source: 'hotspots',
+      maxzoom: 9,
+      layout: { visibility: 'none' },
+      paint: {
+        'circle-radius': ['interpolate', ['linear'], ['sqrt', ['get', 'vehicles']], 0, 3, 10, 7, 40, 16],
+        'circle-color': ['case', ['>', ['get', 'vehicles'], 0], currentTheme === 'dark' ? '#6fd0ad' : '#0b5a47', 'rgba(0,0,0,0)'],
+        'circle-stroke-color': currentTheme === 'dark' ? '#6fd0ad' : '#0b5a47',
+        'circle-stroke-width': 1.5,
+        'circle-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.75, 9, 0],
+        'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 6, 1, 9, 0],
+      },
+    });
     // Vehicles on top of everything, ringed in the land color so they stand off the lines.
     live.addLayer(t.halo);
     applyFilters();
@@ -175,6 +229,19 @@ export function startGlobe(root: HTMLElement) {
     ];
     const hits = map.queryRenderedFeatures(box, { layers: routeLayers.filter((l) => map.getLayer(l)) });
     popup?.remove();
+    // A live system's dot: fly to where it runs.
+    const spot = map.getLayer('hotspots') && liveOnly() ? map.queryRenderedFeatures(box, { layers: ['hotspots'] })[0] : undefined;
+    if (spot) {
+      const q = spot.properties as { w: number; s: number; e: number; n: number };
+      map.fitBounds(
+        [
+          [q.w, q.s],
+          [q.e, q.n],
+        ],
+        { padding: 40, maxZoom: 12, duration: reducedMotion() ? 0 : 2500 },
+      );
+      return;
+    }
     // A vehicle wins over the lines under it.
     const vehiclePopup = live.popupAt(e);
     if (vehiclePopup) {
@@ -205,10 +272,12 @@ export function startGlobe(root: HTMLElement) {
     }
     popup = new maplibregl.Popup({ maxWidth: '20rem' }).setLngLat(e.lngLat).setDOMContent(list).addTo(map);
   });
-  for (const id of [...routeLayers, 'vehicles']) {
+  for (const id of [...routeLayers, 'vehicles', 'hotspots']) {
     map.on('mouseenter', id, () => (map.getCanvas().style.cursor = 'pointer'));
     map.on('mouseleave', id, () => (map.getCanvas().style.cursor = ''));
   }
+
+  globeSearch(root, map, reducedMotion);
 
   // Go to: fly to a place (or jump, with reduced motion). Zoom 0 means the starting view.
   const places = root.querySelector<HTMLSelectElement>('[data-places]');

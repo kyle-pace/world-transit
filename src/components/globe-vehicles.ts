@@ -12,8 +12,8 @@
 */
 import maplibregl, { type GeoJSONSource, type Map as MapLibreMap } from 'maplibre-gl';
 
-/** [feed id, agency name, schedule id, [west, south, east, north]] */
-export type LiveFeedRow = [id: string, name: string, schedule: string, bbox: [number, number, number, number]];
+/** [feed id, agency name, schedule id, [west, south, east, north], vehicles at the last check] */
+export type LiveFeedRow = [id: string, name: string, schedule: string, bbox: [number, number, number, number], vehicles?: number];
 type RouteInfo = [short: string, long: string, color: string, mode: string, agency: string];
 type VehicleRow = [id: string, lon: number, lat: number, bearing: number | null, route: string, label: string, ts: number];
 

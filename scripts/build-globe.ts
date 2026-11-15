@@ -21,6 +21,7 @@
     --tiles-only       skip downloading; just repack the cached results
     --live-only        just recheck the live vehicle feeds (needs a finished build)
     --no-tiles         download only; pack the tiles in a later --tiles-only run
+    --search-only      just rebuild the search indexes (agencies and cities)
     --extra            also every open schedule in Transitland Atlas and Transitous that
                        the Mobility Database doesn't list (any country; cloned into
                        .globe-tmp/catalogs/ from GitHub)
@@ -54,6 +55,7 @@ const TILES_ONLY = process.argv.includes('--tiles-only');
 const LIVE_ONLY = process.argv.includes('--live-only');
 const NO_TILES = process.argv.includes('--no-tiles');
 const EXTRA = process.argv.includes('--extra');
+const SEARCH_ONLY = process.argv.includes('--search-only');
 const CATALOGS = join(TMP, 'catalogs');
 const UPLOAD = process.argv.includes('--upload');
 const BUCKET = 'kylepace-transit-tiles';
@@ -838,7 +840,8 @@ async function buildLiveList() {
     writeFileSync(join(routesDir, `${schedule}.json`), JSON.stringify(lookup));
   }
   // What the page needs, fetched after the map loads (URLs stay with the Worker).
-  writeFileSync(join(OUT_DIR, 'live-feeds.json'), JSON.stringify(feeds.map((f) => [f.id, f.name, f.static, f.bbox])));
+  // [id, agency, schedule, [w, s, e, n], vehicles at the last check]
+  writeFileSync(join(OUT_DIR, 'live-feeds.json'), JSON.stringify(feeds.map((f) => [f.id, f.name, f.static, f.bbox, f.vehicles])));
   writeFileSync(
     join(root, 'src/lib/globe-live.json'),
     JSON.stringify({ updated: new Date().toISOString(), feeds }, null, 1) + '\n',
@@ -846,6 +849,66 @@ async function buildLiveList() {
   const moving = feeds.reduce((sum, f) => sum + f.vehicles, 0);
   console.log(`Live: ${feeds.length} feeds answered (${moving} vehicles right now), ${problems.length} didn't:`);
   for (const p of problems.sort()) console.log(`  ${p}`);
+}
+
+// ---------- Search indexes ----------
+
+/**
+ * Two small files the globe's search box loads the first time it's used:
+ * - search-agencies.json: every agency on the globe with where it runs, from the merged
+ *   routes (the middle 96% of its routes' midpoints, so one long-distance route doesn't
+ *   stretch it), how many routes, and its country.
+ * - search-places.json: cities of 50,000 people or more, from GeoNames (CC BY 4.0).
+ * Rows are arrays to keep them small; the page knows the order.
+ */
+async function buildSearch() {
+  const { countryAt } = await import('./country-at.ts');
+  const byAgency = new Map<string, { xs: number[]; ys: number[]; routes: number; modes: Set<string> }>();
+  for await (const f of readFeatures(join(TMP, 'tiles-input', 'routes.ndjson'))) {
+    const name = String(f.properties.agency ?? '').trim();
+    if (!name || name === 'OpenStreetMap') continue;
+    let a = byAgency.get(name);
+    if (!a) byAgency.set(name, (a = { xs: [], ys: [], routes: 0, modes: new Set() }));
+    const line = f.geometry.coordinates[0];
+    const mid = line[Math.floor(line.length / 2)];
+    a.xs.push(mid[0]);
+    a.ys.push(mid[1]);
+    a.routes++;
+    a.modes.add(f.properties.mode);
+  }
+  const r2 = (x: number) => Math.round(x * 100) / 100;
+  const at = (arr: number[], q: number) => arr[Math.min(arr.length - 1, Math.max(0, Math.floor(q * (arr.length - 1))))];
+  const agencies: (string | number)[][] = [];
+  for (const [name, a] of byAgency) {
+    a.xs.sort((p, q) => p - q);
+    a.ys.sort((p, q) => p - q);
+    const [w, s, e, n] = [at(a.xs, 0.02), at(a.ys, 0.02), at(a.xs, 0.98), at(a.ys, 0.98)];
+    // [name, west, south, east, north, routes, country, modes]
+    agencies.push([name, r2(w), r2(s), r2(e), r2(n), a.routes, countryAt(at(a.xs, 0.5), at(a.ys, 0.5)), [...a.modes].sort().join(',')]);
+  }
+  agencies.sort((p, q) => (q[5] as number) - (p[5] as number));
+  mkdirSync(OUT_DIR, { recursive: true });
+  writeFileSync(join(OUT_DIR, 'search-agencies.json'), JSON.stringify(agencies));
+
+  // Cities: GeoNames cities15000 (tab-separated), refreshed monthly.
+  const zip = join(TMP, 'cities15000.zip');
+  if (!existsSync(zip) || Date.now() - statSync(zip).mtimeMs > 30 * 86_400_000) {
+    const res = await fetch('https://download.geonames.org/export/dump/cities15000.zip', { signal: AbortSignal.timeout(120_000) });
+    if (!res.ok) throw new Error(`GeoNames: HTTP ${res.status}`);
+    writeFileSync(zip, Buffer.from(await res.arrayBuffer()));
+  }
+  const text = String(spawnSync('unzip', ['-p', zip, 'cities15000.txt'], { maxBuffer: 1 << 28 }).stdout);
+  const places: (string | number)[][] = [];
+  for (const line of text.split('\n')) {
+    const c = line.split('\t');
+    const pop = Number(c[14]);
+    if (!(pop >= 50_000)) continue;
+    // [name, ascii name, country, latitude, longitude, population]
+    places.push([c[1], c[2] === c[1] ? '' : c[2], c[8], r2(Number(c[4])), r2(Number(c[5])), pop]);
+  }
+  places.sort((p, q) => (q[5] as number) - (p[5] as number));
+  writeFileSync(join(OUT_DIR, 'search-places.json'), JSON.stringify(places));
+  console.log(`Search: ${agencies.length} agencies, ${places.length} places.`);
 }
 
 // ---------- Main ----------
@@ -862,6 +925,7 @@ async function main() {
   const previous: Record<string, FeedResult> = existsSync(reportFile) ? JSON.parse(readFileSync(reportFile, 'utf8')) : {};
 
   if (LIVE_ONLY) return buildLiveList();
+  if (SEARCH_ONLY) return buildSearch();
 
   if (!TILES_ONLY) {
     const { feeds, keyed } = await loadFeeds();
@@ -900,6 +964,11 @@ async function main() {
   const { out, counts } = await buildTiles();
   console.log(`Tiles: ${out} (${Math.round(statSync(out).size / 1e6)} MB)`);
   writeSummary(reportFile, counts);
+  try {
+    await buildSearch();
+  } catch (err) {
+    console.log(`::warning title=Search indexes not updated::${(err as Error).message}`);
+  }
   // A live-feed problem never costs the routes: the tiles are already written.
   try {
     await buildLiveList();
