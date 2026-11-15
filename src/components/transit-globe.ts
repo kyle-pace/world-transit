@@ -26,7 +26,8 @@ const STYLES = {
 // Keep in step with BASEMAP in transit-map.ts and src/styles/theme.css.
 const BASEMAP = {
   light: { land: '#eceee8', water: '#b3cad2', green: null, space: '#16242a', halo: '#ffffff' },
-  dark: { land: '#1b2326', water: '#1a3440', green: '#20292c', space: '#040708', halo: '#121719' },
+  // A touch lighter than the page's own darks, so the planet reads against space.
+  dark: { land: '#232d31', water: '#1f4150', green: '#283236', space: '#040708', halo: '#121719' },
 };
 const MODE_NAMES: Record<Mode, string> = { bus: 'Bus', rail: 'Train', tram: 'Light rail or streetcar', ferry: 'Ferry', other: 'Other' };
 // Drawn bottom to top, so trains sit over the buses that feed them.
@@ -106,6 +107,27 @@ export function startGlobe(root: HTMLElement) {
       // No live list: routes still show; vehicles just don't.
     }
     liveSchedules = [...new Set(liveFeeds.map((f) => f[2]))];
+    // Links that open on a view: ?at=lon,lat,zoom (the old /transit/ map redirects here,
+    // centered on Puget Sound).
+    const at = new URLSearchParams(location.search).get('at')?.split(',').map(Number);
+    if (at && at.length === 3 && at.every(Number.isFinite)) map.jumpTo({ center: [at[0], at[1]], zoom: at[2] });
+    // Links from the agencies directory: /world-transit/?agency=<name> opens focused on it.
+    const wanted = new URLSearchParams(location.search).get('agency');
+    if (wanted) {
+      type Row = [string, number, number, number, number, number, string, string];
+      const rows = (await fetch('/world-transit/search-agencies.json').then((r) => r.json()).catch(() => [])) as Row[];
+      const row = rows.find((r) => r[0] === wanted);
+      if (row) {
+        setFocus({ agency: row[0] });
+        map.fitBounds(
+          [
+            [row[1], row[2]],
+            [row[3], row[4]],
+          ],
+          { padding: 40, maxZoom: 13, duration: 0 },
+        );
+      }
+    }
     drawHotspots();
     applyFilters();
     live.start();
@@ -179,10 +201,11 @@ export function startGlobe(root: HTMLElement) {
     // into the flat map, so city streets look the way they always do.
     map.setProjection({ type: 'globe' });
     const t = BASEMAP[currentTheme];
-    // Space behind the planet (the container's background shows through) and a thin
-    // Sound-blue atmosphere at the rim that fades out as you zoom in.
+    // Space behind the planet: the container's background shows through.
     container.style.background = t.space;
-    map.setSky({ 'sky-color': t.space, 'horizon-color': '#4f8fa3', 'fog-color': t.space, 'sky-horizon-blend': 0.5, 'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 5, 1, 7, 0] });
+    // No atmosphere: MapLibre lights it from a fixed sun, which left a bright crescent on
+    // one edge. A crisp rim against space reads better, and the blue oceans give the shape.
+    map.setSky({ 'sky-color': t.space, 'horizon-color': t.space, 'fog-color': t.space, 'sky-horizon-blend': 0, 'atmosphere-blend': 0 });
     tintBasemap();
 
     map.addSource('transit', { type: 'vector', url: tiles, attribution: '' });

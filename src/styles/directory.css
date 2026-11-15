@@ -1,0 +1,82 @@
+/* The agencies directory (/world-transit/agencies/): a station's system directory, in
+   the same timetable style as the old Washington agencies page. */
+.directory {
+  padding: var(--space-4) var(--gutter) var(--space-12);
+  max-width: 72rem;
+}
+
+.directory .title {
+  display: inline-block;
+  margin: 0 0 var(--space-4);
+  padding: 0.08em 0.35em 0.12em;
+  font-size: var(--step-2);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  border-radius: var(--radius-sm);
+}
+
+.directory p {
+  max-width: 36rem;
+  margin: 0 0 var(--space-4);
+}
+
+.directory a {
+  color: var(--accent-ink);
+  text-underline-offset: 0.15em;
+}
+
+.directory .crumbs {
+  margin-bottom: var(--space-4);
+  font-weight: 600;
+}
+
+.timetable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--step--1);
+}
+
+.timetable caption {
+  text-align: left;
+  font-weight: 700;
+  font-size: var(--step-0);
+  padding-bottom: var(--space-2);
+}
+
+.timetable thead th {
+  padding: var(--space-1) var(--space-3) var(--space-1) 0;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  color: var(--ink-muted);
+  font-weight: 400;
+  text-align: left;
+}
+
+.timetable tbody th,
+.timetable td {
+  padding: var(--space-2) var(--space-3) var(--space-2) 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.timetable tbody th {
+  font-weight: 600;
+}
+
+.timetable .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.timetable .quiet {
+  color: var(--ink-muted);
+}
+
+/* Narrow screens: the less important columns go, the table never scrolls sideways. */
+@media (max-width: 40rem) {
+  .timetable .wide {
+    display: none;
+  }
+}

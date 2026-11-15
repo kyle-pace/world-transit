@@ -33,11 +33,9 @@ const modes: { value: IconMode; label: string; bold: boolean }[] = [
   image="/world-transit/share.jpg"
   imageAlt="World transit: the name on a green sign beside a dark globe crossed by colorful transit lines."
   themeColor={{ light: '#eceee8', dark: '#121719' }}
+  about="/world-transit/about/"
+  lab={{ name: 'World transit', href: '/world-transit/' }}
 >
-  <ul class="lab-nav" slot="bar">
-    <li><a href="/world-transit/" aria-current="page">Map</a></li>
-    <li><a href="/world-transit/about/">About</a></li>
-  </ul>
 
   <section class="transit" id="transit-globe" data-country="world" aria-labelledby="globe-title">
     <div class="frame" data-frame>
@@ -77,6 +75,7 @@ const modes: { value: IconMode; label: string; bold: boolean }[] = [
               >
               Somewhere random
             </button>
+            <a class="all-agencies" href="/world-transit/agencies/">Every agency, by country</a>
             <span class="random-where" data-random-where aria-live="polite"></span>
           </p>
           <details class="layers" data-layers open>
@@ -448,7 +447,14 @@ const modes: { value: IconMode; label: string; bold: boolean }[] = [
   }
 
   .random-where {
+    flex-basis: 100%;
     color: var(--ink-muted);
+  }
+
+  .all-agencies {
+    color: var(--accent-ink);
+    font-weight: 600;
+    text-underline-offset: 0.15em;
   }
 
 

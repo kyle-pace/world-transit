@@ -1,0 +1,51 @@
+---
+// Every country on the globe, with its agencies and routes (src/lib/agency-directory.ts).
+import LabLayout from 'kp-design/layouts/LabLayout.astro';
+import '../../../styles/theme.css';
+import '../../../styles/directory.css';
+import { countries } from '../../../lib/agency-directory';
+
+const n = (x: number) => x.toLocaleString('en-US');
+const total = countries.reduce((sum, c) => sum + c.agencies.length, 0);
+---
+
+<LabLayout
+  title="Transit agencies around the world"
+  description={`Every transit agency on the World transit globe, ${n(total)} of them, by country, with their routes and which ones show live vehicles.`}
+  image="/world-transit/share.jpg"
+  imageAlt="World transit: the name on a green sign beside a dark globe crossed by colorful transit lines."
+  themeColor={{ light: '#eceee8', dark: '#121719' }}
+  about="/world-transit/about/"
+  lab={{ name: 'World transit', href: '/world-transit/' }}
+>
+  <main class="directory">
+    <p class="crumbs"><a href="/world-transit/">Back to the map</a></p>
+    <h1 class="plate title">Transit agencies</h1>
+    <p>{n(total)} agencies in {countries.length - 1} countries are on the globe. Pick a country to see its agencies and show any of them on the map.</p>
+    <table class="timetable">
+      <caption>Countries</caption>
+      <thead>
+        <tr>
+          <th scope="col">Country</th>
+          <th scope="col" class="num">Agencies</th>
+          <th scope="col" class="num">Routes</th>
+          <th scope="col" class="num wide">With live vehicles</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          countries.map((c) => (
+            <tr>
+              <th scope="row">
+                <a href={`/world-transit/agencies/${c.code}/`}>{c.name}</a>
+              </th>
+              <td class="num">{n(c.agencies.length)}</td>
+              <td class="num">{n(c.routes)}</td>
+              <td class:list={['num wide', { quiet: !c.live }]}>{c.live ? n(c.live) : 'None'}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </main>
+</LabLayout>

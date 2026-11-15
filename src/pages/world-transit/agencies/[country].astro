@@ -1,0 +1,61 @@
+---
+// One country's agencies, biggest first, each with a link that opens the map on it.
+import LabLayout from 'kp-design/layouts/LabLayout.astro';
+import '../../../styles/theme.css';
+import '../../../styles/directory.css';
+import { countries, mapLink, modeWords, type Country } from '../../../lib/agency-directory';
+
+export function getStaticPaths() {
+  return countries.map((country) => ({ params: { country: country.code }, props: { country } }));
+}
+
+const { country } = Astro.props as { country: Country };
+const n = (x: number) => x.toLocaleString('en-US');
+---
+
+<LabLayout
+  title={`Transit agencies in ${country.name}`}
+  description={`${n(country.agencies.length)} transit agencies in ${country.name} on the World transit globe, with their routes and which ones show live vehicles.`}
+  image="/world-transit/share.jpg"
+  imageAlt="World transit: the name on a green sign beside a dark globe crossed by colorful transit lines."
+  themeColor={{ light: '#eceee8', dark: '#121719' }}
+  about="/world-transit/about/"
+  lab={{ name: 'World transit', href: '/world-transit/' }}
+>
+  <main class="directory">
+    <p class="crumbs"><a href="/world-transit/agencies/">All countries</a></p>
+    <h1 class="plate title">{country.name}</h1>
+    <p>
+      {`${n(country.agencies.length)} ${country.agencies.length === 1 ? 'agency' : 'agencies'} and ${n(country.routes)} routes${country.live ? `, ${n(country.live)} with live vehicles` : ''}.`}
+    </p>
+    <table class="timetable">
+      <caption>Agencies, biggest first</caption>
+      <thead>
+        <tr>
+          <th scope="col">Agency</th>
+          <th scope="col" class="num">Routes</th>
+          <th scope="col" class="wide">Runs</th>
+          <th scope="col" class="wide">Live</th>
+          <th scope="col"><span class="visually-hidden">Map</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          country.agencies.map((a) => (
+            <tr>
+              <th scope="row">{a.name}</th>
+              <td class="num">{n(a.routes)}</td>
+              <td class="wide">{modeWords(a.modes)}</td>
+              <td class:list={['wide', { quiet: !a.live }]}>{a.live ? 'Yes' : 'No'}</td>
+              <td>
+                <a href={mapLink(a.name)}>
+                  Show on map<span class="visually-hidden">: {a.name}</span>
+                </a>
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </main>
+</LabLayout>
