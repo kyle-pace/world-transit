@@ -318,15 +318,31 @@ export function startGlobe(root: HTMLElement) {
     map.on('mouseleave', id, () => (map.getCanvas().style.cursor = ''));
   }
 
-  globeSearch(root, map, reducedMotion, (agency) => setFocus({ agency }));
+  globeSearch(root, map, reducedMotion, (agency) => setFocus({ agency }), homeZoom);
 
-  // Go to: fly to a place (or jump, with reduced motion). Zoom 0 means the starting view.
-  const places = root.querySelector<HTMLSelectElement>('[data-places]');
-  places?.addEventListener('change', () => {
-    const [lon, lat, z] = places.value.split(',').map(Number);
-    const target = { center: [lon, lat] as [number, number], zoom: z || homeZoom(), pitch: 0, bearing: 0 };
+  // Somewhere random: a dense transit city, never the same one twice in a row.
+  type DenseRow = [name: string, region: string, country: string, lat: number, lon: number, routes: number];
+  const randomButton = root.querySelector<HTMLButtonElement>('[data-random]');
+  const randomWhere = root.querySelector<HTMLElement>('[data-random-where]');
+  let dense: DenseRow[] = [];
+  let lastRandom = -1;
+  randomButton?.addEventListener('click', async () => {
+    if (!dense.length) dense = await fetch('/transit/globe/search-dense.json').then((r) => r.json()).catch(() => []);
+    if (!dense.length) return;
+    let i = Math.floor(Math.random() * dense.length);
+    if (i === lastRandom) i = (i + 1) % dense.length;
+    lastRandom = i;
+    const [name, region, cc, lat, lon, routes] = dense[i];
+    let country = cc;
+    try {
+      country = new Intl.DisplayNames(['en'], { type: 'region' }).of(cc) ?? cc;
+    } catch {
+      // keep the code
+    }
+    if (randomWhere) randomWhere.textContent = `${[name, region, country].filter(Boolean).join(', ')}. About ${routes.toLocaleString('en-US')} routes nearby.`;
+    const target = { center: [lon, lat] as [number, number], zoom: 11, pitch: 0, bearing: 0 };
     if (reducedMotion()) map.jumpTo(target);
-    else map.flyTo({ ...target, duration: 2500, essential: false });
+    else map.flyTo({ ...target, duration: 3000, essential: false });
   });
 
   map.on('error', (e) => {

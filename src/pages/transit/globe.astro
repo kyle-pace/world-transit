@@ -25,84 +25,6 @@ const modes: { value: IconMode; label: string; bold: boolean }[] = [
   { value: 'ferry', label: 'Ferries', bold: true },
   { value: 'bus', label: 'Buses', bold: false },
 ];
-// Go to: [label, lon, lat, zoom], grouped by region. Zoom 0 is the starting view.
-const places: [string, [string, number, number, number][]][] = [
-  [
-    'North America',
-    [
-      ['The whole continent', -98, 39, 0],
-      ['New York', -73.95, 40.72, 10],
-      ['Chicago', -87.68, 41.86, 10],
-      ['Puget Sound', -122.33, 47.6, 9],
-      ['San Francisco Bay', -122.3, 37.78, 9.5],
-      ['Los Angeles', -118.25, 34.04, 9.5],
-      ['Washington, DC', -77.03, 38.9, 10.5],
-      ['Toronto', -79.38, 43.68, 10],
-      ['Montréal', -73.6, 45.52, 10.5],
-      ['Vancouver', -123.05, 49.25, 10],
-      ['Mexico City', -99.13, 19.43, 10],
-      ['Hawaii', -157.9, 21.4, 7],
-    ],
-  ],
-  [
-    'Europe',
-    [
-      ['London', -0.12, 51.5, 10],
-      ['Paris', 2.35, 48.86, 10.5],
-      ['Berlin', 13.4, 52.52, 10],
-      ['Madrid', -3.7, 40.42, 10.5],
-      ['Rome', 12.5, 41.9, 10.5],
-      ['Amsterdam', 4.9, 52.37, 10.5],
-      ['Warsaw', 21.01, 52.23, 10.5],
-      ['Helsinki', 24.94, 60.19, 10.5],
-      ['Moscow', 37.62, 55.75, 10],
-      ['Istanbul', 28.98, 41.03, 10],
-    ],
-  ],
-  [
-    'South America',
-    [
-      ['São Paulo', -46.63, -23.55, 10],
-      ['Buenos Aires', -58.42, -34.6, 10],
-      ['Bogotá', -74.08, 4.65, 10.5],
-      ['Lima', -77.04, -12.06, 10.5],
-      ['Santiago', -70.65, -33.45, 10.5],
-    ],
-  ],
-  [
-    'Asia and the Pacific',
-    [
-      ['Tokyo', 139.75, 35.68, 10],
-      ['Osaka', 135.5, 34.69, 10.5],
-      ['Sydney', 151.2, -33.87, 10],
-      ['Melbourne', 144.96, -37.81, 10],
-      ['Auckland', 174.76, -36.85, 10.5],
-      ['Kuala Lumpur', 101.69, 3.14, 10.5],
-      ['Singapore', 103.82, 1.35, 11],
-      ['Seoul', 126.98, 37.55, 10],
-      ['Taipei', 121.53, 25.04, 10.5],
-      ['Shanghai', 121.47, 31.23, 10],
-      ['Beijing', 116.4, 39.9, 10],
-      ['Hong Kong', 114.17, 22.32, 11],
-      ['Delhi', 77.21, 28.61, 10],
-      ['Mumbai', 72.88, 19.08, 10.5],
-      ['Bangkok', 100.5, 13.75, 10.5],
-      ['Jakarta', 106.85, -6.2, 10.5],
-      ['Manila', 120.98, 14.6, 10.5],
-    ],
-  ],
-  [
-    'Africa and the Middle East',
-    [
-      ['Cairo', 31.24, 30.04, 10.5],
-      ['Johannesburg', 28.05, -26.2, 10],
-      ['Cape Town', 18.42, -33.92, 10.5],
-      ['Nairobi', 36.82, -1.29, 10.5],
-      ['Tel Aviv', 34.78, 32.08, 10.5],
-      ['Dubai', 55.27, 25.2, 10.5],
-    ],
-  ],
-];
 ---
 
 <LabLayout
@@ -147,9 +69,20 @@ const places: [string, [string, number, number, number][]][] = [
             />
             <ul id="globe-results" class="results" data-results role="listbox" aria-label="Places and agencies" hidden></ul>
           </div>
+          <p class="random">
+            <button type="button" data-random>
+              <svg viewBox="0 0 24 24" aria-hidden="true"
+                ><path
+                  d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm2.5 3a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm9 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm-4.5 4.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM7.5 15a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm9 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"
+                ></path></svg
+              >
+              Somewhere random
+            </button>
+            <span class="random-where" data-random-where aria-live="polite"></span>
+          </p>
           <details class="layers" data-layers open>
             <summary>
-              <span>Lines and places</span>
+              <span>What’s on the map</span>
               <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"
                 ><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg
               >
@@ -184,21 +117,7 @@ const places: [string, [string, number, number, number][]][] = [
                 <span class="row-label">Only places with live vehicles</span>
               </label>
             </fieldset>
-            <label class="jump">
-              <span>Go to</span>
-              <select data-places>
-                <option value="" selected disabled>Pick a place</option>
-                {
-                  places.map(([region, list]) => (
-                    <optgroup label={region}>
-                      {list.map(([label, lon, lat, zoom]) => (
-                        <option value={`${lon},${lat},${zoom}`}>{label}</option>
-                      ))}
-                    </optgroup>
-                  ))
-                }
-              </select>
-            </label>
+
           </details>
         </div>
       </div>
@@ -343,19 +262,52 @@ const places: [string, [string, number, number, number][]][] = [
     overflow: hidden;
   }
 
-  .results :global(li) {
-    display: grid;
-    padding: var(--space-2) var(--space-3);
-    border-top: 1px solid var(--line);
-    cursor: pointer;
+  .results {
+    max-height: min(60vh, 28rem);
+    overflow-y: auto;
   }
 
-  .results :global(li:first-child) {
+  .results :global(ul) {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Group names: plain small type on a rule, not a label above a heading. */
+  .results :global(.result-group) {
+    display: block;
+    padding: var(--space-2) var(--space-3) var(--space-1);
+    border-top: 1px solid var(--line);
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+  }
+
+  .results > :global(li:first-child) > :global(.result-group) {
     border-top: 0;
   }
 
-  .results :global(li.active),
-  .results :global(li:hover) {
+  .results :global([role='option']) {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-2) var(--space-3);
+    cursor: pointer;
+  }
+
+  .results :global(.result-icon) {
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: var(--ink-muted);
+  }
+
+  .results :global(.result-text) {
+    display: grid;
+    min-width: 0;
+  }
+
+  .results :global([role='option'].active),
+  .results :global([role='option']:hover) {
     background: color-mix(in oklab, var(--plate), transparent 85%);
   }
 
@@ -457,31 +409,49 @@ const places: [string, [string, number, number, number][]][] = [
     opacity: 0.35;
   }
 
-  .jump {
+  /* Somewhere random: a quiet text button under the search, its destination beside it. */
+  .random {
     display: flex;
-    gap: var(--space-3);
+    flex-wrap: wrap;
     align-items: center;
-    margin-bottom: var(--space-3);
+    gap: var(--space-1) var(--space-3);
+    margin: var(--space-2) 0 0;
     font-size: var(--step--1);
-    font-weight: 600;
   }
 
-  .jump select {
-    flex: 1;
-    min-width: 0;
+  .random button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
     min-height: 2.5rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--accent-ink);
     font: inherit;
-    color: var(--ink);
-    background: var(--bg);
-    border: 1px solid var(--control-line);
-    border-radius: var(--radius-sm);
-    padding: 0 var(--space-2);
+    font-weight: 600;
+    cursor: pointer;
   }
 
-  .jump select:focus-visible {
-    outline: 3px solid var(--accent-ink);
-    outline-offset: 1px;
+  .random button:hover {
+    text-decoration: underline;
   }
+
+  .random button:focus-visible {
+    outline: 3px solid var(--accent-ink);
+    outline-offset: 2px;
+  }
+
+  .random svg {
+    width: 1.15rem;
+    height: 1.15rem;
+    fill: currentColor;
+  }
+
+  .random-where {
+    color: var(--ink-muted);
+  }
+
 
   @media (max-width: 47.99rem) {
     .layers[open] {

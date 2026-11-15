@@ -864,7 +864,17 @@ async function buildLiveList() {
 async function buildSearch() {
   const { countryAt } = await import('./country-at.ts');
   const byAgency = new Map<string, { xs: number[]; ys: number[]; routes: number; modes: Set<string> }>();
+  // Routes per ~10 km cell (by each route's midpoint), to find the densest networks.
+  const DENSE_CELL = 0.1;
+  const cellKey = (lon: number, lat: number) => `${Math.floor(lon / DENSE_CELL)},${Math.floor(lat / DENSE_CELL)}`;
+  const perCell = new Map<string, number>();
   for await (const f of readFeatures(join(TMP, 'tiles-input', 'routes.ndjson'))) {
+    {
+      const line = f.geometry.coordinates[0];
+      const [lon, lat] = line[Math.floor(line.length / 2)];
+      const k = cellKey(lon, lat);
+      perCell.set(k, (perCell.get(k) ?? 0) + 1);
+    }
     const name = String(f.properties.agency ?? '').trim();
     if (!name || name === 'OpenStreetMap') continue;
     let a = byAgency.get(name);
@@ -898,17 +908,49 @@ async function buildSearch() {
     writeFileSync(zip, Buffer.from(await res.arrayBuffer()));
   }
   const text = String(spawnSync('unzip', ['-p', zip, 'cities15000.txt'], { maxBuffer: 1 << 28 }).stdout);
+  // State or province names ("US.OR" -> Oregon), so two Portlands can be told apart.
+  const admin1File = join(TMP, 'admin1CodesASCII.txt');
+  if (!existsSync(admin1File) || Date.now() - statSync(admin1File).mtimeMs > 30 * 86_400_000) {
+    const res = await fetch('https://download.geonames.org/export/dump/admin1CodesASCII.txt', { signal: AbortSignal.timeout(60_000) });
+    if (!res.ok) throw new Error(`GeoNames admin1: HTTP ${res.status}`);
+    writeFileSync(admin1File, await res.text());
+  }
+  const regions = new Map<string, string>();
+  for (const line of readFileSync(admin1File, 'utf8').split('\n')) {
+    const [code, name] = line.split('\t');
+    if (code && name) regions.set(code, name);
+  }
   const places: (string | number)[][] = [];
   for (const line of text.split('\n')) {
     const c = line.split('\t');
     const pop = Number(c[14]);
     if (!(pop >= 50_000)) continue;
-    // [name, ascii name, country, latitude, longitude, population]
-    places.push([c[1], c[2] === c[1] ? '' : c[2], c[8], r2(Number(c[4])), r2(Number(c[5])), pop]);
+    // [name, ascii name, country, latitude, longitude, population, state or province]
+    places.push([c[1], c[2] === c[1] ? '' : c[2], c[8], r2(Number(c[4])), r2(Number(c[5])), pop, regions.get(`${c[8]}.${c[10]}`) ?? '']);
   }
   places.sort((p, q) => (q[5] as number) - (p[5] as number));
   writeFileSync(join(OUT_DIR, 'search-places.json'), JSON.stringify(places));
-  console.log(`Search: ${agencies.length} agencies, ${places.length} places.`);
+
+  // "Somewhere random": cities of 500,000+ ranked by routes within about 15 km (the 3×3
+  // cells around them); the page picks from the top 400, so it always lands somewhere busy.
+  const near = (lon: number, lat: number) => {
+    let sum = 0;
+    const cx = Math.floor(lon / DENSE_CELL);
+    const cy = Math.floor(lat / DENSE_CELL);
+    for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) sum += perCell.get(`${cx + dx},${cy + dy}`) ?? 0;
+    return sum;
+  };
+  const dense = places
+    .filter((p) => (p[5] as number) >= 500_000)
+    .map((p) => [p[0], p[6] ?? '', p[2], p[3], p[4], near(p[4] as number, p[3] as number)] as (string | number)[])
+    .filter((d) => (d[5] as number) >= 40)
+    .sort((a, b) => (b[5] as number) - (a[5] as number))
+    // Neighbors in one metro (Pudong and Shanghai) count once: keep the busier.
+    .filter((d, i, all) => !all.slice(0, i).some((e) => Math.abs((e[3] as number) - (d[3] as number)) < 0.15 && Math.abs((e[4] as number) - (d[4] as number)) < 0.2))
+    .slice(0, 400);
+  // [name, state or province, country, latitude, longitude, routes nearby]
+  writeFileSync(join(OUT_DIR, 'search-dense.json'), JSON.stringify(dense));
+  console.log(`Search: ${agencies.length} agencies, ${places.length} places, ${dense.length} dense places for random.`);
 }
 
 // ---------- Main ----------
