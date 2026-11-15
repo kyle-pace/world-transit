@@ -165,8 +165,8 @@ function safe(s: string) {
  * names and colors). Feeds that only carry delay predictions are weeded out by the
  * check: they decode, but with no vehicles.
  */
-function extraLiveCandidates(knownUrls: Set<string>): { id: string; name: string; url: string; static: string }[] {
-  const out: { id: string; name: string; url: string; static: string }[] = [];
+function extraLiveCandidates(knownUrls: Set<string>): { id: string; name: string; url: string; static: string; alts: string[] }[] {
+  const out: { id: string; name: string; url: string; static: string; alts: string[] }[] = [];
   const cached = (id: string) => existsSync(join(CACHE, `${id}.ndjson`));
   const atlas = join(CATALOGS, 'transitland-atlas', 'feeds');
   if (existsSync(atlas))
@@ -185,7 +185,7 @@ function extraLiveCandidates(knownUrls: Set<string>): { id: string; name: string
         const schedule = assoc ?? statics[0];
         if (!schedule) continue;
         knownUrls.add(url);
-        out.push({ id: `tl-${safe(f.id)}`, name: f.id, url, static: schedule });
+        out.push({ id: `tl-${safe(f.id)}`, name: f.id, url, static: schedule, alts: statics });
       }
     }
   const transitous = join(CATALOGS, 'transitous', 'feeds');
@@ -207,7 +207,7 @@ function extraLiveCandidates(knownUrls: Set<string>): { id: string; name: string
         const schedule = cached(staticId(src.name)) ? staticId(src.name) : statics[0];
         if (!schedule) continue;
         knownUrls.add(src.url);
-        out.push({ id: `tr-${safe(base)}-${safe(`${src.name ?? 'rt'}-${src.url}`)}`, name: src.name ?? base, url: src.url, static: schedule });
+        out.push({ id: `tr-${safe(base)}-${safe(`${src.name ?? 'rt'}-${src.url}`)}`, name: src.name ?? base, url: src.url, static: schedule, alts: statics });
       }
     }
   return out;
@@ -713,7 +713,7 @@ async function buildLiveList() {
   const col = new Map(header.map((h, i) => [h, i]));
   const get = (r: string[], name: string) => r[col.get(name)!] ?? '';
 
-  const candidates: Omit<LiveFeed, 'bbox' | 'vehicles'>[] = [];
+  const candidates: (Omit<LiveFeed, 'bbox' | 'vehicles'> & { alts: string[] })[] = [];
   const seenUrls = new Set<string>();
   let keyed = 0;
   let noSchedule = 0;
@@ -727,13 +727,14 @@ async function buildLiveList() {
     }
     const url = get(r, 'urls.direct_download');
     if (!/^https?:\/\//.test(url) || seenUrls.has(url)) continue;
-    const schedule = get(r, 'static_reference').split('|').find((s) => existsSync(join(CACHE, `${s}.ndjson`)));
+    const refs = get(r, 'static_reference').split('|').filter((s) => existsSync(join(CACHE, `${s}.ndjson`)));
+    const schedule = refs[0];
     if (!schedule) {
       noSchedule++;
       continue;
     }
     seenUrls.add(url);
-    candidates.push({ id: get(r, 'id'), name: get(r, 'provider') || get(r, 'name'), url, static: schedule });
+    candidates.push({ id: get(r, 'id'), name: get(r, 'provider') || get(r, 'name'), url, static: schedule, alts: refs });
   }
   candidates.push(...extraLiveCandidates(seenUrls));
   console.log(`\nLive: ${candidates.length} open vehicle feeds with a schedule on the globe (${keyed} need a key, ${noSchedule} have no schedule on the globe). Checking each…`);
@@ -744,6 +745,23 @@ async function buildLiveList() {
     if (f.properties.source === 'osm') continue;
     finalColor.set(routeKey(f.properties, f.geometry.coordinates[0][0]), f.properties.color);
   }
+
+  // Route ids per schedule, read once, to pair each live feed with the schedule its
+  // vehicles' routes actually come from (otherwise its dots can't be named or colored).
+  const routeIds = new Map<string, Promise<Set<string>>>();
+  const idsOf = (schedule: string) => {
+    let p = routeIds.get(schedule);
+    if (!p) {
+      p = (async () => {
+        const ids = new Set<string>();
+        for await (const f of readFeatures(join(CACHE, `${schedule}.ndjson`))) if (f.tippecanoe.layer === 'routes') ids.add(f.properties.rid);
+        return ids;
+      })();
+      routeIds.set(schedule, p);
+    }
+    return p;
+  };
+  let repaired = 0;
 
   const results: (LiveFeed | null)[] = new Array(candidates.length).fill(null);
   const problems: string[] = [];
@@ -757,6 +775,24 @@ async function buildLiveList() {
         // From the other catalogs, a feed with no vehicles and no sign it's a positions
         // feed is most likely delays only.
         if (/^t[lr]-/.test(c.id) && !live.v.length && !/vehicle|position|vp/i.test(c.url)) throw new Error('no vehicles (delays only?)');
+        // Pick the schedule whose route ids match the most vehicles.
+        const seen = live.v.map((v) => v[4]).filter(Boolean);
+        if (seen.length && c.alts.length > 1) {
+          let best = c.static;
+          let bestHits = -1;
+          for (const alt of new Set([c.static, ...c.alts].slice(0, 12))) {
+            const ids = await idsOf(alt);
+            const hits = seen.filter((r) => ids.has(r)).length;
+            if (hits > bestHits) {
+              best = alt;
+              bestHits = hits;
+            }
+          }
+          if (best !== c.static) {
+            c.static = best;
+            repaired++;
+          }
+        }
         // The feed's area: the middle 96% of its points, so a few stray stops (a
         // Eurostar stop in Paris on Britain's feed) can't stretch it across a sea.
         const xs: number[] = [];
@@ -781,7 +817,11 @@ async function buildLiveList() {
     }
   };
   await Promise.all(Array.from({ length: 16 }, worker));
-  const feeds = results.filter((r): r is LiveFeed => r !== null).sort((a, b) => a.id.localeCompare(b.id));
+  const feeds = results
+    .filter((r): r is LiveFeed & { alts?: string[] } => r !== null)
+    .map(({ alts, ...f }) => (void alts, f as LiveFeed))
+    .sort((a, b) => a.id.localeCompare(b.id));
+  if (repaired) console.log(`Live: ${repaired} feeds paired with a better-matching schedule.`);
   if (!feeds.length) throw new Error('no live feed answered; keeping the last list');
 
   const routesDir = join(OUT_DIR, 'routes');
