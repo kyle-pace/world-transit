@@ -72,9 +72,9 @@ const stopsOnLine = [
 >
 
   <article class="page">
-    <h1 class="plate title">About World transit</h1>
+    <h1 class="plate title" data-area="title">About World transit</h1>
 
-    <section class="notes" aria-labelledby="what-heading">
+    <section class="notes" data-area="what" aria-labelledby="what-heading">
       <h2 id="what-heading">What it is</h2>
       <p>
         <a href="/world-transit/">A globe</a> with every transit route on Earth that has an open schedule, from metros and trains to buses and
@@ -82,7 +82,7 @@ const stopsOnLine = [
       </p>
     </section>
 
-    <section class="notes" aria-labelledby="use-heading">
+    <section class="notes" data-area="use" aria-labelledby="use-heading">
       <h2 id="use-heading">How to use it</h2>
       <p>
         Spin the globe and zoom in anywhere. Long train and ferry lines show from orbit; buses and trams appear at region level in softer
@@ -95,7 +95,7 @@ const stopsOnLine = [
       </p>
     </section>
 
-    <section aria-labelledby="how-heading">
+    <section data-area="how" aria-labelledby="how-heading">
       <h2 id="how-heading">How it works</h2>
       <ol class="line">
         {
@@ -112,22 +112,22 @@ const stopsOnLine = [
       </ol>
     </section>
 
-    <section class="notes" aria-labelledby="sources-heading">
+    <section class="notes" data-area="sources" aria-labelledby="sources-heading">
       <h2 id="sources-heading">Where the data comes from</h2>
       <p>
-        Every schedule and live feed belongs to the agency that publishes it, under its own terms. They were found through the
-        <a href="https://mobilitydatabase.org">Mobility Database</a>, <a href="https://www.transit.land">Transitland Atlas</a> and
+        Every schedule and live feed belongs to the agency that publishes it, under its own terms. They were found through the{' '}
+        <a href="https://mobilitydatabase.org">Mobility Database</a>, <a href="https://www.transit.land">Transitland Atlas</a> and{' '}
         <a href="https://transitous.org">Transitous</a>.
       </p>
       <p>
-        Lines in countries without open schedules, the streets and water, and the map tiles come from
-        <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> (© OpenStreetMap contributors, ODbL), with tiles by
+        Lines in countries without open schedules, the streets and water, and the map tiles come from{' '}
+        <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> (© OpenStreetMap contributors, ODbL), with tiles by{' '}
         <a href="https://openfreemap.org">OpenFreeMap</a> and extracts by <a href="https://download.geofabrik.de/">Geofabrik</a>. City names
         and populations for search come from <a href="https://www.geonames.org/">GeoNames</a> (CC BY 4.0).
       </p>
     </section>
 
-    <section class="notes" aria-labelledby="trust-heading">
+    <section class="notes" data-area="trust" aria-labelledby="trust-heading">
       <h2 id="trust-heading">Good to know</h2>
       <p>
         A vehicle on the map is where its agency last said it was, so it’s always a little behind. Many agencies don’t share live positions
@@ -140,7 +140,7 @@ const stopsOnLine = [
       </p>
     </section>
 
-    <section class="notes" aria-labelledby="privacy-heading">
+    <section class="notes" data-area="privacy" aria-labelledby="privacy-heading">
       <h2 id="privacy-heading">Privacy</h2>
       <p>
         Your browser asks OpenFreeMap’s servers for the part of the map you’re looking at. Everything else, including the tiles and the live
@@ -149,7 +149,7 @@ const stopsOnLine = [
       </p>
     </section>
 
-    <section class="notes" aria-labelledby="code-heading">
+    <section class="notes" data-area="code" aria-labelledby="code-heading">
       <h2 id="code-heading">Get in touch</h2>
       <p>
         If something is missing or looks wrong, email <a href="mailto:mail@kylepace.net">mail@kylepace.net</a>. The code is public:{' '}
@@ -274,5 +274,50 @@ const stopsOnLine = [
 
   .notes {
     margin-bottom: var(--space-8);
+  }
+
+  /* Wide screens: more columns, not longer lines. What it is and How to use it side by
+     side, then the line of How it works down the left beside everything else. */
+  @media (min-width: 64rem) {
+    .page {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas:
+        'title title'
+        'what use'
+        'how sources'
+        'how trust'
+        'how privacy'
+        'how code'
+        'how .';
+      column-gap: var(--space-12);
+      align-items: start;
+    }
+
+    [data-area='title'] {
+      grid-area: title;
+      justify-self: start;
+    }
+    [data-area='what'] {
+      grid-area: what;
+    }
+    [data-area='use'] {
+      grid-area: use;
+    }
+    [data-area='how'] {
+      grid-area: how;
+    }
+    [data-area='sources'] {
+      grid-area: sources;
+    }
+    [data-area='trust'] {
+      grid-area: trust;
+    }
+    [data-area='privacy'] {
+      grid-area: privacy;
+    }
+    [data-area='code'] {
+      grid-area: code;
+    }
   }
 </style>

@@ -13,6 +13,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { Protocol } from 'pmtiles';
 import { liveVehicles, type LiveFeedRow } from './globe-vehicles';
 import { globeSearch } from './globe-search';
+import { globeLocator } from './globe-locator';
 import { track } from 'kp-design/analytics';
 
 const EXPERIMENT = 'world-transit';
@@ -85,7 +86,9 @@ export function startGlobe(root: HTMLElement) {
     container,
     style: STYLES[currentTheme],
     // Start over North America.
-    center: [-98, 39],
+    // A different part of the world each visit, like World cuisine (latitude 22 keeps the
+    // busiest continents in view), unless the link asks for a place or an agency.
+    center: [Math.random() * 360 - 180, 22],
     zoom: homeZoom(),
     attributionControl: false,
     cooperativeGestures: matchMedia('(pointer: coarse)').matches,
@@ -100,7 +103,38 @@ export function startGlobe(root: HTMLElement) {
   const live = liveVehicles(map, liveFeeds, (text) => {
     if (liveStatus && liveStatus.textContent !== text) liveStatus.textContent = text;
   });
+  // ---------- The slow spin on arrival ----------
+  // The globe turns on its own until someone touches it: a drag, a scroll, a search, a
+  // fly-to. Not at all with reduced motion, or when a link opens on a place or agency.
+  const linked = /[?&](at|agency)=/.test(location.search);
+  let spinning = !reducedMotion() && !linked;
+  let spinStep = false; // true while the spin itself moves the map
+  let lastFrame = 0;
+  const SPIN_DEGREES_PER_SECOND = 4;
+  const stopSpin = () => {
+    spinning = false;
+  };
+  function spin(now: number) {
+    if (!spinning) return;
+    const dt = lastFrame ? Math.min(now - lastFrame, 100) : 0;
+    lastFrame = now;
+    if (document.visibilityState === 'visible' && !map.isMoving()) {
+      const c = map.getCenter();
+      spinStep = true;
+      map.setCenter([c.lng + (SPIN_DEGREES_PER_SECOND * dt) / 1000, c.lat]);
+      spinStep = false;
+    }
+    requestAnimationFrame(spin);
+  }
+  // Any movement the spin didn't make (a drag, a fly-to from search) ends it for good.
+  map.on('movestart', () => {
+    if (!spinStep) stopSpin();
+  });
+  for (const type of ['mousedown', 'touchstart', 'wheel'] as const) map.on(type, stopSpin);
+  container.addEventListener('keydown', stopSpin);
+
   map.once('load', async () => {
+    if (spinning) requestAnimationFrame(spin);
     try {
       liveFeeds.push(...((await fetch('/world-transit/live-feeds.json').then((r) => r.json())) as LiveFeedRow[]));
     } catch {
@@ -161,10 +195,37 @@ export function startGlobe(root: HTMLElement) {
   });
   map.addControl(new maplibregl.FullscreenControl({ container: root.querySelector<HTMLElement>('[data-frame]')! }), 'top-right');
 
+  // ---------- Rough continents while the map loads ----------
+  // The basemap's tiles take a moment to download, and until then the globe is one flat
+  // color. world-atlas's 1:110m land (a small file, also used by the locator) draws the
+  // continents right away, under the basemap, which covers it with detail as it arrives.
+  const QUICK_LAND_MAX_ZOOM = 5;
+  let quickLand: GeoJSON.FeatureCollection | null = null;
+  const quickLandReady = import('world-atlas/land-110m.json').then(async (m) => {
+    const { feature } = await import('topojson-client');
+    const topo = (m as { default: { objects: { land: unknown } } }).default;
+    quickLand = feature(topo as never, topo.objects.land as never) as unknown as GeoJSON.FeatureCollection;
+    return quickLand;
+  });
+  function addQuickLand(color: string) {
+    const add = (data: GeoJSON.FeatureCollection) => {
+      if (map.getSource('quick-land')) return;
+      // Just above the background, under everything the basemap draws.
+      const firstAboveBackground = map.getStyle().layers?.find((l) => l.type !== 'background')?.id;
+      map.addSource('quick-land', { type: 'geojson', data });
+      map.addLayer({ id: 'quick-land', type: 'fill', source: 'quick-land', maxzoom: QUICK_LAND_MAX_ZOOM, paint: { 'fill-color': color } }, firstAboveBackground);
+    };
+    if (quickLand) add(quickLand);
+    else void quickLandReady.then((data) => map.isStyleLoaded() && add(data));
+  }
+
   function tintBasemap() {
     const t = BASEMAP[currentTheme];
     for (const layer of map.getStyle().layers ?? []) {
-      if (layer.type === 'background') map.setPaintProperty(layer.id, 'background-color', t.land);
+      // From orbit the background is ocean, with rough continents drawn on it at once
+      // (addQuickLand), so the planet is recognizable before the map's tiles arrive.
+      // Closer in, it's land again, as the basemap expects.
+      if (layer.type === 'background') map.setPaintProperty(layer.id, 'background-color', ['step', ['zoom'], t.water, QUICK_LAND_MAX_ZOOM, t.land]);
       else if (layer.type === 'fill' && /^water/.test(layer.id)) map.setPaintProperty(layer.id, 'fill-color', t.water);
       else if (layer.type === 'line' && /^waterway/.test(layer.id)) map.setPaintProperty(layer.id, 'line-color', t.water);
       else if (t.green && layer.type === 'fill' && /park|wood|grass/.test(layer.id)) map.setPaintProperty(layer.id, 'fill-color', t.green);
@@ -207,6 +268,7 @@ export function startGlobe(root: HTMLElement) {
     // one edge. A crisp rim against space reads better, and the blue oceans give the shape.
     map.setSky({ 'sky-color': t.space, 'horizon-color': t.space, 'fog-color': t.space, 'sky-horizon-blend': 0, 'atmosphere-blend': 0 });
     tintBasemap();
+    addQuickLand(t.land);
 
     map.addSource('transit', { type: 'vector', url: tiles, attribution: '' });
     // Routes go above every basemap road and area, under the labels that come after them.
@@ -400,6 +462,7 @@ export function startGlobe(root: HTMLElement) {
   }
 
   globeSearch(root, map, reducedMotion, (agency) => setFocus({ agency }), homeZoom);
+  const locator = globeLocator(root, map, () => currentTheme);
 
   // Somewhere random: a dense transit city, never the same one twice in a row.
   type DenseRow = [name: string, region: string, country: string, lat: number, lon: number, routes: number];
@@ -437,6 +500,7 @@ export function startGlobe(root: HTMLElement) {
     if (next === currentTheme) return;
     currentTheme = next;
     map.setStyle(STYLES[next]);
+    locator?.redraw();
   };
   new MutationObserver(onTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onTheme);

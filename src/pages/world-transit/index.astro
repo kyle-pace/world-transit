@@ -120,6 +120,10 @@ const modes: { value: IconMode; label: string; bold: boolean }[] = [
         </div>
       </div>
       <div class="map" data-map role="region" aria-label="Globe of transit routes and live vehicles. Drag to spin, scroll or pinch to zoom."></div>
+      <div class="locator" data-locator hidden>
+        <canvas width="96" height="96" aria-hidden="true"></canvas>
+        <p data-near aria-live="polite"></p>
+      </div>
     </div>
   </section>
 
@@ -490,6 +494,40 @@ const modes: { value: IconMode; label: string; bold: boolean }[] = [
     .sign-body {
       padding: var(--space-4) var(--space-4) var(--space-1);
     }
+  }
+
+  /* Where am I: a little globe turned to the view, and the nearest city. */
+  .locator {
+    position: absolute;
+    right: var(--space-3);
+    bottom: 4.5rem;
+    z-index: 2;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-1);
+    max-width: 9rem;
+    padding: var(--space-2);
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.18);
+  }
+
+  .locator[hidden] {
+    display: none;
+  }
+
+  .locator canvas {
+    width: 96px;
+    height: 96px;
+  }
+
+  .locator p {
+    margin: 0;
+    font-size: var(--step--1);
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: center;
   }
 
   .transit :global(.maplibregl-map) {
