@@ -11,6 +11,7 @@
 import maplibregl, { type Map as MapLibreMap } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { Protocol } from 'pmtiles';
+import { liveVehicles, type LiveFeedRow } from './globe-vehicles';
 
 type Mode = 'bus' | 'rail' | 'tram' | 'ferry' | 'other';
 
@@ -42,6 +43,9 @@ export function startGlobe(root: HTMLElement) {
   const tiles = `pmtiles://${location.origin}/transit/globe/${country}.pmtiles`;
   const modeInputs = [...root.querySelectorAll<HTMLInputElement>('[data-mode]')];
   const status = root.querySelector<HTMLElement>('[data-status]');
+  const liveStatus = root.querySelector<HTMLElement>('[data-live-status]');
+  const liveInput = root.querySelector<HTMLInputElement>('[data-live]');
+  const liveFeeds: LiveFeedRow[] = JSON.parse(root.dataset.live ?? '[]');
 
   const protocol = new Protocol();
   maplibregl.addProtocol('pmtiles', protocol.tile);
@@ -65,6 +69,11 @@ export function startGlobe(root: HTMLElement) {
     if (matchMedia('(max-width: 47.99rem)').matches) container.querySelector('.maplibregl-ctrl-attrib')?.classList.remove('maplibregl-compact-show');
   });
   map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+  const live = liveVehicles(map, liveFeeds, (text) => {
+    if (liveStatus && liveStatus.textContent !== text) liveStatus.textContent = text;
+  });
+  map.once('load', () => live.start());
+  liveInput?.addEventListener('change', () => live.setVisible(liveInput.checked));
   map.addControl(new maplibregl.FullscreenControl({ container: root.querySelector<HTMLElement>('[data-frame]')! }), 'top-right');
 
   function tintBasemap() {
@@ -140,6 +149,8 @@ export function startGlobe(root: HTMLElement) {
       },
       firstLabel,
     );
+    // Vehicles on top of everything, ringed in the land color so they stand off the lines.
+    live.addLayer(t.halo);
     applyFilters();
   }
   map.on('style.load', addOverlay);
@@ -156,6 +167,12 @@ export function startGlobe(root: HTMLElement) {
     ];
     const hits = map.queryRenderedFeatures(box, { layers: routeLayers.filter((l) => map.getLayer(l)) });
     popup?.remove();
+    // A vehicle wins over the lines under it.
+    const vehiclePopup = live.popupAt(e);
+    if (vehiclePopup) {
+      popup = vehiclePopup;
+      return;
+    }
     if (!hits.length) return;
     const seen = new Set<string>();
     const list = document.createElement('ul');
@@ -178,7 +195,7 @@ export function startGlobe(root: HTMLElement) {
     }
     popup = new maplibregl.Popup({ maxWidth: '20rem' }).setLngLat(e.lngLat).setDOMContent(list).addTo(map);
   });
-  for (const id of routeLayers) {
+  for (const id of [...routeLayers, 'vehicles']) {
     map.on('mouseenter', id, () => (map.getCanvas().style.cursor = 'pointer'));
     map.on('mouseleave', id, () => (map.getCanvas().style.cursor = ''));
   }

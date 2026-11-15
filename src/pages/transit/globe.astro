@@ -13,6 +13,13 @@ const found = import.meta.glob<Summary>('../../../public/transit/globe/us.json',
 const summary: Summary | null = Object.values(found)[0] ?? null;
 const n = (x: number) => x.toLocaleString('en-US');
 
+// Live vehicle feeds (scripts/build-globe.ts): just what the page needs, the URLs stay
+// with the Worker (src/pages/transit/api/globe/[feed].json.ts).
+type LiveList = { feeds: { id: string; name: string; static: string; bbox: number[] }[] };
+const liveFound = import.meta.glob<LiveList>('../../lib/globe-live-us.json', { eager: true, import: 'default' });
+const liveList: LiveList = Object.values(liveFound)[0] ?? { feeds: [] };
+const liveRows = JSON.stringify(liveList.feeds.map((f) => [f.id, f.name, f.static, f.bbox]));
+
 const modes: { value: IconMode; label: string; bold: boolean }[] = [
   { value: 'rail', label: 'Trains', bold: true },
   { value: 'tram', label: 'Light rail and streetcars', bold: true },
@@ -45,7 +52,7 @@ const places: [string, number, number, number][] = [
     <li><a href="/transit/about/">About</a></li>
   </ul>
 
-  <section class="transit" id="transit-globe" data-country="us" aria-labelledby="globe-title">
+  <section class="transit" id="transit-globe" data-country="us" data-live={liveRows} aria-labelledby="globe-title">
     <div class="frame" data-frame>
       <div class="sign">
         <div class="plate sign-plate">
@@ -53,6 +60,7 @@ const places: [string, number, number, number][] = [
           <p class="readout" data-status aria-live="polite">
             {summary ? `${n(summary.routes)} routes from ${n(summary.agencies)} agencies` : 'Routes not built yet'}
           </p>
+          <p class="readout live" data-live-status aria-live="polite">Zoom in to a region to see live vehicles</p>
         </div>
         <div class="sign-body">
           <details class="layers" data-layers open>
@@ -78,6 +86,14 @@ const places: [string, number, number, number][] = [
                   </label>
                 ))
               }
+            </fieldset>
+            <fieldset class="legend">
+              <legend>Live</legend>
+              <label class="row">
+                <input type="checkbox" data-live checked />
+                <svg class="pictogram" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6" fill="currentColor"></circle></svg>
+                <span class="row-label">Vehicles reporting where they are ({n(liveList.feeds.length)} agencies)</span>
+              </label>
             </fieldset>
             <fieldset class="legend places">
               <legend>Go to</legend>
@@ -107,7 +123,8 @@ const places: [string, number, number, number][] = [
         }
       </p>
       <p>
-        This is a first look at taking the <a href="/transit/">Washington live map</a> worldwide. Live vehicles come next.
+        Live vehicles come from each agency’s open feed (GTFS-realtime), for the part of the map you’re looking at, and refresh
+        every 15 seconds. This is a first look at taking the <a href="/transit/">Washington live map</a> worldwide.
       </p>
       <p>
         Map tiles by <a href="https://openfreemap.org">OpenFreeMap</a>, map data © OpenStreetMap contributors. Privacy: your
@@ -364,6 +381,28 @@ const places: [string, number, number, number][] = [
     color: var(--ink);
     border-radius: var(--radius-sm);
     padding: var(--space-3) var(--space-4) var(--space-2);
+  }
+
+  .readout.live {
+    font-weight: 400;
+    color: var(--plate-ink-muted);
+  }
+
+  .transit :global(.globe-vehicle) {
+    display: grid;
+    gap: var(--space-1);
+    font-size: var(--step--1);
+  }
+
+  /* The route's color as a bar beside the name: the color is extra, the name says it. */
+  .transit :global(.globe-vehicle strong) {
+    padding-left: var(--space-2);
+    border-left: 4px solid var(--route);
+    font-size: var(--step-0);
+  }
+
+  .transit :global(.globe-vehicle span) {
+    color: var(--ink-muted);
   }
 
   .transit :global(.globe-hits) {

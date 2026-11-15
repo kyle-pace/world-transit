@@ -19,6 +19,7 @@
     --limit 20         only the first N feeds (for trying it out)
     --concurrency 6    feeds processed at once
     --tiles-only       skip downloading; just repack the cached results
+    --live-only        just recheck the live vehicle feeds (needs a finished build)
     --upload           send the finished tiles to R2 (bucket kylepace-transit-tiles,
                        key globe/<country>.pmtiles), which the Worker serves at
                        /transit/globe/<country>.pmtiles. Needs `wrangler login`.
@@ -42,6 +43,7 @@ const COUNTRY = (arg('country', 'US') as string).toUpperCase();
 const LIMIT = Number(arg('limit', '0'));
 const CONCURRENCY = Number(arg('concurrency', '6'));
 const TILES_ONLY = process.argv.includes('--tiles-only');
+const LIVE_ONLY = process.argv.includes('--live-only');
 const UPLOAD = process.argv.includes('--upload');
 const BUCKET = 'kylepace-transit-tiles';
 const OUT_DIR = join(root, 'public/transit/globe');
@@ -183,7 +185,7 @@ async function buildFeed(feed: Feed, color: string): Promise<FeedResult> {
         JSON.stringify({
           type: 'Feature',
           tippecanoe: { layer: 'routes', minzoom: MIN_ZOOM[r.mode] ?? 5 },
-          properties: { feed: feed.id, agency: bundle.agencies[r.agency] ?? feed.provider, short: r.short, long: r.long, color: r.color, mode: r.mode },
+          properties: { feed: feed.id, rid: r.id, agency: bundle.agencies[r.agency] ?? feed.provider, short: r.short, long: r.long, color: r.color, mode: r.mode },
           geometry: { type: 'MultiLineString', coordinates: r.geom },
         }),
       );
@@ -350,12 +352,133 @@ function writeSummary(reportFile: string, counts: Counts) {
   console.log(`Summary: ${summary.feeds} feeds, ${summary.agencies} agencies, ${counts.routes} routes (${counts.duplicates} duplicates dropped), ${counts.stops} stops.`);
 }
 
+// ---------- Live feeds (vehicle positions) ----------
+
+interface LiveFeed {
+  id: string;
+  name: string;
+  url: string;
+  /** The schedule feed whose routes and stops this feed's vehicles run on. */
+  static: string;
+  /** [west, south, east, north] of that schedule's routes and stops. */
+  bbox: [number, number, number, number];
+  /** Vehicles in the feed when the build checked it (0 at night is normal). */
+  vehicles: number;
+}
+
+const routeKey = (p: { agency: string; short: string; long: string; mode: string }, first: number[]) =>
+  `${p.agency}|${p.short}|${p.long}|${p.mode}|${first[0].toFixed(3)},${first[1].toFixed(3)}`;
+
+/**
+ * List every open live vehicle feed for the country that belongs to a schedule on the
+ * globe and answers right now, plus a route lookup for each (route id -> name, color),
+ * so the page can say what a vehicle is and color it like its line.
+ *
+ * Writes src/lib/globe-live-us.json (the Worker reads feed URLs from it, the page reads
+ * ids and areas) and public/transit/globe/routes/<schedule>.json. If no feed answers at
+ * all (the network is down), nothing is written and the last list stays.
+ */
+async function buildLiveList() {
+  const { fetchLiveFeed, compactFeed } = await import('../src/lib/globe-live.ts');
+  const [header, ...rows] = parseCsv(readFileSync(join(TMP, 'feeds_v2.csv'), 'utf8'));
+  const col = new Map(header.map((h, i) => [h, i]));
+  const get = (r: string[], name: string) => r[col.get(name)!] ?? '';
+
+  const candidates: Omit<LiveFeed, 'bbox' | 'vehicles'>[] = [];
+  const seenUrls = new Set<string>();
+  let keyed = 0;
+  let noSchedule = 0;
+  for (const r of rows) {
+    if (get(r, 'data_type') !== 'gtfs_rt' || get(r, 'location.country_code') !== COUNTRY) continue;
+    if (!get(r, 'entity_type').split('|').includes('vp')) continue;
+    if (['deprecated', 'inactive'].includes(get(r, 'status')) || get(r, 'redirect.id')) continue;
+    if (!['0', ''].includes(get(r, 'urls.authentication_type'))) {
+      keyed++;
+      continue;
+    }
+    const url = get(r, 'urls.direct_download');
+    if (!/^https?:\/\//.test(url) || seenUrls.has(url)) continue;
+    const schedule = get(r, 'static_reference').split('|').find((s) => existsSync(join(CACHE, `${s}.ndjson`)));
+    if (!schedule) {
+      noSchedule++;
+      continue;
+    }
+    seenUrls.add(url);
+    candidates.push({ id: get(r, 'id'), name: get(r, 'provider') || get(r, 'name'), url, static: schedule });
+  }
+  console.log(`\nLive: ${candidates.length} open vehicle feeds with a schedule on the globe (${keyed} need a key, ${noSchedule} have no schedule here). Checking each…`);
+
+  // Final line colors, after duplicates and recoloring (the merged file tippecanoe read).
+  const finalColor = new Map<string, string>();
+  for (const line of readFileSync(join(TMP, 'tiles-input', 'routes.ndjson'), 'utf8').split('\n')) {
+    if (!line) continue;
+    const f = JSON.parse(line);
+    finalColor.set(routeKey(f.properties, f.geometry.coordinates[0][0]), f.properties.color);
+  }
+
+  const results: (LiveFeed | null)[] = new Array(candidates.length).fill(null);
+  const problems: string[] = [];
+  let next = 0;
+  const worker = async () => {
+    while (next < candidates.length) {
+      const i = next++;
+      const c = candidates[i];
+      try {
+        const live = compactFeed(await fetchLiveFeed(c.url, 10_000));
+        let [w, s, e, n] = [180, 90, -180, -90];
+        for (const line of readFileSync(join(CACHE, `${c.static}.ndjson`), 'utf8').split('\n')) {
+          if (!line) continue;
+          const g = JSON.parse(line).geometry;
+          const pts: number[][] = g.type === 'Point' ? [g.coordinates] : g.coordinates.flat();
+          for (const [x, y] of pts) {
+            if (x < w) w = x;
+            if (x > e) e = x;
+            if (y < s) s = y;
+            if (y > n) n = y;
+          }
+        }
+        results[i] = { ...c, bbox: [w, s, e, n].map((v) => Math.round(v * 1000) / 1000) as LiveFeed['bbox'], vehicles: live.v.length };
+      } catch (err) {
+        problems.push(`${c.id} ${c.name}: ${(err as Error).message}`);
+      }
+    }
+  };
+  await Promise.all(Array.from({ length: 16 }, worker));
+  const feeds = results.filter((r): r is LiveFeed => r !== null).sort((a, b) => a.id.localeCompare(b.id));
+  if (!feeds.length) throw new Error('no live feed answered; keeping the last list');
+
+  const routesDir = join(OUT_DIR, 'routes');
+  rmSync(routesDir, { recursive: true, force: true });
+  mkdirSync(routesDir, { recursive: true });
+  for (const schedule of new Set(feeds.map((f) => f.static))) {
+    // route id -> [short name, long name, color, mode, agency]
+    const lookup: Record<string, [string, string, string, string, string]> = {};
+    for (const line of readFileSync(join(CACHE, `${schedule}.ndjson`), 'utf8').split('\n')) {
+      if (!line) continue;
+      const f = JSON.parse(line);
+      if (f.tippecanoe.layer !== 'routes') continue;
+      const p = f.properties;
+      lookup[p.rid] = [p.short, p.long, finalColor.get(routeKey(p, f.geometry.coordinates[0][0])) ?? p.color, p.mode, p.agency];
+    }
+    writeFileSync(join(routesDir, `${schedule}.json`), JSON.stringify(lookup));
+  }
+  writeFileSync(
+    join(root, `src/lib/globe-live-${COUNTRY.toLowerCase()}.json`),
+    JSON.stringify({ updated: new Date().toISOString(), feeds }, null, 1) + '\n',
+  );
+  const moving = feeds.reduce((sum, f) => sum + f.vehicles, 0);
+  console.log(`Live: ${feeds.length} feeds answered (${moving} vehicles right now), ${problems.length} didn't:`);
+  for (const p of problems.sort()) console.log(`  ${p}`);
+}
+
 // ---------- Main ----------
 
 async function main() {
   mkdirSync(CACHE, { recursive: true });
   const reportFile = join(TMP, `report-${COUNTRY.toLowerCase()}.json`);
   const previous: Record<string, FeedResult> = existsSync(reportFile) ? JSON.parse(readFileSync(reportFile, 'utf8')) : {};
+
+  if (LIVE_ONLY) return buildLiveList();
 
   if (!TILES_ONLY) {
     const { feeds, keyed } = await loadFeeds();
@@ -385,6 +508,12 @@ async function main() {
   const { out, counts } = await buildTiles();
   console.log(`Tiles: ${out} (${Math.round(statSync(out).size / 1e6)} MB)`);
   writeSummary(reportFile, counts);
+  // A live-feed problem never costs the routes: the tiles are already written.
+  try {
+    await buildLiveList();
+  } catch (err) {
+    console.log(`::warning title=Live feeds not updated::${(err as Error).message}`);
+  }
   if (UPLOAD) {
     const key = `${BUCKET}/globe/${COUNTRY.toLowerCase()}.pmtiles`;
     const up = spawnSync('npx', ['wrangler', 'r2', 'object', 'put', key, '--file', out, '--content-type', 'application/octet-stream', '--remote'], { stdio: 'inherit', cwd: root });
