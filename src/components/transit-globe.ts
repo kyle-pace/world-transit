@@ -132,9 +132,24 @@ export function startGlobe(root: HTMLElement) {
   });
   for (const type of ['mousedown', 'touchstart', 'wheel'] as const) map.on(type, stopSpin);
   container.addEventListener('keydown', stopSpin);
+  const startSpin = () => {
+    lastFrame = 0;
+    requestAnimationFrame(spin);
+  };
+  // Start as soon as the style is ready, not after every tile has loaded ('load'), so the
+  // globe is already turning when a first-time visitor closes the welcome.
+  map.once('style.load', () => {
+    if (spinning) startSpin();
+  });
+  // Nothing done while the welcome dialog is open is someone reaching for the map (a
+  // resize, a scroll that slipped through), so closing it always sets the globe turning.
+  document.querySelector('[data-lab-welcome]')?.addEventListener('close', () => {
+    if (spinning || reducedMotion() || linked) return;
+    spinning = true;
+    startSpin();
+  });
 
   map.once('load', async () => {
-    if (spinning) requestAnimationFrame(spin);
     try {
       liveFeeds.push(...((await fetch('/world-transit/live-feeds.json').then((r) => r.json())) as LiveFeedRow[]));
     } catch {
