@@ -125,8 +125,8 @@ export function startGlobe(root: HTMLElement) {
           paint: {
             'line-color': ['get', 'color'],
             // Hairlines from orbit, full strokes at street level.
-            'line-width': heavy ? ['interpolate', ['linear'], ['zoom'], 2, 0.8, 8, 2, 14, 5] : ['interpolate', ['linear'], ['zoom'], 5, 0.4, 9, 1, 14, 3],
-            'line-opacity': heavy ? 0.95 : ['interpolate', ['linear'], ['zoom'], 5, 0.5, 10, 0.85],
+            'line-width': heavy ? ['interpolate', ['linear'], ['zoom'], 2, 0.8, 8, 2, 14, 5] : ['interpolate', ['linear'], ['zoom'], 7, 0.5, 9, 1, 14, 3],
+            'line-opacity': heavy ? 0.95 : ['interpolate', ['linear'], ['zoom'], 7, 0.55, 10, 0.85],
             ...(mode === 'ferry' ? { 'line-dasharray': [2, 1.5] } : {}),
           },
         },

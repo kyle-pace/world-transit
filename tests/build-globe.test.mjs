@@ -26,3 +26,20 @@ test('a drawn path (points not on stops) is never cut, however straight', () => 
 test('a line that is only one long hop disappears instead of slicing the map', () => {
   assert.deepEqual(breakLongHops([[c, airport]], stops, 'bus'), []);
 });
+
+import { minZoomFor } from '../scripts/build-globe.ts';
+
+test('from orbit only long rail shows; buses and trams wait for region level', () => {
+  const long = [[[-122.3, 47.6], [-122.3, 43.5]]]; // ~450 km
+  const regional = [[[-122.3, 47.6], [-122.3, 46.3]]]; // ~145 km
+  const mid = [[[-122.3, 47.6], [-122.3, 47.3]]]; // ~33 km
+  const short = [[[-122.3, 47.6], [-122.3, 47.55]]]; // ~5.5 km
+  assert.equal(minZoomFor('rail', long), 0);
+  assert.equal(minZoomFor('rail', regional), 3);
+  assert.equal(minZoomFor('rail', mid), 5);
+  assert.equal(minZoomFor('rail', short), 6);
+  assert.equal(minZoomFor('ferry', regional), 3);
+  assert.equal(minZoomFor('ferry', short), 6);
+  assert.equal(minZoomFor('bus', long), 7);
+  assert.equal(minZoomFor('tram', short), 7);
+});

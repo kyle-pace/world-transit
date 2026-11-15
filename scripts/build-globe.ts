@@ -21,6 +21,9 @@
     --tiles-only       skip downloading; just repack the cached results
     --live-only        just recheck the live vehicle feeds (needs a finished build)
     --no-tiles         download only; pack the tiles in a later --tiles-only run
+    --extra            also every open schedule in Transitland Atlas and Transitous that
+                       the Mobility Database doesn't list (any country; cloned into
+                       .globe-tmp/catalogs/ from GitHub)
     --upload           send the finished tiles to R2 (bucket kylepace-transit-tiles,
                        key globe/<country>.pmtiles), which the Worker serves at
                        /transit/globe/<country>.pmtiles. Needs `wrangler login`.
@@ -50,6 +53,8 @@ const CONCURRENCY = Number(arg('concurrency', '6'));
 const TILES_ONLY = process.argv.includes('--tiles-only');
 const LIVE_ONLY = process.argv.includes('--live-only');
 const NO_TILES = process.argv.includes('--no-tiles');
+const EXTRA = process.argv.includes('--extra');
+const CATALOGS = join(TMP, 'catalogs');
 const UPLOAD = process.argv.includes('--upload');
 const BUCKET = 'kylepace-transit-tiles';
 const OUT_DIR = join(root, 'public/transit/globe');
@@ -136,7 +141,74 @@ async function loadFeeds(): Promise<{ feeds: Feed[]; keyed: number }> {
     if (!urls.length) continue;
     feeds.push({ id: get(r, 'id'), provider: get(r, 'provider'), name: get(r, 'name'), state: get(r, 'location.subdivision_name'), country: get(r, 'location.country_code'), urls });
   }
+  if (EXTRA) {
+    const known = new Set<string>();
+    for (const r of rows) for (const c of ['urls.direct_download', 'urls.latest']) if (get(r, c)) known.add(get(r, c).trim().replace(/\/$/, ''));
+    feeds.push(...extraFeeds(known));
+  }
   return { feeds: LIMIT ? feeds.slice(0, LIMIT) : feeds, keyed };
+}
+
+/**
+ * Open schedules from Transitland Atlas and Transitous that the Mobility Database doesn't
+ * list (by URL). Transitous files are named by country; Transitland doesn't say, so those
+ * feeds get their country from where their routes are, once built (country-at.ts).
+ */
+function extraFeeds(known: Set<string>): Feed[] {
+  const clone = (repo: string, dir: string) => {
+    const path = join(CATALOGS, dir);
+    if (existsSync(path)) spawnSync('git', ['-C', path, 'pull', '-q', '--depth', '1']);
+    else spawnSync('git', ['clone', '-q', '--depth', '1', repo, path]);
+    return path;
+  };
+  mkdirSync(CATALOGS, { recursive: true });
+  // File-safe ids. Non-Latin ids would all shrink to the same few characters, so a short
+  // hash of the original keeps every id unique.
+  const safe = (s: string) => {
+    let h = 0;
+    for (const ch of s) h = (Math.imul(h, 31) + ch.codePointAt(0)!) >>> 0;
+    return `${s.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-|-$/g, '').slice(0, 60)}-${h.toString(36)}`;
+  };
+  const out: Feed[] = [];
+  const add = (f: Feed) => {
+    const u = f.urls[0].trim().replace(/\/$/, '');
+    if (known.has(u)) return;
+    known.add(u);
+    out.push(f);
+  };
+
+  const atlas = clone('https://github.com/transitland/transitland-atlas.git', 'transitland-atlas');
+  for (const file of readdirSync(join(atlas, 'feeds')).filter((f) => f.endsWith('.json')).sort()) {
+    let dmfr: { feeds?: { id: string; spec?: string; urls?: { static_current?: string }; authorization?: unknown }[] };
+    try {
+      dmfr = JSON.parse(readFileSync(join(atlas, 'feeds', file), 'utf8'));
+    } catch {
+      continue;
+    }
+    for (const f of dmfr.feeds ?? []) {
+      const url = f.urls?.static_current;
+      if (f.spec !== 'gtfs' || !url || f.authorization || !/^https?:\/\//.test(url)) continue;
+      add({ id: `tl-${safe(f.id)}`, provider: f.id, name: '', state: '', country: '', urls: [url] });
+    }
+  }
+
+  const transitous = clone('https://github.com/public-transport/transitous.git', 'transitous');
+  for (const file of readdirSync(join(transitous, 'feeds')).filter((f) => f.endsWith('.json')).sort()) {
+    let cfg: { sources?: { name?: string; type?: string; url?: string; spec?: string; skip?: boolean; 'api-key'?: unknown; headers?: unknown }[] };
+    try {
+      cfg = JSON.parse(readFileSync(join(transitous, 'feeds', file), 'utf8'));
+    } catch {
+      continue;
+    }
+    const country = file.slice(0, 2).toUpperCase();
+    for (const src of cfg.sources ?? []) {
+      if (src.type !== 'http' || src.skip || (src.spec && src.spec !== 'gtfs') || !src.url || src.headers || src['api-key']) continue;
+      if (!/^https?:\/\//.test(src.url)) continue;
+      add({ id: `tr-${safe(file.replace(/\.json$/, ''))}-${safe(src.name ?? 'feed')}`, provider: src.name ?? file, name: '', state: file.replace(/\.json$/, ''), country, urls: [src.url] });
+    }
+  }
+  console.log(`Extra catalogs: ${out.length} open schedules not in the Mobility Database.`);
+  return out;
 }
 
 // ---------- One feed ----------
@@ -228,6 +300,16 @@ async function buildFeed(feed: Feed, color: string): Promise<FeedResult> {
             geometry: { type: 'Point', coordinates: [st.lon, st.lat] },
           }),
         );
+      }
+    }
+    // Feeds whose catalog doesn't say (Transitland): the country their first line starts in.
+    if (!feed.country) {
+      // Route lines are written before stops, so the first line is a route if there is one.
+      const first = drawn ? JSON.parse(lines[0]) : null;
+      if (first) {
+        const { countryAt } = await import('./country-at.ts');
+        const [lon, lat] = first.geometry.coordinates[0][0];
+        base.country = countryAt(lon, lat);
       }
     }
     if (!drawn) throw new Error(`no route lines (${routeCount} routes, no shapes or stop sequences)`);
@@ -326,6 +408,20 @@ function km(a: number[], b: number[]) {
   return Math.hypot(dx, dy);
 }
 
+/**
+ * The zoom a line first shows at. From orbit, only long lines that define a continent;
+ * shorter ones as you come down, so no low-zoom tile carries a whole country's regional
+ * trains (Europe's were 2 MB a tile, and long lines alone still 1.4 MB at orbit). Buses and trams wait for region level.
+ */
+export function minZoomFor(mode: string, lines: number[][][]): number {
+  if (mode === 'bus' || mode === 'other' || mode === 'tram') return 7;
+  let length = 0;
+  for (const line of lines) for (let i = 1; i < line.length; i++) length += km(line[i - 1], line[i]);
+  if (mode === 'ferry') return length > 40 ? 3 : 6;
+  // Thresholds tuned so an orbit tile stays a few hundred KB with the whole world in it.
+  return length > 400 ? 0 : length > 120 ? 3 : length > 30 ? 5 : 6;
+}
+
 /** A line whose points are (almost) all this feed's stops was drawn stop to stop. */
 export function breakLongHops(lines: number[][][], stopsAt: Set<string>, mode: string): number[][][] {
   const limit = MAX_HOP_KM[mode] ?? 3;
@@ -388,6 +484,7 @@ async function mergeFeeds(files: string[], routesOut: string, stopsOut: string):
         }
         p.official = p.color;
         delete f.tippecanoe.layer;
+        f.tippecanoe.minzoom = minZoomFor(p.mode, f.geometry.coordinates);
         await write(routes, f);
         keep(f);
       }
@@ -434,6 +531,7 @@ async function mergeFeeds(files: string[], routesOut: string, stopsOut: string):
       if (members.length >= 4 || key.includes('|none|')) members.forEach((f, n) => (f.properties.color = DISTINCT[n % DISTINCT.length]));
       for (const f of members) {
         delete f.tippecanoe.layer;
+        f.tippecanoe.minzoom = minZoomFor(f.properties.mode, f.geometry.coordinates);
         await write(routes, f);
         keep(f);
       }
