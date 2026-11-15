@@ -22,14 +22,33 @@ const STYLES = {
 };
 // Keep in step with BASEMAP in transit-map.ts and src/styles/theme.css.
 const BASEMAP = {
-  light: { land: '#eceee8', water: '#b3cad2', green: null, space: '#16242a', halo: '#ffffff', network: '#8d9a9f' },
-  dark: { land: '#1b2326', water: '#1a3440', green: '#20292c', space: '#040708', halo: '#121719', network: '#56656b' },
+  light: { land: '#eceee8', water: '#b3cad2', green: null, space: '#16242a', halo: '#ffffff' },
+  dark: { land: '#1b2326', water: '#1a3440', green: '#20292c', space: '#040708', halo: '#121719' },
 };
 const MODE_NAMES: Record<Mode, string> = { bus: 'Bus', rail: 'Train', tram: 'Light rail or streetcar', ferry: 'Ferry', other: 'Other' };
 // Drawn bottom to top, so trains sit over the buses that feed them.
 const MODE_ORDER: Mode[] = ['bus', 'other', 'ferry', 'tram', 'rail'];
-// Buses take their own colors from this zoom (street level); before it they're one gray network.
+// Buses reach full color at this zoom (street level); further out they're softened.
 const BUS_COLOR_ZOOM = 13;
+// How far a bus line's color is blended toward the land color further out (0 to 1).
+// Less on the dark map: blending toward near-black dims a line much faster.
+const BUS_SOFTEN = { light: 0.4, dark: 0.25 };
+const RAIL_MODES: Mode[] = ['tram', 'rail'];
+
+/**
+ * A route's own color blended toward the land: MapLibre can't desaturate, but it can do
+ * arithmetic on a color's channels, so every bus keeps its hue, just quieter.
+ */
+function softened(land: string, amount: number): maplibregl.ExpressionSpecification {
+  const n = parseInt(land.slice(1), 16);
+  const rgb = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  // A route with no usable color counts as gray, rather than failing the whole expression.
+  const color: maplibregl.ExpressionSpecification = ['to-rgba', ['to-color', ['get', 'color'], '#868e96']];
+  const channel = (i: number): maplibregl.ExpressionSpecification => ['+', ['*', ['at', i, color], 1 - amount], rgb[i] * amount];
+  return ['rgba', channel(0), channel(1), channel(2), 1];
+}
+/** Buses: softened further out, their own color at street level. */
+const busColor = (theme: 'light' | 'dark'): maplibregl.ExpressionSpecification => ['interpolate', ['linear'], ['zoom'], BUS_COLOR_ZOOM - 2, softened(BASEMAP[theme].land, BUS_SOFTEN[theme]), BUS_COLOR_ZOOM, ['get', 'color']];
 
 const theme = (): 'light' | 'dark' => {
   const set = document.documentElement.dataset.theme;
@@ -141,6 +160,11 @@ export function startGlobe(root: HTMLElement) {
       map.setLayoutProperty(id, 'visibility', modes.includes(mode) ? 'visible' : 'none');
       const byMode: maplibregl.FilterSpecification = ['==', ['get', 'mode'], mode];
       map.setFilter(id, only ? ['all', byMode, inLive] : byMode);
+      const casing = `casing-${mode}`;
+      if (map.getLayer(casing)) {
+        map.setLayoutProperty(casing, 'visibility', modes.includes(mode) ? 'visible' : 'none');
+        map.setFilter(casing, only ? ['all', byMode, inLive] : byMode);
+      }
     }
     if (map.getLayer('stops')) map.setFilter('stops', only ? inLive : null);
     if (map.getLayer('hotspots')) map.setLayoutProperty('hotspots', 'visibility', only ? 'visible' : 'none');
@@ -158,9 +182,35 @@ export function startGlobe(root: HTMLElement) {
     tintBasemap();
 
     map.addSource('transit', { type: 'vector', url: tiles, attribution: '' });
-    const firstLabel = map.getStyle().layers?.find((l) => l.type === 'symbol')?.id;
+    // Routes go above every basemap road and area, under the labels that come after them.
+    // (The dark style has a label layer early on, below its roads; inserting before the
+    // first label hid every bus under the road fills.)
+    const styleLayers = map.getStyle().layers ?? [];
+    let lastShape = -1;
+    styleLayers.forEach((l, i) => {
+      if (l.type === 'line' || l.type === 'fill' || l.type === 'fill-extrusion') lastShape = i;
+    });
+    const firstLabel = styleLayers.find((l, i) => i > lastShape && l.type === 'symbol')?.id;
     for (const mode of MODE_ORDER) {
       const heavy = mode === 'rail' || mode === 'tram' || mode === 'ferry';
+      // A thin outline in the land color under trains and trams lifts them off the buses.
+      if (RAIL_MODES.includes(mode))
+        map.addLayer(
+          {
+            id: `casing-${mode}`,
+            type: 'line',
+            source: 'transit',
+            'source-layer': 'routes',
+            filter: ['==', ['get', 'mode'], mode],
+            layout: { 'line-join': 'round', 'line-cap': 'round' },
+            paint: {
+              'line-color': t.land,
+              'line-width': ['interpolate', ['linear'], ['zoom'], 2, 0, 7, 2.5, 8, 4, 14, 8],
+              'line-opacity': 0.9,
+            },
+          },
+          firstLabel,
+        );
       map.addLayer(
         {
           id: `routes-${mode}`,
@@ -170,12 +220,12 @@ export function startGlobe(root: HTMLElement) {
           filter: ['==', ['get', 'mode'], mode],
           layout: { 'line-join': 'round', 'line-cap': 'round' },
           paint: {
-            // The hierarchy: trains, trams and ferries in their colors at every zoom; buses
-            // as one quiet gray network until street level, where their own colors help.
-            'line-color': heavy ? ['get', 'color'] : ['step', ['zoom'], t.network, BUS_COLOR_ZOOM, ['get', 'color']],
+            // The hierarchy: trains, trams and ferries in full color at every zoom, outlined;
+            // buses in their own colors softened toward the land until street level.
+            'line-color': heavy ? ['get', 'color'] : busColor(currentTheme),
             // Hairlines from orbit, full strokes at street level.
             'line-width': heavy ? ['interpolate', ['linear'], ['zoom'], 2, 0.8, 8, 2, 14, 5] : ['interpolate', ['linear'], ['zoom'], 7, 0.4, 12, 0.9, 14, 3],
-            'line-opacity': heavy ? 0.95 : ['interpolate', ['linear'], ['zoom'], 7, 0.45, 12, 0.6, BUS_COLOR_ZOOM, 0.85],
+            'line-opacity': heavy ? 0.95 : ['interpolate', ['linear'], ['zoom'], 7, 0.6, BUS_COLOR_ZOOM, 0.9],
             ...(mode === 'ferry' ? { 'line-dasharray': [2, 1.5] } : {}),
           },
         },
@@ -188,12 +238,13 @@ export function startGlobe(root: HTMLElement) {
         type: 'circle',
         source: 'transit',
         'source-layer': 'stops',
-        minzoom: 11,
+        // Stops wait for street level, small, so they mark the lines instead of hiding them.
+        minzoom: 13,
         paint: {
-          'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 1.5, 16, 5],
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 13, 1.5, 16, 4],
           'circle-color': t.halo,
-          'circle-stroke-color': currentTheme === 'dark' ? '#e4ebed' : '#0f1a1d',
-          'circle-stroke-width': 1,
+          'circle-stroke-color': currentTheme === 'dark' ? '#9badb3' : '#46545a',
+          'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 13, 0.5, 16, 1],
         },
       },
       firstLabel,
@@ -237,10 +288,11 @@ export function startGlobe(root: HTMLElement) {
       const id = `routes-${mode}`;
       if (!map.getLayer(id)) continue;
       const heavy = mode === 'rail' || mode === 'tram' || mode === 'ferry';
-      const base = heavy ? 0.95 : (['interpolate', ['linear'], ['zoom'], 7, 0.45, 12, 0.6, BUS_COLOR_ZOOM, 0.85] as maplibregl.ExpressionSpecification);
+      const base = heavy ? 0.95 : (['interpolate', ['linear'], ['zoom'], 7, 0.6, BUS_COLOR_ZOOM, 0.9] as maplibregl.ExpressionSpecification);
       map.setPaintProperty(id, 'line-opacity', match ? ['case', match, 1, 0.12] : base);
-      // A focused bus route shows its own color at any zoom.
-      if (!heavy) map.setPaintProperty(id, 'line-color', match ? ['case', match, ['get', 'color'], BASEMAP[currentTheme].network] : ['step', ['zoom'], BASEMAP[currentTheme].network, BUS_COLOR_ZOOM, ['get', 'color']]);
+      // A focused bus route shows its full color at any zoom.
+      if (!heavy) map.setPaintProperty(id, 'line-color', match ? ['case', match, ['get', 'color'], softened(BASEMAP[currentTheme].land, BUS_SOFTEN[currentTheme])] : busColor(currentTheme));
+      if (map.getLayer(`casing-${mode}`)) map.setPaintProperty(`casing-${mode}`, 'line-opacity', match ? ['case', match, 0.9, 0] : 0.9);
     }
   }
   const setFocus = (f: Focus) => {

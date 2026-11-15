@@ -130,7 +130,7 @@ const modes: { value: IconMode; label: string; bold: boolean }[] = [
       <h2 id="about-heading">About</h2>
       <p>
         {
-          `Routes come from the schedules agencies publish openly (GTFS), found through the Mobility Database${summary ? `: ${n(summary.feeds)} sources, ${n(summary.routes)} routes and ${n(summary.stops)} stops in ${summary.countries.length} countries` : ''}. Where a country publishes no open schedules, the lines come from OpenStreetMap, which shows where they run but not when. Long train and ferry lines show from orbit, shorter ones as you come closer; buses and trams appear at region level, and stops at city level. Tap a line to see its name and who runs it.`
+          `Routes come from the schedules agencies publish openly (GTFS), found through the Mobility Database${summary ? `: ${n(summary.feeds)} sources, ${n(summary.routes)} routes and ${n(summary.stops)} stops in ${summary.countries.length} countries` : ''}. Where a country publishes no open schedules, the lines come from OpenStreetMap, which shows where they run but not when. Long train and ferry lines show from orbit, shorter ones as you come closer; buses and trams appear at region level in softer colors, and stops at street level. Tap a line to see its name and who runs it.`
         }
       </p>
       <p>
