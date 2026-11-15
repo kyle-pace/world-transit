@@ -1,0 +1,411 @@
+---
+// The transit globe (/transit/globe/), a prototype: every route and stop in the US's open
+// schedules on a globe. Logic: src/components/transit-globe.ts. Data:
+// public/transit/globe/us.pmtiles and us.json, built by scripts/build-globe.ts.
+// Same look as the live map (design/PLAN.md): the map fills the window with one sign on it.
+import LabLayout from 'kp-design/layouts/LabLayout.astro';
+import '../../styles/theme.css';
+import { ICONS, type IconMode } from '../../components/transit-icons';
+
+// Optional at build time: the summary only exists once scripts/build-globe.ts has run.
+type Summary = { updated: string; feeds: number; agencies: number; routes: number; stops: number };
+const found = import.meta.glob<Summary>('../../../public/transit/globe/us.json', { eager: true, import: 'default' });
+const summary: Summary | null = Object.values(found)[0] ?? null;
+const n = (x: number) => x.toLocaleString('en-US');
+
+const modes: { value: IconMode; label: string; bold: boolean }[] = [
+  { value: 'rail', label: 'Trains', bold: true },
+  { value: 'tram', label: 'Light rail and streetcars', bold: true },
+  { value: 'ferry', label: 'Ferries', bold: true },
+  { value: 'bus', label: 'Buses', bold: false },
+];
+// [label, lon, lat, zoom]
+const places: [string, number, number, number][] = [
+  ['The whole country', -98, 39, 0],
+  ['New York', -73.95, 40.72, 10],
+  ['Chicago', -87.68, 41.86, 10],
+  ['Puget Sound', -122.33, 47.6, 9],
+  ['San Francisco Bay', -122.3, 37.78, 9.5],
+  ['Los Angeles', -118.25, 34.04, 9.5],
+  ['Washington, DC', -77.03, 38.9, 10.5],
+  ['Hawaii', -157.9, 21.4, 7],
+];
+---
+
+<LabLayout
+  title="US transit on a globe"
+  description="Every bus, train and ferry route in the United States that publishes an open schedule, on one globe you can spin and zoom into a single street."
+  image="/transit/share.png"
+  imageAlt="Washington transit: the name on a green sign beside a dark map of Puget Sound's transit routes in many colors."
+  themeColor={{ light: '#eceee8', dark: '#121719' }}
+>
+  <ul class="lab-nav" slot="bar">
+    <li><a href="/transit/">Live map</a></li>
+    <li><a href="/transit/agencies/">Agencies</a></li>
+    <li><a href="/transit/about/">About</a></li>
+  </ul>
+
+  <section class="transit" id="transit-globe" data-country="us" aria-labelledby="globe-title">
+    <div class="frame" data-frame>
+      <div class="sign">
+        <div class="plate sign-plate">
+          <h1 id="globe-title">US transit</h1>
+          <p class="readout" data-status aria-live="polite">
+            {summary ? `${n(summary.routes)} routes from ${n(summary.agencies)} agencies` : 'Routes not built yet'}
+          </p>
+        </div>
+        <div class="sign-body">
+          <details class="layers" data-layers open>
+            <summary>
+              <span>Lines and places</span>
+              <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"
+                ><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg
+              >
+            </summary>
+            <fieldset class="legend">
+              <legend>Show</legend>
+              {
+                modes.map((m) => (
+                  <label class="row">
+                    <input type="checkbox" data-mode value={m.value} checked />
+                    <svg class="pictogram" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d={ICONS[m.value]} fill-rule="evenodd" />
+                    </svg>
+                    <span class="row-label">{m.label}</span>
+                    <svg class:list={['stroke', { bold: m.bold }]} viewBox="0 0 40 12" aria-hidden="true">
+                      <path d="M2 6h36" />
+                    </svg>
+                  </label>
+                ))
+              }
+            </fieldset>
+            <fieldset class="legend places">
+              <legend>Go to</legend>
+              <div class="place-list">
+                {
+                  places.map(([label, lon, lat, zoom]) => (
+                    <button type="button" data-fly={`${lon},${lat},${zoom}`}>
+                      {label}
+                    </button>
+                  ))
+                }
+              </div>
+            </fieldset>
+          </details>
+        </div>
+      </div>
+      <div class="map" data-map role="region" aria-label="Globe of US transit routes. Drag to spin, scroll or pinch to zoom."></div>
+    </div>
+  </section>
+
+  <div class="below">
+    <section class="about" aria-labelledby="about-heading">
+      <h2 id="about-heading">About</h2>
+      <p>
+        {
+          `Every route here comes from a schedule an agency publishes openly (GTFS), found through the Mobility Database${summary ? `: ${n(summary.feeds)} schedules, ${n(summary.routes)} routes and ${n(summary.stops)} stops` : ''}. Trains and ferries show from orbit; buses appear as you zoom in to a region, and stops at city level. Tap a line to see its name and agency.`
+        }
+      </p>
+      <p>
+        This is a first look at taking the <a href="/transit/">Washington live map</a> worldwide. Live vehicles come next.
+      </p>
+      <p>
+        Map tiles by <a href="https://openfreemap.org">OpenFreeMap</a>, map data © OpenStreetMap contributors. Privacy: your
+        browser asks OpenFreeMap’s servers for the part of the map you’re looking at. Analytics works the same as the rest of
+        kylepace.dev (<a href="https://kylepace.dev/privacy/">privacy</a>).
+      </p>
+    </section>
+  </div>
+</LabLayout>
+
+<script is:inline>
+  if (matchMedia('(max-width: 47.99rem)').matches) document.querySelector('[data-layers]')?.removeAttribute('open');
+</script>
+
+<script>
+  import { startGlobe } from '../../components/transit-globe';
+
+  const root = document.getElementById('transit-globe');
+  if (root) startGlobe(root);
+</script>
+
+<style>
+  .frame {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: calc(100dvh - var(--bar-h) - 3rem);
+    min-height: 32rem;
+    background: var(--bg);
+  }
+
+  .frame:fullscreen {
+    height: 100vh;
+  }
+
+  .map {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .sign {
+    position: relative;
+    z-index: 3;
+    background: var(--bg-raised);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .sign-plate {
+    padding: var(--space-3) var(--gutter);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: var(--step-1);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+
+  .readout {
+    margin: var(--space-1) 0 0;
+    font-size: var(--step--1);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sign-body {
+    padding: 0 var(--gutter);
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 2.75rem;
+    font-size: var(--step--1);
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .chevron {
+    width: 1rem;
+    height: 1rem;
+    color: var(--ink-muted);
+  }
+
+  .layers[open] .chevron {
+    rotate: 180deg;
+  }
+
+  .legend {
+    margin: 0 0 var(--space-3);
+    padding: 0;
+    border: 0;
+  }
+
+  legend {
+    padding: 0;
+    margin-bottom: var(--space-1);
+    font-size: var(--step--1);
+    color: var(--ink-muted);
+  }
+
+  .row {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    min-height: 2.5rem;
+    border-top: 1px solid var(--line);
+    font-size: var(--step--1);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .row:last-of-type {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .row input {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0;
+    flex: none;
+    accent-color: var(--plate);
+    cursor: pointer;
+  }
+
+  .row-label {
+    flex: 1;
+  }
+
+  .pictogram {
+    width: 1.3rem;
+    height: 1.3rem;
+    fill: var(--ink);
+    flex: none;
+  }
+
+  .stroke {
+    width: 2.5rem;
+    height: 0.75rem;
+    flex: none;
+    stroke: var(--ink);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  .stroke.bold {
+    stroke-width: 5;
+  }
+
+  .row:has(input:not(:checked)) :is(.pictogram, .stroke) {
+    opacity: 0.35;
+  }
+
+  /* Places read like a station's list of destinations: plain rows, not buttons in a grid. */
+  .place-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .place-list button {
+    min-height: 2.5rem;
+    padding: 0;
+    border: 0;
+    border-top: 1px solid var(--line);
+    background: none;
+    color: var(--accent-ink);
+    font: inherit;
+    font-size: var(--step--1);
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .place-list button:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .place-list button:hover {
+    text-decoration: underline;
+  }
+
+  .place-list button:focus-visible {
+    outline: 3px solid var(--accent-ink);
+    outline-offset: 1px;
+  }
+
+  @media (max-width: 47.99rem) {
+    .layers[open] {
+      max-height: 45dvh;
+      overflow: auto;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .sign {
+      position: absolute;
+      top: var(--space-4);
+      left: var(--space-4);
+      width: 19rem;
+      max-height: calc(100% - 2 * var(--space-4) - 1.5rem);
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 28px rgb(0 0 0 / 0.2);
+    }
+
+    .sign-plate {
+      padding: var(--space-4) var(--space-4) var(--space-3);
+      border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
+    }
+
+    h1 {
+      font-size: var(--step-2);
+    }
+
+    .sign-body {
+      padding: 0 var(--space-4) var(--space-1);
+    }
+  }
+
+  .transit :global(.maplibregl-map) {
+    font: inherit;
+  }
+
+  .transit :global(.maplibregl-ctrl-group) {
+    background: var(--bg-raised);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 0 0 1px var(--control-line);
+  }
+
+  .transit :global(.maplibregl-ctrl-group button) {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .transit :global(.maplibregl-ctrl-attrib) {
+    background: color-mix(in oklab, var(--bg-raised), transparent 10%);
+    color: var(--ink);
+  }
+
+  .transit :global(.maplibregl-ctrl-attrib a) {
+    color: var(--ink);
+  }
+
+  .transit :global(.maplibregl-popup-content) {
+    background: var(--bg-raised);
+    color: var(--ink);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-4) var(--space-2);
+  }
+
+  .transit :global(.globe-hits) {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--step--1);
+  }
+
+  .transit :global(.globe-hits li) {
+    display: grid;
+    grid-template-columns: 0.4rem 1fr;
+    column-gap: var(--space-2);
+    padding: var(--space-1) 0;
+  }
+
+  .transit :global(.globe-hits .swatch) {
+    grid-row: span 2;
+    border-radius: 2px;
+  }
+
+  .transit :global(.globe-hits span:last-child) {
+    color: var(--ink-muted);
+  }
+
+  .below {
+    padding: var(--space-8) var(--gutter) 0;
+    max-width: 68rem;
+  }
+
+  .about {
+    max-width: 40rem;
+    font-size: var(--step--1);
+  }
+
+  .about h2 {
+    margin: 0 0 var(--space-2);
+    font-size: var(--step-1);
+  }
+
+  .about p {
+    max-width: 32em;
+    margin: 0 0 var(--space-3);
+  }
+</style>

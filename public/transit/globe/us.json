@@ -1,0 +1,17 @@
+{
+ "updated": "2026-11-15T07:52:58.990Z",
+ "country": "US",
+ "feeds": 828,
+ "failed": 69,
+ "routes": 12779,
+ "stops": 494629,
+ "duplicates": 1112,
+ "agencies": 820,
+ "modes": {
+  "bus": 12275,
+  "rail": 234,
+  "tram": 123,
+  "ferry": 141,
+  "other": 6
+ }
+}

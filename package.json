@@ -17,7 +17,8 @@
     "@astrojs/cloudflare": "^14.4.6",
     "astro": "^7.4.7",
     "kp-design": "github:kyle-pace/kp-design#214b5d5c932308c49fac6c70e53a53ea509831e1",
-    "maplibre-gl": "^5.24.0"
+    "maplibre-gl": "^5.24.0",
+    "pmtiles": "^4.5.0"
   },
   "devDependencies": {
     "axe-core": "^4.14.0",

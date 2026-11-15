@@ -63,7 +63,7 @@ interface BundleStop {
   lat: number;
   routes: string[]; // `${systemKey}:${routeId}`
 }
-interface Bundle {
+export interface Bundle {
   agencies: string[];
   /** Each agency's website, from agency.txt (same order as agencies). */
   urls: string[];
@@ -170,7 +170,7 @@ function simplify(points: number[][], tolerance = 6): number[][] {
 
 const round = (n: number) => Math.round(n * 1e5) / 1e5;
 
-function cleanLine(points: number[][]): number[][] {
+export function cleanLine(points: number[][]): number[][] {
   const out: number[][] = [];
   for (const [lon, lat] of points) {
     if (!Number.isFinite(lon) || !Number.isFinite(lat) || (lon === 0 && lat === 0)) continue;
@@ -183,7 +183,7 @@ function cleanLine(points: number[][]): number[][] {
 
 // ---------- Download and unzip ----------
 
-async function download(url: string, dest: string): Promise<void> {
+export async function download(url: string, dest: string): Promise<void> {
   if (url.startsWith('file://')) {
     writeFileSync(dest, readFileSync(fileURLToPath(url)));
     return;
@@ -202,7 +202,7 @@ async function download(url: string, dest: string): Promise<void> {
   writeFileSync(dest, buf);
 }
 
-function findFiles(dir: string): Map<string, string> {
+export function findFiles(dir: string): Map<string, string> {
   const files = new Map<string, string>();
   const walk = (d: string) => {
     for (const name of readdirSync(d)) {
@@ -217,7 +217,7 @@ function findFiles(dir: string): Map<string, string> {
 
 // ---------- One GTFS feed into a bundle ----------
 
-async function readGtfs(system: TransitSystem, dir: string, defaultColor: string): Promise<Bundle> {
+export async function readGtfs(system: TransitSystem, dir: string, defaultColor: string): Promise<Bundle> {
   const files = findFiles(dir);
   if (!files.has('routes.txt') || !files.has('trips.txt')) throw new Error('no routes.txt or trips.txt in the zip');
 
@@ -547,8 +547,11 @@ async function main(): Promise<{ tried: number; failed: number }> {
   return { tried: attempted.length, failed: failed.length };
 }
 
-const failures = await main();
-if (failures.tried > 0 && failures.failed === failures.tried) {
-  console.error(`\nEvery system tried (${failures.tried}) failed. Nothing new was built; the last good data is unchanged.`);
-  process.exit(1);
+// Run only when started directly (npm run data), not when the globe build imports the reader.
+if (import.meta.main) {
+  const failures = await main();
+  if (failures.tried > 0 && failures.failed === failures.tried) {
+    console.error(`\nEvery system tried (${failures.tried}) failed. Nothing new was built; the last good data is unchanged.`);
+    process.exit(1);
+  }
 }
