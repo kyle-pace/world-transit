@@ -6,11 +6,14 @@
   "compatibility_date": "2026-11-01",
   "observability": { "enabled": true },
   // Claims kylepace.dev/world-transit on the hub's domain. Routes win over the hub's
-  // Custom Domain, so only these paths reach this Worker. The old /transit addresses
-  // still belong to the wa-transit-map Worker, which redirects them here.
+  // Custom Domain, so only these paths reach this Worker, plus the old /transit addresses
+  // (the wa-transit-map Worker that used to own them is deleted).
   "routes": [
     { "pattern": "kylepace.dev/world-transit", "zone_name": "kylepace.dev" },
-    { "pattern": "kylepace.dev/world-transit/*", "zone_name": "kylepace.dev" }
+    { "pattern": "kylepace.dev/world-transit/*", "zone_name": "kylepace.dev" },
+    // The retired Washington map's old addresses, redirected by src/pages/transit/[...path].ts.
+    { "pattern": "kylepace.dev/transit", "zone_name": "kylepace.dev" },
+    { "pattern": "kylepace.dev/transit/*", "zone_name": "kylepace.dev" }
   ],
   "workers_dev": true,
   // The tiles (/world-transit/world.pmtiles), too big for static assets (25 MB limit).
