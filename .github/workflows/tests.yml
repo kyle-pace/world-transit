@@ -15,8 +15,11 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v5
-      # Node 24 runs the TypeScript build script directly; no npm install needed.
+      # Node 24 runs the TypeScript scripts directly. The country lookup test needs
+      # topojson-client and world-atlas, so install from the lockfile first.
       - uses: actions/setup-node@v5
         with:
           node-version: 24
+          cache: npm
+      - run: npm ci --no-audit --no-fund
       - run: npm test
