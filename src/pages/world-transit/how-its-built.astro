@@ -15,7 +15,7 @@ const repo = 'https://github.com/kyle-pace/world-transit/blob/main/';
 
 <LabLayout
   title="How World transit is built"
-  description="The technical version: how 675,000 transit routes become one globe of map tiles, how live vehicles reach the page, and the decisions and bugs along the way."
+  description="The technical version: how 675,000 transit routes become one globe of map tiles, how live vehicles reach the page, and the decisions along the way."
   image="/world-transit/share-about.png"
   imageAlt="About World transit: the title on a green sign beside a transit line with six stops, from Agencies publish their schedules to Your browser draws the map."
   themeColor={{ light: '#eceee8', dark: '#121719' }}
@@ -196,28 +196,6 @@ const repo = 'https://github.com/kyle-pace/world-transit/blob/main/';
       </ul>
     </section>
 
-    <section aria-labelledby="bugs-heading">
-      <h2 id="bugs-heading">Bugs worth learning from</h2>
-      <ul class="notes-list">
-        <li>
-          <strong>Seattle's buses vanished, but only in dark mode.</strong> Routes were inserted below the basemap's first label layer.
-          The dark style has a label layer early on, below its roads, so the road fills covered every bus and cut rail lines into dashes.
-          The fix places routes above the last road or area layer.
-        </li>
-        <li>
-          <strong>King County Metro was in the tiles but not on the map.</strong> With hundreds of input files, tippecanoe put some
-          features in a layer named after a file instead of <code>routes</code>. Merging everything into one file per layer fixed it.
-        </li>
-        <li>
-          <strong>Node's 512 MB string limit.</strong> China's OpenStreetMap file and the merged routes file were too big to read as one
-          string, so everything is read line by line.
-        </li>
-        <li>
-          <strong>Straight lines across London.</strong> Schedules without drawn paths connect stops directly, so an airport coach sliced
-          through a city. Lines drawn stop to stop are now broken where one hop is longer than a bus would go without stopping.
-        </li>
-      </ul>
-    </section>
 
     <section aria-labelledby="stack-heading">
       <h2 id="stack-heading">The stack</h2>
