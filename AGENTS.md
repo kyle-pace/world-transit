@@ -107,6 +107,16 @@ Every project uses the same rules, so charts read the same way everywhere.
 - Copy is plain language, written for the person using it.
 - Don't add "Built with AI" lines or other AI credits to sites or apps unless Kyle asks.
 
+### Docs stay current
+
+Docs are part of the change, like its analytics events: the same piece of work updates every doc that describes what changed, in every project it touches. Not a follow-up, and not only when a session ends.
+
+- **In the repo:** the README (what it is, how to build and run it), the project's section of this file, and any handoff or status file the project keeps (where things stand, decisions, what's left).
+- **In Confluence:** the project's pages in the App Projects space (https://kylepace.atlassian.net/wiki/spaces/APPS). Update the status line and date on the project's overview page and the pages about what changed (architecture, analytics, notifications, roadmap and so on). A new feature that needs more than a few lines gets its own page under the project's. Do it yourself when you can reach Confluence; if you can't, say so and list what needs changing.
+- The project's section names its Confluence overview page. A project with none yet gets one with its first real feature.
+- Write for someone picking it up cold: what it does, how it works, where it stands, and the date. When something stops being true, change or remove it; don't add the new fact beside the old one.
+- Say in your report which docs you updated, or why the change needed none.
+
 ### Correctness
 
 - Anything that reads data from outside the project (a feed, a flyer, an API response, a file someone picks) gets a test that runs it against a saved real sample, plus one broken sample.
@@ -148,6 +158,16 @@ Kyle is a product leader building his development skills through this work. Trea
 - A real title, description and favicon.
 - A privacy note if it collects anything.
 
+A new website on its own domain also gets set up so search engines can find it, as part of launch, not later:
+
+- A home page title that says what the site is and who it's for ("Henwood: pantry and recipes app for iPhone, iPad and Mac"), not just the name.
+- `robots.txt` that points to a sitemap, and a sitemap that lists every page meant to be found. Astro sites use `@astrojs/sitemap`; a hand-written site keeps `sitemap.xml` by hand and adds each new page to it.
+- Structured data (JSON-LD) on the home page: `WebSite` for every site, `MobileApplication` with the store or TestFlight link for an app's site, and Kyle's `Person` (`@id` `https://kylepace.net/#kyle`) on his personal sites.
+- A Google Search Console domain property, with the sitemap submitted there. Verifying the domain adds a DNS record, so ask Kyle first (see "Shipping").
+- The site imported into [Bing Webmaster Tools](https://www.bing.com/webmasters) from Search Console, which also covers DuckDuckGo. Bing only brings in sitemaps already submitted to Google, so do Search Console first.
+- A few days after launch, check Search Console's Pages report and fix anything it says it couldn't crawl.
+- Changing a favicon later? Give the new file a new name (`favicon-v2.png`), because Google keeps showing the old one for weeks otherwise.
+
 ### Before you call it done
 
 Match the checking to the change. If you're unsure which tier a change is, use the higher one. In your report, say which tier you used and what you ran.
@@ -156,6 +176,7 @@ Match the checking to the change. If you're unsure which tier a change is, use t
 
 - The build passes, and so do any tests and linters.
 - Read the changed text where it shows up in the built output.
+- The docs that describe what changed are updated, in the repo and in Confluence (see "Docs stay current").
 
 **Tier 2: something people see or use changed.** Layout, styles, a component, a new control, new behavior.
 
