@@ -72,7 +72,10 @@ const stopsOnLine = [
 >
 
   <article class="page">
-    <h1 class="plate title" data-area="title">About World transit</h1>
+    <header class="intro" data-area="title">
+      <h1 class="plate title">About World transit</h1>
+      <p class="deep-dive">Curious how it’s made? Read <a href="/world-transit/how-its-built/">how World transit is built</a>, the technical version with diagrams.</p>
+    </header>
 
     <section class="notes" data-area="what" aria-labelledby="what-heading">
       <h2 id="what-heading">What it is</h2>
@@ -97,7 +100,6 @@ const stopsOnLine = [
 
     <section data-area="how" aria-labelledby="how-heading">
       <h2 id="how-heading">How it works</h2>
-      <p>For the technical version, with diagrams, see <a href="/world-transit/how-its-built/">how World transit is built</a>.</p>
       <ol class="line">
         {
           stopsOnLine.map((stop) => (
@@ -176,6 +178,19 @@ const stopsOnLine = [
     line-height: 1.2;
     letter-spacing: -0.015em;
     border-radius: var(--radius-sm);
+  }
+
+  .intro {
+    margin-bottom: var(--space-8);
+  }
+
+  .intro .title {
+    margin-bottom: var(--space-3);
+  }
+
+  .deep-dive {
+    margin: 0;
+    max-width: 44rem;
   }
 
   h2 {
