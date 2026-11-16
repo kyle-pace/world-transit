@@ -275,13 +275,16 @@ export function globeSearch(
     }
   }
 
-  function choose(option: Option) {
+  // A keyboard pick keeps focus in the box, so the next Tab carries on from here (the
+  // "Near …" line announces where the map went). A tap or a touch keyboard's Go closes the
+  // keyboard instead, so the map isn't hidden behind it.
+  function choose(option: Option, fromKeyboard = false) {
     // No search text in analytics: only what kind of result, and whether it was a suggestion.
     track('Picked Search Result', { experiment: 'world-transit', result_kind: option.kind, from_suggestions: !input!.value.trim() });
     input!.value = '';
     groups = [];
     render();
-    input!.blur();
+    if (!fromKeyboard || matchMedia('(pointer: coarse)').matches) input!.blur();
     option.go();
   }
 
@@ -303,7 +306,7 @@ export function globeSearch(
       const option = flat[active >= 0 ? active : 0];
       if (option) {
         e.preventDefault();
-        choose(option);
+        choose(option, true);
       }
     } else if (e.key === 'Escape') {
       groups = [];

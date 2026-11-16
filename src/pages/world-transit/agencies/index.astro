@@ -18,8 +18,7 @@ const total = countries.reduce((sum, c) => sum + c.agencies.length, 0);
   about="/world-transit/about/"
   lab={{ name: 'World transit', href: '/world-transit/' }}
 >
-  <main class="directory">
-    <p class="crumbs"><a href="/world-transit/">Back to the map</a></p>
+  <div class="directory">
     <h1 class="plate title">Transit agencies</h1>
     <p>{n(total)} agencies in {countries.length - 1} countries are on the globe. Pick a country to see its agencies and show any of them on the map.</p>
     <table class="timetable">
@@ -47,5 +46,5 @@ const total = countries.reduce((sum, c) => sum + c.agencies.length, 0);
         }
       </tbody>
     </table>
-  </main>
+  </div>
 </LabLayout>

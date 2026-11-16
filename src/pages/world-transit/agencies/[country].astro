@@ -22,7 +22,7 @@ const n = (x: number) => x.toLocaleString('en-US');
   about="/world-transit/about/"
   lab={{ name: 'World transit', href: '/world-transit/' }}
 >
-  <main class="directory">
+  <div class="directory">
     <p class="crumbs"><a href="/world-transit/agencies/">All countries</a></p>
     <h1 class="plate title">{country.name}</h1>
     <p>
@@ -57,5 +57,5 @@ const n = (x: number) => x.toLocaleString('en-US');
         }
       </tbody>
     </table>
-  </main>
+  </div>
 </LabLayout>
